@@ -1,0 +1,4 @@
+authtype basic
+     authname authdomain
+     authuserfile /home/greg/public_html/diatom.cc/public/flowpaper/beta/users.passwd
+     require valid-user
