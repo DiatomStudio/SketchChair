@@ -120,8 +120,10 @@ public class SETTINGS {
 			10, 10);
 
 	//ENVIRONMENT COLOURS
-	public int world_ground_colour = GLOBAL.applet.color(39, 35, 36);
-	public int world_ground_under_colour = GLOBAL.applet.color(39, 35, 36, 10);
+	public int world_ground_colour = GLOBAL.applet.color(190, 190, 190);
+	public int world_ground_side_colour = GLOBAL.applet.color(50, 50, 50);
+	public int world_ground_under_colour = GLOBAL.applet.color(50, 50, 50);
+	
 	public int background_colour = GLOBAL.applet.color(250, 250, 250);
 
 	public static float gravity = 60f;

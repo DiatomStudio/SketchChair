@@ -24,6 +24,7 @@ package cc.sketchchair.core;
 //TODO: Add Ragdoll class
 //TODO: Render ragdoll correctly
 //TODO: sitting controle for ragdoll
+import ixagon.renderer.*;
 
 import java.awt.Dimension;
 import java.awt.DisplayMode;
@@ -39,8 +40,10 @@ import java.io.PrintStream;
 import java.nio.IntBuffer;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLCapabilities;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.vecmath.Vector3f;
 
 
@@ -72,7 +75,7 @@ public class main extends PApplet {
 
 	public static void main(String args[]) {
 
-		
+		/*
 		//send log to a file
 		File file=new File("debug.log");
 			try {
@@ -87,7 +90,7 @@ public class main extends PApplet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+			*/
 			
 
 		PApplet.main(new String[] { main.class.getName() });
@@ -735,7 +738,7 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 			float GROUND_DEPTH = 1000;
 			renderer.pushMatrix();
 			renderer.noStroke();
-			renderer.fill(SETTINGS.world_ground_colour);
+			renderer.fill(SETTINGS.world_ground_side_colour);
 
 			if (GLOBAL.rotateModelsX > 0)
 				renderer.fill(SETTINGS.world_ground_under_colour);
@@ -743,9 +746,16 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 			
 			renderer.translate((int)(GLOBAL.windowWidth / 2), 1670 + (GROUND_DEPTH / 2.5f), 0);
 			
-			if(GLOBAL.floorOn)
-			renderer.box(GROUND_WIDTH, GROUND_DEPTH, GROUND_LENGTH);
+			if(GLOBAL.floorOn){
+			 renderer.box(GROUND_WIDTH, GROUND_DEPTH, GROUND_LENGTH);
 			
+			if(GLOBAL.rotateModelsX < 0){
+				renderer.fill(SETTINGS.world_ground_colour);
+				renderer.translate(0, -501,0);
+			renderer.rotateX(PApplet.PI/2);
+					renderer.rect(-GROUND_WIDTH/2,-GROUND_WIDTH/2, GROUND_WIDTH, GROUND_LENGTH);		
+			}
+			}
 			
 			renderer.popMatrix();
 			
@@ -1126,6 +1136,9 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 					//size(GLOBAL.windowWidth, GLOBAL.windowHeight,GLConstants.GLGRAPHICS);
 				//else
 					//size(GLOBAL.windowWidth, GLOBAL.windowHeight, GLConstants.GLGRAPHICS);
+				
+				//size(GLOBAL.windowWidth, GLOBAL.windowHeight, OldP3D.NOSTALGIA);
+
 				size(GLOBAL.windowWidth, GLOBAL.windowHeight, OPENGL);
 
 			}
@@ -1139,7 +1152,31 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		
 		}
 		}
+		
+		
+		// Detect current openGL version and warn if necessary 
+		PGL pgl = ((PGraphicsOpenGL) this.g).beginPGL();
 
+		GL2 gl = pgl.gl.getGL().getGL2();
+	    String version = gl.glGetString(GL.GL_VERSION).trim();
+
+		LOGGER.info("This system uses OpenGL:"+version);
+
+	    String[] parts = version.split(" ");
+	    
+	    if(parts.length > 0){
+	    	float versionFloat = Float.parseFloat(parts[0]);
+	    	
+	    	if(versionFloat < 2){
+	    	JOptionPane.showMessageDialog(frame,
+	    		    "SketchChair requires OpenGL v 2.0 or higher to run. Your system currently supports up to OpenGL V "+versionFloat+". Please try SketchChair on a different system or make sure that any dedicated graphics cards are enabled. ",
+	    		    "OpenGL Version Not Supported",
+	    		    JOptionPane.ERROR_MESSAGE);
+	    	}
+	    	
+	    }
+	    
+		
 		//g.printProjection();
 		
 

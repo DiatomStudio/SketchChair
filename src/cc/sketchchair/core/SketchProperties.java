@@ -109,6 +109,8 @@ public class SketchProperties {
 			SETTINGS.autoResetSeconds = (int)Float.parseFloat(properties.getProperty("autoResetSeconds"));
 
 		
+		//if(properties.containsKey("groundColour"))		
+		//	SETTINGS.groundColour = String.
 		
 		if(properties.containsKey("furnitureScale")){	
 			SETTINGS.scale = Float.parseFloat(properties.getProperty("furnitureScale"));
