@@ -73,7 +73,7 @@ public class GLOBAL {
 	public static int windowHeight;
 	public static PFont font;
 	public PImage clickToStart;
-	public String version = "0.9.0.0";
+	public String version = "0.9.0.1";
 	public static boolean forceReset = false;
 	public static boolean cropExportToScreen = false;
 	public static SketchGlobals SketchGlobals;

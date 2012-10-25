@@ -1773,11 +1773,14 @@ if(delta <= 1){
 		myTransform = bodies[BodyPart.BODYPART_SPINE.ordinal()]
 				.getMotionState().getWorldTransform(myTransform);
 		applyMatrix(myTransform, g);
+		
+		
+		g.pushMatrix();
 		functions.flatCylinder(radius, radius * ratio, halfHeight * 2, myTransform,g);
-
-		functions.cylinder(radius, radius * ratio, halfHeight * 2,
-				SETTINGS.cylinder_res, g);
-		functions.flatCylinder(radius, radius * ratio, halfHeight * 2, myTransform,g);
+		g.popMatrix();
+		//functions.cylinder(radius, radius * ratio, halfHeight * 2,
+		//		SETTINGS.cylinder_res, g);
+		//functions.flatCylinder(radius, radius * ratio, halfHeight * 2, myTransform,g);
 
 		g.translate(0, halfHeight, 0);
 		//if (!GLOBAL.performanceMode)

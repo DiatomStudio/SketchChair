@@ -29,6 +29,9 @@ import cc.sketchchair.sketch.SketchSpline;
  */
 public class SETTINGS {
 
+	public static boolean DEVELOPER_MODE = false; //if on print to console etc
+
+	
 	public static final int UNDO_LEVELS = 20;
 	public static final boolean build_collision_mesh_detailed = true;
 	public static final float MIN_SPACING = 20f;
@@ -110,7 +113,6 @@ public class SETTINGS {
 	public static boolean TOUCH_SCREEN_MODE = false; 
 
 	
-	public static boolean DEVELOPER_MODE = false; 
 	
 	//PERSON COLOURS
 	public static int ERGODOLL_FILL_COLOUR = GLOBAL.applet.color(225, 225, 225);

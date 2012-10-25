@@ -75,7 +75,6 @@ public class main extends PApplet {
 
 	public static void main(String args[]) {
 
-		/*
 		//send log to a file
 		File file=new File("debug.log");
 			try {
@@ -90,7 +89,7 @@ public class main extends PApplet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			*/
+		
 			
 
 		PApplet.main(new String[] { main.class.getName() });
@@ -1164,8 +1163,18 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 
 	    String[] parts = version.split(" ");
 	    
+	    if(parts.length > 0 )
+	    	parts = parts[0].split(".");
+	    
 	    if(parts.length > 0){
-	    	float versionFloat = Float.parseFloat(parts[0]);
+	    	
+	    	float versionFloat; 
+	    	try{
+		    	 versionFloat = Float.parseFloat(parts[0]);
+	    }
+		catch(NumberFormatException e) {
+			versionFloat = 2;
+		}
 	    	
 	    	if(versionFloat < 2){
 	    	JOptionPane.showMessageDialog(frame,
