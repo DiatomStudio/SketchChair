@@ -24,7 +24,6 @@ package cc.sketchchair.core;
 //TODO: Add Ragdoll class
 //TODO: Render ragdoll correctly
 //TODO: sitting controle for ragdoll
-import ixagon.renderer.*;
 
 import java.awt.Dimension;
 import java.awt.DisplayMode;
@@ -76,6 +75,7 @@ public class main extends PApplet {
 	public static void main(String args[]) {
 
 		//send log to a file
+		
 		File file=new File("debug.log");
 			try {
 				if(!file.exists()){
@@ -378,15 +378,7 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 
 		
 		
-		//ypdate grid info
-		if (keyPressed && (this.keyCode == PConstants.ALT)) {
-			GLOBAL.uiTools.useGrid = true;
-			GLOBAL.uiTools.SketchTools.useGrid = true;
-		} else {
-			GLOBAL.uiTools.useGrid = false;
-			GLOBAL.uiTools.SketchTools.useGrid = false;
-
-		}
+	
 
 		if (mousePressed && !this.mouseDown)
 			UI.mouseClicked = true;
@@ -1152,7 +1144,7 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		}
 		}
 		
-		
+		/*
 		// Detect current openGL version and warn if necessary 
 		PGL pgl = ((PGraphicsOpenGL) this.g).beginPGL();
 
@@ -1185,11 +1177,11 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 	    	
 	    }
 	    
-		
+		*/
 		//g.printProjection();
 		
 
-		if (GLOBAL.frame != null){
+		if (GLOBAL.frame != null ){
 			//causing crash?
 			/*
 			GLOBAL.frame.setPreferredSize(new Dimension(width,
@@ -1244,7 +1236,7 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		LOGGER.info("AFTER GUI AGAIN");
 
 		GLOBAL.uiTools.build(this);
-		noCursor();
+		//noCursor();
 		GLOBAL.setZOOM(.5f);
 		GLOBAL.CAM_OFFSET_Y = (float) -((700 - GLOBAL.windowHeight) + 900);
 		// button = new GUI.Button(new Vec2D(60,0),

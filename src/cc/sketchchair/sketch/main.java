@@ -120,7 +120,7 @@ public class main extends PApplet {
 	}
 
 	public void setup() {
-		size(600, 600, OPENGL);
+		size(600, 400, P3D);
 		sketch.sketchTools = new SketchTools(this);
 		sketch.sketchTools.build(this);
 		

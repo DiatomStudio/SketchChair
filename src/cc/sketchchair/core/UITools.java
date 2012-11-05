@@ -396,7 +396,7 @@ public class UITools {
 
 	public int mouseButton;
 	public boolean renderNodesFlag = false;
-	boolean useGrid = true;
+	boolean useGrid = false;
 	float gridWidth = 50f;
 	float gridHeight = 50f;
 	float minorGridnumber = 10;
@@ -1996,6 +1996,13 @@ public class UITools {
 	public void saveChairToFileAuto() {
 
 		if (GLOBAL.sketchChairs.getCurChair() != null) {
+			
+			if(GLOBAL.sketchChairs.getCurChair().localSavelocation == null){
+				this.saveChairToFile();
+				return;
+				
+			}
+			
 			GLOBAL.sketchChairs.getCurChair().addToShapePack();
 
 			String location = "";
@@ -2164,6 +2171,44 @@ public class UITools {
 		
 		GLOBAL.pdfSaveLocation = filename;
 		GLOBAL.savePDF = true;
+		
+	}
+	public void layersSelectNext(GUIEvent e){
+	
+		if (GLOBAL.sketchChairs.getCurChair() != null) {
+			GLOBAL.sketchChairs.getCurChair().selectedPlaneNumber++;
+			
+			if(GLOBAL.sketchChairs.getCurChair().selectedPlaneNumber >= GLOBAL.sketchChairs.getCurChair().getSlicePlanesY().size()){
+				if(GLOBAL.planesWidget.mirrorSelection && GLOBAL.sketchChairs.getCurChair().getSlicePlanesY().size()>1)
+					GLOBAL.sketchChairs.getCurChair().selectedPlaneNumber = 1;
+				else
+					GLOBAL.sketchChairs.getCurChair().selectedPlaneNumber = 0;
+
+				
+			}
+
+			GLOBAL.planesWidget.planeClickedOn(GLOBAL.sketchChairs.getCurChair().getSlicePlanesY().get(GLOBAL.sketchChairs.getCurChair().selectedPlaneNumber));
+		}
+	}
+
+	public void layersSelectPrev(GUIEvent e){
+	
+		
+		if (GLOBAL.sketchChairs.getCurChair() != null) {
+			GLOBAL.sketchChairs.getCurChair().selectedPlaneNumber--;
+			
+			if(GLOBAL.sketchChairs.getCurChair().selectedPlaneNumber < 0){
+				if(GLOBAL.planesWidget.mirrorSelection && GLOBAL.sketchChairs.getCurChair().getSlicePlanesY().size()>1)
+					GLOBAL.sketchChairs.getCurChair().selectedPlaneNumber = GLOBAL.sketchChairs.getCurChair().getSlicePlanesY().size()-1;
+				else
+					GLOBAL.sketchChairs.getCurChair().selectedPlaneNumber = GLOBAL.sketchChairs.getCurChair().getSlicePlanesY().size();
+
+				
+			}
+
+			GLOBAL.planesWidget.planeClickedOn(GLOBAL.sketchChairs.getCurChair().getSlicePlanesY().get(GLOBAL.sketchChairs.getCurChair().selectedPlaneNumber));
+		}
+		
 		
 	}
 
@@ -2497,12 +2542,22 @@ public class UITools {
 
 		GLOBAL.person.toggleON();
 	}
+	
+	public void toggleFloor(GUIEvent e){
+		GLOBAL.floorOn = !GLOBAL.floorOn;
+
+	}
 
 	public void toggleReferenceGeom(GUIEvent e) {
 		GLOBAL.environments.render = !GLOBAL.environments.render;
 
 	}
-
+	public void toggleGrid(GUIEvent e) {
+		LOGGER.info("snap to grid");
+		this.useGrid = !this.useGrid;
+		this.SketchTools.useGrid = !this.SketchTools.useGrid ;
+	}
+	
 	public void importSVG(GUIEvent e) {
 
 		

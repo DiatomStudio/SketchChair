@@ -70,7 +70,7 @@ public class WidgetPlanes extends GUIPanel {
 	private int selectWidth = 8;
 	private GUIToggle mirrorPlaneToggle;
 	private GUIButton selectAllPlanes;
-	private boolean mirrorSelection = true;
+	public boolean mirrorSelection = true;
 	public GUISlider SlatSlider;
 	GUISlider SlatSliderStart;
 	public GUISlider SlatSliderEnd;
@@ -292,6 +292,7 @@ public class WidgetPlanes extends GUIPanel {
 
 		GLOBAL.sketchChairs.getCurChair().selectedPlanes.selectAll();
 		
+		GLOBAL.previewWidget.rebuildPatternPreview();
 		this.resizing = false;
 
 	}

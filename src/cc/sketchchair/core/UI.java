@@ -23,6 +23,7 @@ import java.awt.CheckboxMenuItem;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
+import java.awt.MenuShortcut;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -1408,7 +1409,8 @@ class UI {
 
 		Selecting and editing slices
 		 
-		 */GUIPanel slicesPanel = new GUIPanel(0f, 0f, tabbedPanel.getWidth(), (int) panelHeight, gui);
+		 */
+		GUIPanel slicesPanel = new GUIPanel(0f, 0f, tabbedPanel.getWidth(), (int) panelHeight, gui);
 		tabbedPanel.addTabbedPanel(slicesPanel, "slices","gui/GUI_TAB_SLICES_UP.png","gui/GUI_TAB_SLICES_DOWN.png", gui);
 
 		GLOBAL.toggleSetSlices = new GUIComponentSet();
@@ -1757,6 +1759,9 @@ class UI {
 		//-----------------------------------------------------------------------------------------
 		//this doesn't demonstrate best coding practice, just a simple method
 		//create the MenuBar Object
+		
+		
+		
 		menuListen = new myMenuListener();
 		myMenu = new MenuBar();
 		MenuItem item = null;
@@ -1765,17 +1770,17 @@ class UI {
 
 		Menu File = new Menu("File");
 
-		item = new MenuItem("New");
+		item = new MenuItem("New",new MenuShortcut('N',false));
 		item.setActionCommand("deleteAllChairs");
 		item.addActionListener(menuListen);
 		File.add(item);
 
-		item = new MenuItem("Save Chair");
+		item = new MenuItem("Save Chair",new MenuShortcut('S',false));
 		item.setActionCommand("saveChairToFileAuto");
 		item.addActionListener(menuListen);
 		File.add(item);
 
-		item = new MenuItem("Save Chair As");
+		item = new MenuItem("Save Chair As",new MenuShortcut('S',true));
 		item.setActionCommand("saveChairToFile");
 		item.addActionListener(menuListen);
 		File.add(item);
@@ -1820,7 +1825,7 @@ class UI {
 
 		File.add(Export);
 
-		item = new MenuItem("Open");
+		item = new MenuItem("Open",new MenuShortcut('O',false));
 		item.setActionCommand("openChairFromFile");
 		item.addActionListener(menuListen);
 		File.add(item);
@@ -1858,14 +1863,26 @@ class UI {
 
 		Menu Edit = new Menu("Edit");
 
+		
+		item = new MenuItem("Copy" ,new MenuShortcut('C',false));
+		item.setActionCommand("copyChair");
+		item.addActionListener(menuListen);
+		Edit.add(item);
+		
+		item = new MenuItem("Paste" ,new MenuShortcut('V',false));
+		item.setActionCommand("pasteChair");
+		item.addActionListener(menuListen);
+		Edit.add(item);
+		
+		
 		//create all the Menu Items and add the menuListener to check their state.
-		item = new MenuItem("Undo");
+		item = new MenuItem("Undo" ,new MenuShortcut('Z',false));
 		item.setActionCommand("undo");
 		item.addActionListener(menuListen);
 		Edit.add(item);
 
 		//create all the Menu Items and add the menuListener to check their state.
-		item = new MenuItem("Redo");
+		item = new MenuItem("Redo",new MenuShortcut('Z',true));
 		item.setActionCommand("redo");
 		item.addActionListener(menuListen);
 		Edit.add(item);
@@ -1976,20 +1993,32 @@ class UI {
 
 		myMenu.add(Tools);
 
+		
+		Menu layers = new Menu("Layers");
+
+		item = new MenuItem("Select Next",new MenuShortcut(KeyEvent.VK_LEFT,false));
+		item.setActionCommand("layersSelectNext");
+		item.addActionListener(menuListen);
+		layers.add(item);
+
+		item = new MenuItem("Select Prev",new MenuShortcut(KeyEvent.VK_RIGHT,false));
+		item.setActionCommand("layersSelectPrev");
+		item.addActionListener(menuListen);
+		layers.add(item);
+		myMenu.add(layers);
+
+		
 		Menu physics = new Menu("Physics");
 
-		item = new MenuItem("play");
-		item.setActionCommand("physicsPlay");
+		item = new MenuItem("play/pause",new MenuShortcut('G',false));
+		item.setActionCommand("physicsPlayPause");
 		item.addActionListener(menuListen);
 		physics.add(item);
 
-		item = new MenuItem("pause");
-		item.setActionCommand("physicsPause");
-		item.addActionListener(menuListen);
-		physics.add(item);
 
-		item = new MenuItem("rewind");
-		item.setActionCommand("sitStand");
+
+		item = new MenuItem("rewind",new MenuShortcut('G',true));
+		item.setActionCommand("physicsRewind");
 		item.addActionListener(menuListen);
 		physics.add(item);
 
@@ -2006,8 +2035,45 @@ class UI {
 		item.setActionCommand("changeModeExpert");
 		item.addActionListener(menuListen);
 		Mode.add(item);
+		
+		
+		item = new MenuItem("Make It",new MenuShortcut('M',false));
+		item.setActionCommand("viewPattern");
+		item.addActionListener(menuListen);
+		Mode.add(item);
+		
+		item = new MenuItem("Build It",new MenuShortcut('B',false));
+		item.setActionCommand("viewModel");
+		item.addActionListener(menuListen);
+		Mode.add(item);
+		
 		myMenu.add(Mode);
+		
+		
+		
+		
+		
 
+		Menu view = new Menu("View");
+
+		item = new MenuItem("Snap to Grid",new MenuShortcut('I',true));
+		item.setActionCommand("toggleGrid");
+		item.addActionListener(menuListen);
+		view.add(item);
+
+		
+		item = new MenuItem("Ergonomic Figure",new MenuShortcut('E',false));
+		item.setActionCommand("togglePerson");
+		item.addActionListener(menuListen);
+		view.add(item);
+		
+		item = new MenuItem("Floor",new MenuShortcut('F',false));
+		item.setActionCommand("toggleFloor");
+		item.addActionListener(menuListen);
+		view.add(item);
+		
+		myMenu.add(view);
+		
 		/*
 		
 		Menu Language = new Menu("Language");
@@ -2085,6 +2151,42 @@ class UI {
 	Ctrl + Z (Undo)
 	Ctrl + S (Save Chair)
 	Ctrl + P (Print pdf)
+	
+	
+⌘S Save
+⇧⌘ Save As
+
+⌘O Open
+
+⌘Z Undo
+⇧⌘Z Redo
+
+⌘G Physics play/pause
+⇧⌘G Physics reset
+
+⇧⌘I  Show/Hide Grid
+⌘E  Show/Hide Ergonomic Figure
+⌘F  Show/Hide Floor
+
+
+⌘M  make it
+⌘B  build it
+
+
+
+//Tools
+		d Draw Tool
+		a Select Tool
+		b Bezier Tool
+		o Offset Path Tool
+		p Path tool
+		l Leg tools
+		
+		
+		Path Tool
+		Ctrl add remove
+		` DEBUG
+		
 	*/
 	public void keyPressed(char key, int keyCode) {
 			
@@ -2093,6 +2195,8 @@ class UI {
 
 		}
 
+		
+		//LOGGER.info("key pressed" + keyString);
 		if (lastKey != keyCode) {
 			//keyString +=  KeyEvent.getKeyText(keyCode);
 			if (keyCode == 157 || keyCode == 17)
@@ -2102,51 +2206,11 @@ class UI {
 
 			lastKey = keyCode;
 		}
-		LOGGER.debug(keyString);
+		//LOGGER.debug(keyString);
 
 		//shortcuts
-		//copy
-		if (keyString.equals("Ctrlc")) {
-			GLOBAL.uiTools.copyChair();
-			return;
-		}
+	
 
-		//paste
-		if (keyString.equals("Ctrlv")) {
-			GLOBAL.uiTools.pasteChair();
-			return;
-		}
-
-		//undo
-		if (keyString.equals("CtrlZ") || keyString.equals("Ctrlz")) {
-			//GLOBAL.undo.undo();
-			GLOBAL.uiTools.undo(null);
-			return;
-		}
-
-		//undo
-		if (keyString.equals("CtrlS")) {
-			GLOBAL.uiTools.saveChairToFileAuto(null);
-			return;
-		}
-		
-		//undo
-		if (keyString.equals("Ctrlo")) {
-			GLOBAL.uiTools.openChairFromFile(null);
-			return;
-		}
-		
-		//undo
-		if (keyString.equals("Ctrls")) {
-			GLOBAL.uiTools.saveChairToFile(null);
-			return;
-		}
-
-		//undo
-		if (keyString.equals("CtrlP")) {
-			GLOBAL.uiTools.print(null);
-			return;
-		}
 		
 		//reload defaults
 		if (keyString.equals("CtrlR")) {
@@ -2174,27 +2238,30 @@ class UI {
 
 		//  }
 
-		if (key == 'a') {
-			GLOBAL.rotateModelsY -= .1f;
 
+		//Tools
+		if (key == 'd') {
+			GLOBAL.uiTools.SketchTools.selectTool(SketchTools.DRAW_TOOL);
+		}
+		if (key == 'a') {
+			GLOBAL.uiTools.SketchTools.selectTool(SketchTools.SELECT_TOOL);
+		}
+		if (key == 'b') {
+			GLOBAL.uiTools.SketchTools.selectTool(SketchTools.SELECT_BEZIER_TOOL);
+		}	
+		if (key == 'o') {
+			GLOBAL.uiTools.SketchTools.selectTool(SketchTools.DRAW_OFFSETPATH_TOOL);
+		}	
+		if (key == 'p') {
+			GLOBAL.uiTools.SketchTools.selectTool(SketchTools.DRAW_PATH_TOOL);
 		}
 		if (key == 'l') {
-			GLOBAL.jBullet.printDebugInfo();
-
+			GLOBAL.uiTools.SketchTools.selectTool(SketchTools.LEG_TOOL);
 		}
+		
 
-		if (key == 'd') {
-			GLOBAL.shapePack.autoPackPieces = !GLOBAL.shapePack.autoPackPieces;
-		}
-
-		if (key == 'w') {
-			GLOBAL.rotateModelsY += .1f;
-
-		}
-
-		if (key == 's') {
-			//GLOBAL.uiTools.savePDF(null);
-		}
+		
+	
 		if (key == ' ') {
 			GLOBAL.autoRotate = false;
 
@@ -2219,90 +2286,11 @@ class UI {
 			}
 		}
 
-		if (key == 'x') {
-			GLOBAL.sketchChairs.killAll();
 
-		}
-		if (key == ']') {
-			GLOBAL.forceResize = true;
-		}
 
-		if (key == 'g') {
-			GLOBAL.jBullet.physics_on = !GLOBAL.jBullet.physics_on;
-			GLOBAL.person.rememberPosition();
-
-		}
-
-		if (key == '1') {
-			if (GLOBAL.sketchChairs.getCurChair() != null) {
-				GLOBAL.sketchChairs.getCurChair().resetPhysics();
-				GLOBAL.person.resetPhysics();
-				GLOBAL.jBullet.physics_on = false;
-			}
-
-		}
-		if (key == 'm') {
-			SETTINGS.draw_collision_mesh = !SETTINGS.draw_collision_mesh;
-		}
-
-		if (key == '7') {
-			SETTINGS.render_chairs = !SETTINGS.render_chairs;
-
-		}
-
-		if (key == '-') {
-			SETTINGS.RENDER_CENTRE_MASS = !SETTINGS.RENDER_CENTRE_MASS;
-
-		}
-
-		if (key == 'f') {
-			SETTINGS_SKETCH.fill_sketch = !SETTINGS_SKETCH.fill_sketch;
-
-		}
-
-		if (key == 'c') {
-			//SETTINGS_SKETCH.Draw_Curves = !SETTINGS_SKETCH.Draw_Curves;
-
-		}
-
-		if (key == 'k') {
-			GLOBAL.savePDF = true;
-
-		}
-		if (key == 'r') {
-			GLOBAL.autoRotate = !GLOBAL.autoRotate;
-
-		}
-		if (key == 'l') {
-			GLOBAL.uiTools.selectTool(UITools.LEG_TOOL);
-		}
-
-		if (key == 'y') {
-			//	GLOBAL.personTranslate  = !GLOBAL.personTranslate;
-		}
-
-		if (key == 't') {
-			GLOBAL.uiTools.captureScreen(null);
-		}
+	
 
 		
-
-		if (key == 'f') {
-			GLOBAL.floorOn = !GLOBAL.floorOn;
-
-			if (GLOBAL.floorOn)
-				GLOBAL.jBullet.addGround();
-			else
-				GLOBAL.jBullet.removeGround();
-
-		}
-
-		if (key == 'c')
-			SETTINGS.useSliceCollisionDetection = !SETTINGS.useSliceCollisionDetection;
-
-		if (key == 'c')
-			SETTINGS.useSliceCollisionDetection = !SETTINGS.useSliceCollisionDetection;
-
 		if (key == '`') {
 			
 
@@ -2384,121 +2372,13 @@ class UI {
 			}
 		}
 
-		if (key == 'u') {
-			SETTINGS.chair_width -= 1;
-			//System.out.println("chair width now:" + SETTINGS.chair_width);
-		}
-
-		if (key == ']') {
-			if (GLOBAL.sketchChairs.getCurChair() != null) {
-				GLOBAL.sketchChairs.getCurChair().slicePlanesSlatSlices
-						.unselectAll();
-				GLOBAL.sketchChairs.getCurChair().selectedPlanes.clear();
-				GLOBAL.uiTools.curSliceplane = GLOBAL.sketchChairs
-						.getCurChair().getSlicePlanesY().selectNext();
-				//GLOBAL.sketchChairs.curChair.curSlicePlane = 	GLOBAL.uiTools.curSliceplane;
-				GLOBAL.sketchChairs.getCurChair().selectedPlanes
-						.add(GLOBAL.uiTools.curSliceplane);
-			}
-		}
-
-		if (key == '[') {
-			if (GLOBAL.sketchChairs.getCurChair() != null) {
-				GLOBAL.sketchChairs.getCurChair().slicePlanesSlatSlices
-						.unselectAll();
-				GLOBAL.sketchChairs.getCurChair().selectedPlanes.clear();
-				GLOBAL.uiTools.curSliceplane = GLOBAL.sketchChairs
-						.getCurChair().getSlicePlanesY().selectPrev();
-				//GLOBAL.sketchChairs.curChair.curSlicePlane = 	GLOBAL.uiTools.curSliceplane;
-				GLOBAL.sketchChairs.getCurChair().selectedPlanes
-						.add(GLOBAL.uiTools.curSliceplane);
-
-			}
-		}
-
-		if (key == '/') {
-			if (GLOBAL.sketchChairs.getCurChair() != null) {
-				GLOBAL.sketchChairs.getCurChair().selectedPlanes.clear();
-				GLOBAL.sketchChairs.getCurChair().selectedPlanes
-						.add(GLOBAL.sketchChairs.getCurChair()
-								.getSlicePlanesY().getFirst());
-				GLOBAL.sketchChairs.getCurChair().selectedPlanes
-						.add(GLOBAL.sketchChairs.getCurChair()
-								.getSlicePlanesY().getLast());
-			}
-		}
-
-		if (key == '-') {
-			if (GLOBAL.sketchChairs.getCurChair() != null) {
-				/*	GLOBAL.sketchChairs.curChair.selectedPlanes.clear();
-					GLOBAL.sketchChairs.curChair.slicePlanesY.unselectAll();
-					GLOBAL.uiTools.curSliceplane = GLOBAL.sketchChairs.curChair.slicePlanesX.selectNext();
-					//GLOBAL.sketchChairs.curChair.curSlicePlane = 	GLOBAL.uiTools.curSliceplane;
-					GLOBAL.sketchChairs.curChair.selectedPlanes.add(GLOBAL.uiTools.curSliceplane);
-				*/
-			}
-		}
-
-		if (key == 'n') {
-			if (GLOBAL.sketchChairs.getCurChair() != null) {
-				GLOBAL.sketchChairs.getCurChair().deleteSelectedLayers();
-			}
-		}
-
-		if (key == ';') {
-			if (GLOBAL.sketchChairs.getCurChair() != null) {
-				GLOBAL.sketchChairs.getCurChair().getSlicePlanesY()
-						.unselectAll();
-				GLOBAL.uiTools.curSliceplane = GLOBAL.sketchChairs
-						.getCurChair().slicePlanesSlatSlices.selectPrev();
-				//GLOBAL.sketchChairs.curChair.curSlicePlane = 	GLOBAL.uiTools.curSliceplane;
-				GLOBAL.sketchChairs.getCurChair().selectedPlanes
-						.add(GLOBAL.uiTools.curSliceplane);
-
-			}
-		}
-		if (key == '\\') {
-			if (GLOBAL.sketchChairs.getCurChair() != null) {
-				GLOBAL.sketchChairs.getCurChair().selectedPlanes
-						.add(GLOBAL.sketchChairs.getCurChair().slicePlanesSlatSlices);
-				GLOBAL.sketchChairs.getCurChair().selectedPlanes
-						.add(GLOBAL.sketchChairs.getCurChair()
-								.getSlicePlanesY());
-
-			}
-		}
-
-		if (key == 'h') {
-			if (GLOBAL.sketchChairs.getCurChair() != null) {
-				//	GLOBAL.sketchChairs.curChair.hybernateCopy();
-			}
-		}
-
+	
 		if (key == 'o') {
 
 			GLOBAL.person.printOrigins();
 		}
 
-		if (key == 'e') {
-			GLOBAL.environments.render = !GLOBAL.environments.render;
-		}
 		
-		if(key == 'u'){
-			GLOBAL.slicesWidget.unselectAll();
-			GLOBAL.planesWidget.unselectAll();
-		}
-
-		if (key == 'k') {
-			GLOBAL.applet.setup();
-			//GLOBAL.
-			//GLOBAL.applet.start();
-			//	GLOBAL.applet.res
-		}
-
-		if (key == 'p') {
-			GLOBAL.uiTools.toggleView(null);
-		}
-
 		// if(key == 'm')
 	}
 

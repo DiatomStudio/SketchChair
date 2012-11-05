@@ -178,6 +178,8 @@ public class SketchChair {
 
 	private boolean initailSliceAdded = false;
 
+	public int selectedPlaneNumber;
+
 	SketchChair() {
 		// this.sketchSpline.slots_on_inside = true;
 		// this.sketchShapes.add(this.sketchSpline);
