@@ -45,13 +45,14 @@ package ModalGUI;
 import java.util.ArrayList;
 import java.util.Date;
 
+import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-
+import cc.sketchchair.core.KeyEventSK;
 import cc.sketchchair.core.LOGGER;
+import cc.sketchchair.core.MouseEventSK;
+import cc.sketchchair.core.MouseWheelEventSK;
 
 /**
  * description for singleline textfield. create a texfield with<br />
@@ -243,20 +244,20 @@ public class GUITextfield extends GUIComponent {
 	 * @invisible
 	 */
 	@Override
-	public void keyEvent(KeyEvent theKeyEvent) {
+	public void keyEvent(KeyEventSK theKeyEvent) {
 
 
 		if (isTexfieldActive && isActive
-				&& theKeyEvent.getID() == KeyEvent.KEY_PRESSED) {
+				&& theKeyEvent.getAction() == KeyEventSK.PRESS) {
 
-			if (theKeyEvent.getKeyCode() == KeyEvent.VK_UP) {
+			if (theKeyEvent.getKeyCode() == PApplet.UP) {
 				if (myTextList.size() > 0 && myIndex > 0) {
 					myIndex--;
 					myTextline = new StringBuffer(
 							(String) myTextList.get(myIndex));
 					adjust();
 				}
-			} else if (theKeyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
+			} else if (theKeyEvent.getKeyCode() == PApplet.DOWN) {
 				myIndex++;
 				if (myIndex >= myTextList.size()) {
 					myIndex = myTextList.size();
@@ -266,31 +267,31 @@ public class GUITextfield extends GUIComponent {
 							(String) myTextList.get(myIndex));
 				}
 				adjust();
-			} else if (theKeyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
+			} else if (theKeyEvent.getKeyCode() == PApplet.LEFT) {
 				if (myPosition > 0) {
 					myPosition--;
 				}
-			} else if (theKeyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+			} else if (theKeyEvent.getKeyCode() == PApplet.RIGHT) {
 				if (myPosition < myTextline.length()) {
 					myPosition++;
 				}
-			} else if (theKeyEvent.getKeyCode() == KeyEvent.VK_DELETE
-					|| theKeyEvent.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			} else if (theKeyEvent.getKeyCode() == PApplet.DELETE
+					|| theKeyEvent.getKeyCode() == PApplet.BACKSPACE) {
 				if (myTextline.length() > 0) {
 					if (myPosition > 0) {
 						myTextline.deleteCharAt(myPosition - 1);
 						myPosition--;
 					}
 				}
-			} else if (theKeyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
+			} else if (theKeyEvent.getKeyCode() == PApplet.ENTER) {
 				submit();
-			} else if (theKeyEvent.getKeyCode() != KeyEvent.VK_SHIFT
-					&& theKeyEvent.getKeyCode() != KeyEvent.VK_ALT
-					&& theKeyEvent.getKeyCode() != KeyEvent.VK_CONTROL) {
+			} else if (theKeyEvent.getKeyCode() != PApplet.SHIFT
+					&& theKeyEvent.getKeyCode() != PApplet.ALT
+					&& theKeyEvent.getKeyCode() != PApplet.CONTROL) {
 
 				if (theKeyEvent.getKeyCode() >= 31
 						&& theKeyEvent.getKeyCode() <= 127) {
-					myTextline.insert(myPosition, theKeyEvent.getKeyChar());
+					myTextline.insert(myPosition, theKeyEvent.getKey());
 					myPosition++;
 				}
 			}
@@ -313,17 +314,17 @@ public class GUITextfield extends GUIComponent {
 
 	
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public void mouseWheelMoved(MouseWheelEventSK e) {
 	}
 	@Override
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 		//
 
 		
-		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getAction() == MouseEventSK.PRESS) {
 			if (isMouseOver())
 				wasClicked = true;
-		} else if (e.getID() == MouseEvent.MOUSE_RELEASED && wasClicked
+		} else if (e.getAction() == MouseEventSK.RELEASE && wasClicked
 				&& isMouseOver()) {
 			//  fireEventNotification(this, "Clicked");
 			this.isActive = true;
@@ -331,7 +332,7 @@ public class GUITextfield extends GUIComponent {
 			this.setFocus(true);
 		}
 
-		if (e.getID() == MouseEvent.MOUSE_RELEASED && wasClicked
+		if (e.getAction() == MouseEventSK.RELEASE && wasClicked
 				&& !isMouseOver()) {
 			this.isActive = false;
 			this.isTexfieldActive = false;

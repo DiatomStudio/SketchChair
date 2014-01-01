@@ -21,6 +21,7 @@ package cc.sketchchair.widgets;
 
 import cc.sketchchair.core.GLOBAL;
 import cc.sketchchair.core.LOGGER;
+import cc.sketchchair.core.Localization;
 import cc.sketchchair.core.SETTINGS;
 import cc.sketchchair.core.UITools;
 
@@ -75,7 +76,7 @@ public class WidgetMaterials extends GUIPanel{
 		
 		
 		
-		label = new GUILabel(20, 30, "scale", gui);
+		label = new GUILabel(20, 30, Localization.getString("scale"), gui);
 		add(label);
 		
 		
@@ -86,7 +87,7 @@ public class WidgetMaterials extends GUIPanel{
 		scaleSlider.setShowValLabel(true);
 		scaleSlider.setFormatValLabel("1:%1$.0f");
 		scaleSlider.setLabelValMultiplier(1.0f);
-		scaleSlider.setEndImgs(GLOBAL.applet.loadImage("gui/SLIDER_DESIGN_SCALE_MIN.png"),GLOBAL.applet.loadImage("gui/SLIDER_DESIGN_SCALE_MAX.png"));
+		scaleSlider.setEndImgs(GLOBAL.applet.loadImage("gui/SLIDER_DESIGN_SCALE_MAX.png"),GLOBAL.applet.loadImage("gui/SLIDER_DESIGN_SCALE_MIN.png"));
 		add(scaleSlider);
 		
 		
@@ -97,7 +98,7 @@ public class WidgetMaterials extends GUIPanel{
 
 		slotSizeTextfield.setText(
 				Float.toString(SETTINGS.materialThickness));
-		slotSizeTextfield.setLabel("mm (d)");
+		slotSizeTextfield.setLabel(Localization.getString("mm_d"));
 
 		add(slotSizeTextfield);
 		slotSizeTextfield.setParentPanel(
@@ -107,18 +108,18 @@ public class WidgetMaterials extends GUIPanel{
 		
 		
 		
-		label = new GUILabel(250, 30, "width", gui);
+		label = new GUILabel(250, 30, Localization.getString("width"), gui);
 		add(label);
 		GUINumberfield numberField = new GUINumberfield(300, 30, 60, 15, gui);
-		numberField.setLabel("mm (w)");
+		numberField.setLabel(Localization.getString("mm_w"));
 		numberField.setText(String.valueOf(GLOBAL.shapePack.materialWidth));
 		numberField.addActionListener(GLOBAL.shapePack, "materialWidth");
 		add(numberField);
 
-		label = new GUILabel(250, 50, "height", gui);
+		label = new GUILabel(250, 50, Localization.getString("height"), gui);
 		add(label);
 		numberField = new GUINumberfield(300, 50, 60, 15, gui);
-		numberField.setLabel("mm (h)");
+		numberField.setLabel(Localization.getString("mm_h"));
 		numberField.setText(String.valueOf(GLOBAL.shapePack.materialHeight));
 		numberField.addActionListener(GLOBAL.shapePack, "materialHeight");
 		add(numberField);
@@ -156,24 +157,24 @@ public class WidgetMaterials extends GUIPanel{
 	
 		toggleDogbones = new GUIToggle(500, 15, toggleSize, toggleSize, "gui/GUI_MATERIAL_DOGBONE_SLOT.png",gui);
 		toggleDogbones.addActionListener(GLOBAL.shapePack, "addDogbones");
-		toggleDogbones.setLabel("add dogbones");
+		toggleDogbones.setLabel(Localization.getString("add_dogbones"));
 		//toggle.label.align = GUILabel.CENTRE; toggle.label.layout = GUILabel;
 		add(toggleDogbones);
 
 		toggle = new GUIToggle(500, 40, toggleSize, toggleSize, "gui/GUI_MATERIAL_SEPERATE_SLOT.png",gui);
 		toggle.addActionListener(GLOBAL.SketchGlobals, "seperate_slots");
-		toggle.setLabel("seperate slots");
+		toggle.setLabel(Localization.getString("seperate_slots"));
 		//toggle.label.align = GUILabel.CENTRE; toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		add(toggle);
 
 		toggle = new GUIToggle(500, 65, toggleSize, toggleSize, "gui/GUI_MATERIAL_BEVEL_SLOT.png",gui);
 		toggle.addActionListener(GLOBAL.shapePack, "add_guide_divets");
-		toggle.setLabel("is paper cut");
+		toggle.setLabel(Localization.getString("is_paper_cut"));
 		//toggle.label.align = GUILabel.CENTRE; toggle.label.layout = GUILabel;
 		add(toggle);
 
 		cuttingBitSize = new GUINumberfield(650, 15, 30, 15, gui);
-		cuttingBitSize.setLabel("bit size(mm)");
+		cuttingBitSize.setLabel(Localization.getString("bit_size_mm"));
 		cuttingBitSize.setText("5");
 		cuttingBitSize.addActionListener(GLOBAL.shapePack, "inner_corner_radius");
 		
@@ -195,7 +196,7 @@ public class WidgetMaterials extends GUIPanel{
 			//toggle.label.align = GUILabel.CENTRE; toggle.label.layout = GUILabel;
 			add(toggle);
 			
-		GUIButton button = new GUIButton(800, 30, 60, 15,"Apply", gui);
+		GUIButton button = new GUIButton(800, 30, 60, 15,Localization.getString("apply"), gui);
 		button.addActionListener(GLOBAL.uiTools, "applyMaterialSettings");
 		add(button);
 	}
@@ -216,14 +217,14 @@ public class WidgetMaterials extends GUIPanel{
 		this.panel = new GUIPanel(GLOBAL.windowWidth - 240, 7, 220f, 70f, gui);
 		gui.add(this.panel);
 
-		this.panel.setLabel("materials");
+		this.panel.setLabel(Localization.getString("materials"));
 
 		slotSizeTextfield = new GUINumberfield(panelX, 25, 60, 15, gui);
 		
 
 		slotSizeTextfield.setText(
 				Float.toString(SETTINGS.DEFAULT_MATERIAL_WIDTH));
-		slotSizeTextfield.setLabel("mm:   material width");
+		slotSizeTextfield.setLabel(Localization.getString("mm_material_width"));
 		
 		panel.add(slotSizeTextfield);
 		slotSizeTextfield.setParentPanel(this.panel);

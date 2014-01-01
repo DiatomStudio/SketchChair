@@ -29,6 +29,7 @@ import javax.jnlp.ServiceManager;
 
 import cc.sketchchair.core.GLOBAL;
 import cc.sketchchair.core.LOGGER;
+import cc.sketchchair.core.Localization;
 import cc.sketchchair.core.SETTINGS;
 import cc.sketchchair.core.UITools;
 import cc.sketchchair.sketch.SketchTools;
@@ -251,7 +252,7 @@ public class Environments {
 		this.panel = new GUIPanel(GLOBAL.windowWidth - 240, 220, 220f, 110f,
 				true, applet, gui);
 		gui.add(this.panel);
-		this.panel.setLabel("environments");
+		this.panel.setLabel(Localization.getString("environments"));
 
 		/*
 		buttonAddPlane = new GUI.GUIButton(panelX, 15, "proButtons/GUI_PLANE_ADD_UP.png",

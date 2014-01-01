@@ -22,6 +22,7 @@ package cc.sketchchair.widgets;
 import processing.core.PGraphics;
 import cc.sketchchair.core.GLOBAL;
 import cc.sketchchair.core.LOGGER;
+import cc.sketchchair.core.Localization;
 import cc.sketchchair.core.UITools;
 import cc.sketchchair.sketch.SketchShape;
 import cc.sketchchair.sketch.SketchSpline;
@@ -107,7 +108,7 @@ public class WidgetToolSettings extends GUIPanel {
 		
 		yPos = 32;
 		GUISlider brushSize = new GUISlider(20, yPos, 150, 1, 100, gui);
-		brushSize.setLabel("brush size");
+		brushSize.setLabel(Localization.getString("brush_size"));
 		brushSize.addActionListener(GLOBAL.uiTools, "setBrushDia",
 				UITools.SCALE_TOOL);
 		brushSize.setVal(GLOBAL.uiTools.SketchTools.brush_dia);

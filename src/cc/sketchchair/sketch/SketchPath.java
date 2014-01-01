@@ -2797,7 +2797,10 @@ g.rect(curVec.x,curVec.y,0.5f,0.5f);
 				svgString += "L " + point.x+ "," + point.y + " ";
 			}
 			
+
 		}
+		
+		
 		
 		svgString += " Z";
 		

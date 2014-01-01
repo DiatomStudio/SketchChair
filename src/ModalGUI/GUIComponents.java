@@ -19,13 +19,16 @@
  ******************************************************************************/
 package ModalGUI;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.sketchchair.core.KeyEventSK;
+import cc.sketchchair.core.MouseEventSK;
+import cc.sketchchair.core.MouseWheelEventSK;
 import processing.core.PGraphics;
+
+import cc.sketchchair.core.MouseEventSK;
 
 public class GUIComponents extends GUIComponent {
 
@@ -79,21 +82,21 @@ public class GUIComponents extends GUIComponent {
 		return false;
 	}
 
-	public void keyEvent(KeyEvent keyevent) {
+	public void keyEvent(KeyEventSK keyevent) {
 		for (int i = 0; i < this.l.size(); i++) {
 			GUIComponent component = (GUIComponent) this.l.get(i);
 			component.keyEvent(keyevent);
 		}
 	}
 
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 		for (int i = 0; i < this.l.size(); i++) {
 			GUIComponent component = (GUIComponent) this.l.get(i);
 			component.mouseEvent(e);
 		}
 	}
 	
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public void mouseWheelMoved(MouseWheelEventSK e) {
 		for (int i = 0; i < this.l.size(); i++) {
 			GUIComponent component = (GUIComponent) this.l.get(i);
 			component.mouseWheelMoved(e);

@@ -19,14 +19,15 @@
  ******************************************************************************/
 package ModalGUI;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;
+import cc.sketchchair.core.KeyEventSK;
+import cc.sketchchair.core.MouseEventSK;
+import cc.sketchchair.core.MouseWheelEventSK;
 
 public class GUIPanelTabbed extends GUIComponent {
 
@@ -49,7 +50,7 @@ public class GUIPanelTabbed extends GUIComponent {
 
 	public void addTabbedPanel(GUIPanel panel) {
 	    GUIToggle toggle = new GUIToggle(lastTabX, -32f,
-				panel.tittle.length() * 18, 32f, panel.tittle, toggleSet,
+				(panel.tittle.length() * 18)+45, 32f, panel.tittle, toggleSet,
 				this.controller);
 	    toggle.cornerRad = 3f;
 		
@@ -75,7 +76,7 @@ public class GUIPanelTabbed extends GUIComponent {
 		toggle.label.textSize = 12;
 		toggle.isTab = true;
 
-		lastTabX += ((panel.tittle.length() * 18) + 1);
+		lastTabX += ((panel.tittle.length() * 18) + 1+45);
 		
 		panel.setFillColour(function.color(249, 249, 249));
 		panel.setStrokeColour(function.color(147, 147, 147));
@@ -162,20 +163,20 @@ public class GUIPanelTabbed extends GUIComponent {
 	}
 
 	@Override
-	public void keyEvent(KeyEvent theKeyEvent) {
+	public void keyEvent(KeyEventSK theKeyEvent) {
 		this.panels.keyEvent(theKeyEvent);
 	}
 
 	
 	
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public void mouseWheelMoved(MouseWheelEventSK e) {
 		this.getBasePanel().mouseWheelMoved(e);
 		this.panels.mouseWheelMoved(e);
 
 	}
 	@Override
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 		if (!this.visible)
 			return ;
 		

@@ -38,6 +38,7 @@
         <javac destdir="classes/src" includes="**/*.java" debug="true" verbose="true" target="1.5">
             <src path="src" />
             <exclude name="**/processingjs/**" />
+            <include name="**/*.properties"/>
             <classpath refid="libraries" />
             <classpath refid="one-jar.libraries"/>
             <classpath path="${one-jar.ant.jar}"/>
@@ -62,10 +63,13 @@
             <lib>
                 <fileset dir="lib" includes="*.jar">
                 <exclude name="**/processingjs/**" />
-                </fileset>                
+                </fileset>    
+            	 <fileset dir="libLegacy" includes="*.jar">
+            	  </fileset>   
             </lib>
             <fileset dir="data"/>
-            
+            <fileset dir="languages"/>
+
 
 
 <binlib>

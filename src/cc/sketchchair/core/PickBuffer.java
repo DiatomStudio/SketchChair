@@ -45,7 +45,7 @@ public class PickBuffer {
 	  
 	  
 	 public PGraphics pickBuffer;
-	 float pickBufferRes = 0.5f;
+	 float pickBufferRes = 0.25f;
 	 public boolean renderPickBuffer = false; 
 	 public boolean usePickBuffer = true;
 	 List pickObjects = new ArrayList();
@@ -75,6 +75,10 @@ public class PickBuffer {
 
 
 	public Object getObject(int mouseX, int mouseY) {
+		
+	
+		
+		
 		pickBuffer.beginDraw();
 		int col = pickBuffer.get((int)(mouseX*pickBufferRes),(int)( mouseY*pickBufferRes));
 		pickBuffer.endDraw();

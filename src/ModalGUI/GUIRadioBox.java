@@ -19,8 +19,7 @@
  ******************************************************************************/
 package ModalGUI;
 
-import java.awt.event.MouseEvent;
-
+import cc.sketchchair.core.MouseEventSK;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
@@ -45,12 +44,12 @@ public class GUIRadioBox extends GUIComponent {
 		this.setSize(w, w);
 	}
 
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 
 		if (this.destroy)
 			return;
 
-		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getID() == MouseEventSK.MOUSE_PRESSED) {
 			if (isMouseOver()) {
 				if (set != null)
 					set.setAllUp();
@@ -59,7 +58,7 @@ public class GUIRadioBox extends GUIComponent {
 				wasClicked = true;
 
 			}
-		} else if (e.getID() == MouseEvent.MOUSE_RELEASED && wasClicked
+		} else if (e.getID() == MouseEventSK.MOUSE_RELEASED && wasClicked
 				&& isMouseOver()) {
 			fireEventNotification(this, "Clicked");
 			wasClicked = false;

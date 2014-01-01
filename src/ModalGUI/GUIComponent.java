@@ -19,20 +19,21 @@
  ******************************************************************************/
 package ModalGUI;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.sketchchair.core.KeyEventSK;
+import cc.sketchchair.core.MouseEventSK;
+import cc.sketchchair.core.MouseWheelEventSK;
 import cc.sketchchair.sketch.LOGGER;
-
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
+
+import cc.sketchchair.core.MouseEventSK;
 
 public abstract class GUIComponent {
 	protected  boolean mouseOver = false;
@@ -94,8 +95,8 @@ public abstract class GUIComponent {
 	}
 
 	public void destroy() {
-		controller.applet.unregisterMouseEvent(this);
-		controller.applet.unregisterKeyEvent(this);
+	//	controller.applet.unregisterMouseEventSK(this);
+	//	controller.applet.unregisterKeyEvent(this);
 		controller.reBuildStencilBuffer();
 		this.destroy = true;
 		//System.out.println("destroy");
@@ -323,11 +324,12 @@ public abstract class GUIComponent {
 				&& mouseY >= this.getY() && mouseY <= this.getY() + h;
 	}
 
-	public void keyEvent(KeyEvent keyevent) {
+	public void keyEvent(KeyEventSK keyevent) {
 
 	}
+	
 
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 		if (this.destroy)
 			return;
 
@@ -337,14 +339,41 @@ public abstract class GUIComponent {
 			
 		
 
-		//MouseEvent.MOUSE_PRESSED
+		//MouseEventSK.MOUSE_PRESSED
 
-		if (e.getID() == 501) {
+		if (e.getAction() == MouseEventSK.CLICK){
 			if (isMouseOver() && this.visible){
 				wasClicked = true;
 				reRender();
 			}
-		} else if (e.getID() == 502 && wasClicked && isMouseOver()
+		} else if (e.getAction()  == MouseEventSK.RELEASE && wasClicked && isMouseOver()
+				&& this.visible) {
+			fireEventNotification(this, "Clicked");
+			wasClicked = false;
+		}
+	}
+
+	
+	
+
+	public void mouseEventLegacy(MouseEventSK e) {
+		if (this.destroy)
+			return;
+
+		if (!this.visible)
+			return;
+
+			
+		
+
+		//MouseEventSK.MOUSE_PRESSED
+
+		if (e.getAction() == MouseEventSK.CLICK){
+			if (isMouseOver() && this.visible){
+				wasClicked = true;
+				reRender();
+			}
+		} else if (e.getAction()  == MouseEventSK.RELEASE && wasClicked && isMouseOver()
 				&& this.visible) {
 			fireEventNotification(this, "Clicked");
 			wasClicked = false;
@@ -490,7 +519,7 @@ public abstract class GUIComponent {
 
 	}
 
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public void mouseWheelMoved(MouseWheelEventSK e) {
 		// TODO Auto-generated method stub
 		
 	}

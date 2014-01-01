@@ -270,7 +270,7 @@ loginWindow.add(tittle);
 loginUsername = new GUITextfield(20, 40, 100,
 		15, GLOBAL.gui);
 loginUsername.setText("");
-loginUsername.setLabel("username");
+loginUsername.setLabel(Localization.getString("username"));
 loginUsername.setFocus(true);
 loginUsername.isTexfieldActive = true;
 loginUsername.isActive = true;
@@ -281,7 +281,7 @@ loginWindow.add(loginUsername);
 loginPassword = new GUITextfield(20, 60, 100,
 		15, GLOBAL.gui);
 loginPassword.setText("");
-loginPassword.setLabel("password");
+loginPassword.setLabel(Localization.getString("password"));
 loginPassword.setPasswordMode(true);
 loginWindow.add(loginPassword);
 

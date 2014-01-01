@@ -19,15 +19,15 @@
  ******************************************************************************/
 package cc.sketchchair.widgets;
 
-import java.awt.event.MouseEvent;
 
 import cc.sketchchair.core.GLOBAL;
 import cc.sketchchair.core.LOGGER;
+import cc.sketchchair.core.Localization;
+import cc.sketchchair.core.MouseEventSK;
 import cc.sketchchair.core.SETTINGS;
 import cc.sketchchair.core.UITools;
 import cc.sketchchair.geometry.SlicePlane;
 import cc.sketchchair.geometry.SlicePlanes;
-
 import ModalGUI.GUIButton;
 import ModalGUI.GUIComponent;
 import ModalGUI.GUIComponents;
@@ -196,7 +196,7 @@ public class WidgetPlanes extends GUIPanel {
 	}
 
 	@Override
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 
 		if (!this.visible)
 			return;
@@ -206,15 +206,15 @@ public class WidgetPlanes extends GUIPanel {
 		int mouseX = controller.applet.mouseX;
 		int mouseY = controller.applet.mouseY;
 
-		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getAction() == MouseEventSK.PRESS) {
 			this.mousePressed(mouseX, mouseY);
 
-		} else if (e.getID() == MouseEvent.MOUSE_RELEASED && wasClicked
+		} else if (e.getAction() == MouseEventSK.RELEASE && wasClicked
 				&& isMouseOver()) {
 			this.mouseClicked(mouseX, mouseY);
 		}
 
-		if (e.getID() == MouseEvent.MOUSE_RELEASED) {
+		if (e.getAction() == MouseEventSK.RELEASE) {
 			this.mouseReleased(mouseX, mouseY);
 		}
 
@@ -398,8 +398,9 @@ public class WidgetPlanes extends GUIPanel {
 	}
 
 	public void selectAllPlanes(GUIEvent e) {
-		GLOBAL.sketchChairs.getCurChair().selectedPlanes.empty();
 		if (GLOBAL.sketchChairs.getCurChair() != null) {
+			GLOBAL.sketchChairs.getCurChair().selectedPlanes.empty();
+
 			GLOBAL.sketchChairs.getCurChair().selectedPlanes
 					.add(GLOBAL.sketchChairs.getCurChair().slicePlanesSlatSlices);
 			GLOBAL.sketchChairs.getCurChair().selectedPlanes
@@ -419,7 +420,7 @@ public class WidgetPlanes extends GUIPanel {
 				"gui/GUI_LAYER_NEWLAYER_BUTTON.png", this.controller);
 		buttonAddPlane.addActionListener(GLOBAL.uiTools, "addPlane",
 				UITools.LEG_TOOL);
-		buttonAddPlane.setLabel("new");
+		buttonAddPlane.setLabel(Localization.getString("new"));
 		buttonAddPlane.label.align = GUILabel.CENTRE;
 		buttonAddPlane.label.layout = GUILabel.UNDER_COMPONENT;
 		placeComponent(buttonAddPlane);
@@ -429,7 +430,7 @@ public class WidgetPlanes extends GUIPanel {
 				"gui/GUI_LAYER_DELETE_BUTTON.png", this.controller);
 		buttonDeletePlane.addActionListener(GLOBAL.uiTools,
 				"removeSelectedPlanes", UITools.LEG_TOOL);
-		buttonDeletePlane.setLabel("delete");
+		buttonDeletePlane.setLabel(Localization.getString("delete"));
 		buttonDeletePlane.label.align = GUILabel.CENTRE;
 		buttonDeletePlane.label.layout = GUILabel.UNDER_COMPONENT;
 
@@ -440,7 +441,7 @@ public class WidgetPlanes extends GUIPanel {
 				"gui/GUI_LAYER_MIRROR_BUTTON.png", this.controller);
 		mirrorPlaneToggle.addActionListener(this, "mirrorPlanesToggle",
 				UITools.LEG_TOOL);
-		mirrorPlaneToggle.setLabel("mirror");
+		mirrorPlaneToggle.setLabel(Localization.getString("mirror"));
 		mirrorPlaneToggle.label.align = GUILabel.CENTRE;
 		mirrorPlaneToggle.label.layout = GUILabel.UNDER_COMPONENT;
 
@@ -455,7 +456,7 @@ public class WidgetPlanes extends GUIPanel {
 				"gui/GUI_LAYER_SELECTALL_BUTTON.png", this.controller);
 		this.selectAllPlanes.addActionListener(this, "selectAllPlanes",
 				UITools.LEG_TOOL);
-		this.selectAllPlanes.setLabel("all");
+		this.selectAllPlanes.setLabel(Localization.getString("all"));
 		this.selectAllPlanes.label.align = GUILabel.CENTRE;
 		this.selectAllPlanes.label.layout = GUILabel.UNDER_COMPONENT;
 		///this.selectAllPlanes.addToolTip(GLOBAL.applet,
@@ -468,7 +469,7 @@ public class WidgetPlanes extends GUIPanel {
 				"gui/GUI_LAYER_GUIDELAYER_BUTTON.png", this.controller);
 		this.toggleGuide.addActionListener(this, "toggleGuide",
 				UITools.LEG_TOOL);
-		toggleGuide.setLabel("guide");
+		toggleGuide.setLabel(Localization.getString("guide"));
 		toggleGuide.label.align = GUILabel.CENTRE;
 		toggleGuide.label.layout = GUILabel.UNDER_COMPONENT;
 
@@ -481,7 +482,7 @@ public class WidgetPlanes extends GUIPanel {
 		slider = new GUISlider(550, 40, 150, 0, 2000, this.controller);
 		slider.setParentPanel(this);
 		slider.setVal(SETTINGS.chair_width);
-		slider.setLabel("chair width");
+		slider.setLabel(Localization.getString("chair_width"));
 		slider.label.align = GUILabel.CENTRE;
 		slider.label.layout = GUILabel.UNDER_COMPONENT;
 		slider.setShowValLabel(true);

@@ -25,6 +25,7 @@ import cc.sketchchair.core.CrossSliceSelection;
 import cc.sketchchair.core.CrossSliceSelections;
 import cc.sketchchair.core.GLOBAL;
 import cc.sketchchair.core.LOGGER;
+import cc.sketchchair.core.Localization;
 import cc.sketchchair.core.SETTINGS;
 import cc.sketchchair.core.UITools;
 import cc.sketchchair.geometry.SlicePlane;
@@ -365,7 +366,7 @@ public class WidgetSlices extends GUIPanel {
 		GUIButton button = new GUIButton(10f, yPos, 45, 45,
 				"gui/GUI_SLICE_EDIT_BUTTOM.png", null, this.controller);
 		button.addActionListener(this, "editSlice", this.sliceSelections.l.indexOf(sliceSelection));
-		button.setLabel("edit");
+		button.setLabel( Localization.getString("edit"));
 		button.label.align = GUILabel.CENTRE;
 		button.label.layout = GUILabel.UNDER_COMPONENT;
 		this.propertiesPanel.add(button);
@@ -376,7 +377,7 @@ public class WidgetSlices extends GUIPanel {
 		button.addActionListener(sliceSelection, "destroy", UITools.LEG_TOOL);
 		button.addActionListener(this, "removeSliceCleanup", null);
 
-		button.setLabel("delete");
+		button.setLabel(Localization.getString("delete"));
 		button.label.align = GUILabel.CENTRE;
 		button.label.layout = GUILabel.UNDER_COMPONENT;
 		this.propertiesPanel.add(button);
@@ -456,7 +457,7 @@ public class WidgetSlices extends GUIPanel {
 		toggle = new GUIToggle(xPos, yPos,"gui/GUI_MATERIAL_THROUGHALL_SLOT.png", this.controller);
 		toggle.addActionListener(sliceSelection, "toggleConstrainToshape",
 				UITools.LEG_TOOL);
-		toggle.setLabel("through\nall");
+		toggle.setLabel(Localization.getString("through_all"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		this.propertiesPanel.add(toggle);
@@ -470,7 +471,7 @@ public class WidgetSlices extends GUIPanel {
 				CrossSliceSelection.CAP_INSIDE);
 		toggle.addActionListener(this, "rebuildChair",
 				CrossSliceSelection.CAP_CURVE);
-		toggle.setLabel("flip\nslots");
+		toggle.setLabel(Localization.getString("flip_slots"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		toggle.setState(sliceSelection.flipSide);
@@ -483,7 +484,7 @@ public class WidgetSlices extends GUIPanel {
 				CrossSliceSelection.CAP_INSIDE);
 		toggle.addActionListener(this, "rebuildChair",
 				CrossSliceSelection.CAP_CURVE);
-		toggle.setLabel("smooth");
+		toggle.setLabel((Localization.getString("smooth")));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		toggle.setState(sliceSelection.smooth);
@@ -496,7 +497,7 @@ public class WidgetSlices extends GUIPanel {
 				CrossSliceSelection.CAP_INSIDE);
 		toggle.addActionListener(this, "rebuildChair",
 				CrossSliceSelection.CAP_CURVE);
-		toggle.setLabel("flush\ntops");
+		toggle.setLabel(Localization.getString("flush_tops"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		toggle.setState(sliceSelection.smooth);
@@ -520,7 +521,7 @@ public class WidgetSlices extends GUIPanel {
 			
 			
 			
-			toggle.setLabel("extend\nto top");
+			toggle.setLabel(Localization.getString("extend_to_top"));
 			toggle.label.align = GUILabel.CENTRE;
 			toggle.label.layout = GUILabel.UNDER_COMPONENT;
 			toggle.setState(sliceSelection.extendLegSliceToTopOfLeg);
@@ -538,7 +539,7 @@ public class WidgetSlices extends GUIPanel {
 				sHeight = "";
 
 			slatHeight.setText(sHeight);
-			slatHeight.setLabel("slice\nheight");
+			slatHeight.setLabel(Localization.getString("slice_height"));
 			slatHeight.label.align = GUILabel.CENTRE;
 			slatHeight.label.layout = GUILabel.UNDER_COMPONENT;
 			this.propertiesPanel.add(slatHeight);
@@ -552,7 +553,7 @@ public class WidgetSlices extends GUIPanel {
 			slatHeight.addActionListener(sliceSelection, "teethCount");
 			String sHeight = Float.toString(sliceSelection.teethCount);
 			slatHeight.setText(sHeight);
-			slatHeight.setLabel("teeth count");
+			slatHeight.setLabel(Localization.getString("teeth_count"));
 			this.propertiesPanel.add(slatHeight);
 
 			GUINumberfield fingerTollerance = new GUINumberfield(230, 65, 60,
@@ -561,7 +562,7 @@ public class WidgetSlices extends GUIPanel {
 					"fingerTollerance");
 			String fingetTol = Float.toString(sliceSelection.fingerTollerance);
 			fingerTollerance.setText(fingetTol);
-			fingerTollerance.setLabel("finger tollerance");
+			fingerTollerance.setLabel(Localization.getString("finger_tollerance"));
 			this.propertiesPanel.add(fingerTollerance);
 		}
 		//this.scrollPanel.add(labelButton);

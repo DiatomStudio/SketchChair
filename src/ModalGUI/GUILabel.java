@@ -19,11 +19,10 @@
  ******************************************************************************/
 package ModalGUI;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-
+import cc.sketchchair.core.KeyEventSK;
 import cc.sketchchair.core.LOGGER;
-
+import cc.sketchchair.core.Legacy;
+import cc.sketchchair.core.MouseEventSK;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;
@@ -76,12 +75,12 @@ public class GUILabel extends GUIComponent {
 	}
 
 	@Override
-	public void keyEvent(KeyEvent keyevent) {
+	public void keyEvent(KeyEventSK keyevent) {
 	super.keyEvent(keyevent);
 	}
 
 	@Override
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 	super.mouseEvent(e);
 	}
 
@@ -94,16 +93,17 @@ public class GUILabel extends GUIComponent {
 		float w = (int)g.textWidth(str) + 4;
 		float h = (getController().labelSize + g.textDescent()+ g.textAscent()) * ln;
 		PGraphics textG = getController().appletStatic.createGraphics((int) w,
-				(int) h, PApplet.OPENGL);
+				(int) h, Legacy.instance().get2DRenderMode());
 		
 		this.setSize(w, h);
 		textG.beginDraw();
-		textG.smooth(2);
-		//textG.background(255);
+		//textG.smooth();
+		textG.background(255,255,255,0);
 		
 		//textG.textMode(PApplet.SCREEN);
 		textG.textSize(this.textSize);
 		textG.textFont(getController().myFontMedium,this.textSize);
+		
 		//textG.textFont(myFont);
 		//textG.textMode(PApplet.SCREEN);
 		//textG.alpha(1);
@@ -126,7 +126,9 @@ public class GUILabel extends GUIComponent {
 						- (g.textDescent()+g.textAscent() - 1)
 						- ((getController().labelSize + g.textDescent() + 1) * (ln - 1)));
 		textG.endDraw();
-		this.preRenderedLabel = textG.get();
+		PImage returnImg = textG.get();
+		//getController().appletStatic.image(returnImg, -1000, -1000);
+		this.preRenderedLabel = returnImg;
 	}
 
 	public void render(PGraphics g) {
@@ -182,7 +184,6 @@ public class GUILabel extends GUIComponent {
 
 	public void render(PGraphics g, float x, float y) {
 
-		
 		
 		if (this.controller == null)
 			return;
