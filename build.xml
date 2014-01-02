@@ -11,6 +11,8 @@
 	<property name="temp.dir" value="temp" />	
     <path id="libraries">
     	<fileset dir="lib" includes="*.jar"/>
+    	<fileset dir="libLegacy" includes="*.jar"/>
+
     </path>
     
     <target name="mkdirs">
@@ -63,10 +65,14 @@
             <lib>
                 <fileset dir="lib" includes="*.jar">
                 <exclude name="**/processingjs/**" />
-                </fileset>    
-            	 <fileset dir="libLegacy" includes="*.jar">
-            	  </fileset>   
+                </fileset>   
+            	   <fileset dir="libLegacy" includes="*.jar">
+            	                <exclude name="**/processingjs/**" />
+            	   </fileset>   
             </lib>
+			
+
+            	  	
             <fileset dir="data"/>
             <fileset dir="languages"/>
 

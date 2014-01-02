@@ -103,7 +103,7 @@ public class SETTINGS {
 	public static final float panelWidth = 900;
 	public static final float panelHeight = 110;
 
-	public static final boolean LEGACY_MODE = false;
+	public static final boolean LEGACY_MODE = true;
 
 	
 	

@@ -1247,12 +1247,7 @@ public class main extends PApplet {
 
 		
 		
-		if (SETTINGS.EXPERT_MODE)
-			UI.setupGUITabsExpert(GLOBAL.applet, GLOBAL.gui);
-		else
-			UI.setupGUITabsBasic(GLOBAL.applet, GLOBAL.gui);
-		
-		
+
 		
 		
 		
@@ -1264,6 +1259,11 @@ public class main extends PApplet {
 		
 
 
+		
+		if (SETTINGS.EXPERT_MODE)
+			UI.setupGUITabsExpert(GLOBAL.applet, GLOBAL.gui);
+		else
+			UI.setupGUITabsBasic(GLOBAL.applet, GLOBAL.gui);
 		
 		
 		

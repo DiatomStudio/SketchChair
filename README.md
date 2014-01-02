@@ -8,7 +8,35 @@ This document attempts to outline the structure and code patterns used in Sketch
 **Documentation**
 Most of SketchChairs custom classes have been documented in a JavaDoc this can be found here:  /doc/index.html
 
+**Compiling**
+***To compile in legacy mode***
+edit src/SETTINGS.java 
+change line:106 > LEGACY_MODE = true;
 
+edit: build.xml
+change line:14    dir="libLegacy"
+change line:69	  dir="libLegacy" 
+
+from console change to the SketchChair root directory. 
+run: ant build
+
+***To compile in Current mode***
+*note: this does not currently work in the development branch
+edit src/SETTINGS.java 
+change line:106 > LEGACY_MODE = false;
+
+edit: build.xml
+change line:14    dir="libCurrent"
+change line:69	  dir="libCurrent" 
+
+from console change to the SketchChair root directory. 
+run: ant build
+
+Your compiled SketchChair.jar can be found in build/
+
+
+**Starting**
+java -jar -Xmx1024M SketchChair.jar
 
 **Basic Outline** 
 This is a very basic outline of how the SketchChair engine works and does not take many details into account. 
