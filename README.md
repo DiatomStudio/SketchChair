@@ -13,7 +13,7 @@ Most of SketchChairs custom classes have been documented in a JavaDoc this can b
 **Basic Outline** 
 This is a very basic outline of how the SketchChair engine works and does not take many details into account. 
 
-SketchChair contains basic vector drawing program, when a user draws on a SketchPlane in SketchChair a drawing is added to this plane. Most drawing operations are handled by the cc.sketchcahir.sketch package.  
+SketchChair contains basic vector drawing program, when a user draws on a SketchPlane in SketchChair ,a drawing is added to this plane. Most drawing operations are handled by the cc.sketchcahir.sketch package.  
 
 A build command is then run on the design that generates all parametric parts of the design.
 
