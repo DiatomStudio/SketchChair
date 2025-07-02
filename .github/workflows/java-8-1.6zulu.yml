@@ -1,0 +1,29 @@
+name: Build with Java 1.6
+
+on:
+  push:
+    branches: [ master, develop, upgrade-merge ]
+  pull_request:
+    branches: [ master, develop, upgrade-merge ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 1.6 (Zulu)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '6'
+
+      - name: Verify Java version
+        run: java -version
+
+      - name: Build with javac
+        run: |
+          mkdir -p bin
+          javac -sourcepath src -d bin $(find src -name "*.java")
