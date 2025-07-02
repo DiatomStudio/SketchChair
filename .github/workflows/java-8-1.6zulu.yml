@@ -26,4 +26,4 @@ jobs:
       - name: Build with javac
         run: |
           mkdir -p bin
-          javac -sourcepath src -d bin $(find src -name "*.java")
+          javac -Xlint:all -sourcepath src -d bin $(find src -name "*.java")
