@@ -1,0 +1,34 @@
+name: Build with Java 1.4
+
+on:
+  push:
+    branches: [ master, develop, upgrade-merge ]
+  pull_request:
+    branches: [ master, develop, upgrade-merge ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download JDK 1.4
+        run: |
+          mkdir -p ~/jdk14
+          wget https://archive.org/download/java-1.4.2/j2sdk-1_4_2_19-linux-i586.bin
+          chmod +x j2sdk-1_4_2_19-linux-i586.bin
+          echo "yes" | ./j2sdk-1_4_2_19-linux-i586.bin
+          mv j2sdk1.4.2_19 ~/jdk14/
+
+      - name: Set up Java 1.4 environment
+        run: |
+          echo "JAVA_HOME=$HOME/jdk14/j2sdk1.4.2_19" >> $GITHUB_ENV
+          echo "$HOME/jdk14/j2sdk1.4.2_19/bin" >> $GITHUB_PATH
+
+      - name: Verify Java version
+        run: java -version
+
+      - name: Build with javac
+        run: |
+          javac -sourcepath src -d bin $(find src -name "*.java")
