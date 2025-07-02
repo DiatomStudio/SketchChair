@@ -20,10 +20,17 @@ jobs:
           distribution: 'zulu'
           java-version: '6'
 
-      - name: Verify Java version
-        run: java -version
+      - name: Download and extract Processing 2.2.1 core.jar
+        run: |
+          mkdir -p lib
+          wget https://github.com/processing/processing/releases/download/processing-0221/processing-2.2.1-linux32.tgz
+          tar -xzf processing-2.2.1-linux32.tgz
+          cp processing-2.2.1/lib/core.jar lib/core.jar
 
-      - name: Build with javac
+      - name: Build with javac and Processing
         run: |
           mkdir -p bin
-          javac -Xlint:all -sourcepath src -d bin $(find src -name "*.java")
+          javac -Xlint:all -sourcepath src -d bin -cp lib/core.jar $(find src -name "*.java")
+
+      - name: Verify Java version
+        run: java -version
