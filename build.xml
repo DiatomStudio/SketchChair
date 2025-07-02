@@ -9,7 +9,7 @@
     </target>
 
     <target name="compile" depends="init">
-        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false" source="1.8" target="1.8">
+        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false" source="11" target="11">
             <classpath>
                 <pathelement location="${processing.core}"/>
             </classpath>
