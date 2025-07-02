@@ -35,13 +35,14 @@ jobs:
           tar -xzf processing-4.3-linux-x64.tgz
           cp processing-4.3/core/library/core.jar lib/core.jar
 
-      - name: Print JAVA_HOME and javac path
+      - name: Print Java version info
         run: |
           echo "JAVA_HOME=$JAVA_HOME"
           which javac
           javac -version
+          ant -version
 
-      - name: Build with Ant
+      - name: Build with Ant (force Java 11)
         run: |
           export JAVA_HOME=${JAVA_HOME}
           export PATH=$JAVA_HOME/bin:$PATH
