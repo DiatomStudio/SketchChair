@@ -20,8 +20,13 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: Install Ant
-        run: sudo apt-get update && sudo apt-get install -y ant
+      - name: Install latest Apache Ant
+        run: |
+          wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.14-bin.tar.gz
+          tar -xzf apache-ant-1.10.14-bin.tar.gz
+          sudo mv apache-ant-1.10.14 /opt/ant
+          echo "ANT_HOME=/opt/ant" >> $GITHUB_ENV
+          echo "/opt/ant/bin" >> $GITHUB_PATH
 
       - name: Download and extract Processing 4.3 core.jar
         run: |
