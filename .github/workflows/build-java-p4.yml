@@ -1,4 +1,4 @@
-name: Build with Ant and Processing 4
+name: Build with Ant and Processing 4 (Java 11)
 
 on:
   push:
@@ -20,17 +20,8 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: Print JAVA_HOME and javac path
-        run: |
-        echo "JAVA_HOME=$JAVA_HOME"
-        which javac
-        javac -version
-
-      - name: Build with Ant
-        run: |
-        export JAVA_HOME=${JAVA_HOME}
-        export PATH=$JAVA_HOME/bin:$PATH
-        ant
+      - name: Install Ant
+        run: sudo apt-get update && sudo apt-get install -y ant
 
       - name: Download and extract Processing 4.3 core.jar
         run: |
@@ -39,5 +30,14 @@ jobs:
           tar -xzf processing-4.3-linux-x64.tgz
           cp processing-4.3/core/library/core.jar lib/core.jar
 
+      - name: Print JAVA_HOME and javac path
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          which javac
+          javac -version
+
       - name: Build with Ant
-        run: ant
+        run: |
+          export JAVA_HOME=${JAVA_HOME}
+          export PATH=$JAVA_HOME/bin:$PATH
+          ant
