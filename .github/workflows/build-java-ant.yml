@@ -1,0 +1,34 @@
+name: Build with Ant and Java 8
+
+on:
+  push:
+    branches: [ master, develop, upgrade-merge ]
+  pull_request:
+    branches: [ master, develop, upgrade-merge ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 8 (Zulu)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+
+      - name: Install Ant
+        run: sudo apt-get update && sudo apt-get install -y ant
+
+      - name: Download and extract Processing 2.2.1 core.jar
+        run: |
+          mkdir -p lib
+          wget https://github.com/processing/processing/releases/download/processing-0221/processing-2.2.1-linux32.tgz
+          tar -xzf processing-2.2.1-linux32.tgz
+          cp processing-2.2.1/lib/core.jar lib/core.jar
+
+      - name: Build with Ant
+        run: ant
