@@ -1,4 +1,4 @@
-name: Build with Java 1.6
+name: Build with Java 8
 
 on:
   push:
@@ -14,11 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Java 1.6 (Zulu)
+      - name: Set up Java 8 (Zulu)
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '6'
+          java-version: '8'
 
       - name: Download and extract Processing 2.2.1 core.jar
         run: |
@@ -30,7 +30,7 @@ jobs:
       - name: Build with javac and Processing
         run: |
           mkdir -p bin
-          javac -Xlint:all -sourcepath src -d bin -cp lib/core.jar $(find src -name "*.java")
+          javac -sourcepath src -d bin -cp lib/core.jar $(find src -name "*.java")
 
       - name: Verify Java version
         run: java -version
