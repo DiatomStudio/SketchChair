@@ -531,6 +531,7 @@ public class UITools {
 	public void changeModeBasic(GUIEvent e) {
 		SETTINGS.EXPERT_MODE = false;
 
+		LOGGER.debug("changeModeBasic");
 		UI.setupGUITabsBasic(GLOBAL.applet, GLOBAL.gui);
 
 		GLOBAL.modeChanged = true;
@@ -1317,10 +1318,14 @@ public class UITools {
 	void mouseSingleClick() {
 
 
+
+
+		
 		if(GLOBAL.uiTools.currentView != UITools.VIEW_CHAIR_EDIT)
 			return;
 		
 
+		
 		//Select planes with the select tool
 		if ((!GLOBAL.gui.overComponent() && 
 				this.SketchTools.getCurrentTool() == SketchTools.SELECT_TOOL)
@@ -1404,8 +1409,8 @@ public class UITools {
 
 	public void openChairFromFile(GUIEvent e) {
 	
-			GLOBAL.applet.selectInput("select design file.", "openChairFromFileCallback", null, this);
-		      	
+			//GLOBAL.applet.selectInput("select design file.", "openChairFromFileCallback", null, this);
+		    Legacy.instance().selectInput("select design file.", "openChairFromFileCallback", null, this);
 	}
 	
 	
@@ -1918,7 +1923,8 @@ public class UITools {
 
 		} else {
 			//Create a file chooser
-			GLOBAL.applet.selectOutput("select design file.", "saveChairToFileCallback", null, this);
+			//GLOBAL.applet.selectOutput("select design file.", "saveChairToFileCallback", null, this);
+			Legacy.instance().selectOutput("select design file.", "saveChairToFileCallback", null, this);
 		}
 			 
 			 
@@ -1960,7 +1966,8 @@ public class UITools {
 		} else {
 			//Create a file chooser
 
-			GLOBAL.applet.selectOutput("select design file.", "savePatternToFileCallback", null, this);
+			//GLOBAL.applet.selectOutput("select design file.", "savePatternToFileCallback", null, this);
+		Legacy.instance().selectOutput("select design file.", "savePatternToFileCallback", null, this);
 		}
 			 
 			 
@@ -2072,8 +2079,8 @@ public class UITools {
 			}
 
 		} else {
-			GLOBAL.applet.selectOutput("select design file.", "saveModelDxfCallback", null, this);
-
+			//GLOBAL.applet.selectOutput("select design file.", "saveModelDxfCallback", null, this);
+			Legacy.instance().selectOutput("select design file.", "saveModelDxfCallback", null, this);
 		}
 	}
 	
@@ -2110,8 +2117,8 @@ public class UITools {
 		} else {
 			//GLOBAL.shapePack.printToCraftRobo();
 
-			GLOBAL.applet.selectOutput("select design file.", "savePatternDXFCallback", null, this);
-
+			//GLOBAL.applet.selectOutput("select design file.", "savePatternDXFCallback", null, this);
+			Legacy.instance().selectOutput("select design file.", "savePatternDXFCallback", null, this);
 
 		}
 
@@ -2156,8 +2163,8 @@ public class UITools {
 			//GLOBAL.shapePack.printToCraftRobo();
 
 			//Create a file chooser
-			GLOBAL.applet.selectOutput("select design file.", "savePDFCallback", null, this);
-
+			//GLOBAL.applet.selectOutput("select design file.", "savePDFCallback", null, this);
+			Legacy.instance().selectOutput("select design file.", "savePDFCallback", null, this);
 
 		}
 
@@ -2219,8 +2226,8 @@ public class UITools {
 		} else {
 
 			//Create a file chooser
-			GLOBAL.applet.selectOutput("select design file.", "exportPreviewCallback", null, this);
-
+			//GLOBAL.applet.selectOutput("select design file.", "exportPreviewCallback", null, this);
+			Legacy.instance().selectOutput("select design file.", "exportPreviewCallback", null, this);
 
 
 		}
@@ -2299,6 +2306,11 @@ public class UITools {
 			GLOBAL.sketchChairs.getCurChair().selectedPlanes
 					.add(GLOBAL.sketchChairs.getCurChair().getSlicePlanesY()
 							.getLast());
+			
+			GLOBAL.sketchChairs.getCurChair().slicePlanesY.unselectAll();
+			GLOBAL.sketchChairs.getCurChair().selectedPlanes.selectAll();
+			GLOBAL.previewWidget.rebuildPatternPreview();
+
 		}
 
 	}
@@ -2561,8 +2573,8 @@ public class UITools {
 	public void importSVG(GUIEvent e) {
 
 		
-		GLOBAL.applet.selectInput("select design file.", "importSVGCallback", null, this);
-		
+		//GLOBAL.applet.selectInput("select design file.", "importSVGCallback", null, this);
+		Legacy.instance().selectInput("select design file.", "importSVGCallback", null, this);
 
 	}
 	public void importSVGCallback(File file) {
@@ -2641,12 +2653,15 @@ public class UITools {
 		GLOBAL.cameraPanel.show();
 		
 		
-		this.currentView = UITools.VIEW_CHAIR_EDIT;
+		//
 
+		
 		if(SETTINGS.EXPERT_MODE)
 			UI.setupGUITabsExpert(GLOBAL.applet, GLOBAL.gui);
 			else
 			UI.setupGUITabsBasic(GLOBAL.applet, GLOBAL.gui);
+		
+		this.currentView = UITools.VIEW_CHAIR_EDIT;
 }
 	
 	

@@ -18,14 +18,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package ModalGUI;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-
+import cc.sketchchair.core.KeyEventSK;
+import cc.sketchchair.core.MouseEventSK;
 import cc.sketchchair.sketch.LOGGER;
-
 import processing.core.PGraphics;
 import processing.core.PImage;
+import cc.sketchchair.core.MouseEventSK;
 
 public class GUISlider extends GUIComponent {
 	public static final int HORIZONTAL = 0;
@@ -197,14 +195,14 @@ public class GUISlider extends GUIComponent {
 	}
 
 	@Override
-	public void keyEvent(KeyEvent theKeyEvent) {
+	public void keyEvent(KeyEventSK theKeyEvent) {
 	}
 
 	@Override
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 
 		//
-		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getAction() == MouseEventSK.PRESS) {
 
 			if (isMouseOverDragPoint()) {
 
@@ -230,7 +228,7 @@ public class GUISlider extends GUIComponent {
 			//
 			//        }
 
-		} else if (e.getID() == MouseEvent.MOUSE_RELEASED && wasClicked) {
+		} else if (e.getAction() == MouseEventSK.RELEASE && wasClicked) {
 			fireEventNotification(this, "Clicked");
 			wasClicked = false;
 		}
@@ -279,11 +277,11 @@ public class GUISlider extends GUIComponent {
 			
 			
 			if(this.minImg != null)
-				g.image(this.minImg,this.getX()-(this.minImg.width + 2), this.getY()+(this.minImg.height/2));
+				g.image(this.minImg,this.getX()-(this.minImg.width + 2), this.getY());
 				
 			
 			if(this.maxImg != null)
-				g.image(this.maxImg,this.getX()+(this.width + 2), this.getY());
+				g.image(this.maxImg,this.getX()+(this.width + 2), this.getY()+(this.minImg.height/2));
 
 		} else {
 

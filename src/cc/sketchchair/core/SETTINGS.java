@@ -31,7 +31,6 @@ public class SETTINGS {
 
 	public static boolean DEVELOPER_MODE = false; //if on print to console etc
 
-	
 	public static final int UNDO_LEVELS = 20;
 	public static final boolean build_collision_mesh_detailed = true;
 	public static final float MIN_SPACING = 20f;
@@ -78,7 +77,7 @@ public class SETTINGS {
 
 	//public static int SKETCHSHAPE_FILL_UNSELECTED_COLOUR = GLOBAL.applet.color(240, 240, 240);
 	public static final float DEFAULT_MATERIAL_WIDTH = .37f;
-	public static final float DEFAULT_SLAT_SPACING = 85;
+	public static float DEFAULT_SLAT_SPACING = 120;
 
 	public static int person_fill_colour = GLOBAL.applet.color(250, 250, 250);
 
@@ -103,6 +102,8 @@ public class SETTINGS {
 	public static final float MAX_CAM_Y_OFFSET = 2000;
 	public static final float panelWidth = 900;
 	public static final float panelHeight = 110;
+
+	public static final boolean LEGACY_MODE = true;
 
 	
 	
@@ -166,7 +167,15 @@ public class SETTINGS {
 	public static int autoResetSeconds = 60;
 
 
-	
+	public static boolean selectLegPlanesAuto = false;
+
+
+	public static float sketchSplineSmoothness;
+	public static float sketchSplineMoveFalloff;
+
+
+	public static String language = "auto";
+	public static boolean SMOOTH_RENDER = false;
 	
 
 }

@@ -25,6 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+import cc.sketchchair.sketch.SETTINGS_SKETCH;
+
 
 /**
  * Stores and retrieves properties from the SketchChair properties file. SketchChair.properties
@@ -108,7 +110,25 @@ public class SketchProperties {
 		if(properties.containsKey("autoResetSeconds"))		
 			SETTINGS.autoResetSeconds = (int)Float.parseFloat(properties.getProperty("autoResetSeconds"));
 
+		if(properties.containsKey("autoSelectLegLayers"))		
+			SETTINGS.selectLegPlanesAuto = "yes".equals(properties.getProperty("autoSelectLegLayers"));
+
+
+		if(properties.containsKey("SketchSplineSmoothPixels"))
+			SETTINGS_SKETCH.splineMoveFalloff = Float.parseFloat(properties.getProperty("SketchSplineSmoothPixels"));
+
 		
+		if(properties.containsKey("SketchSplinePointsEvey"))
+			SETTINGS_SKETCH.spline_point_every = Float.parseFloat(properties.getProperty("SketchSplinePointsEvey"));
+
+		
+		if(properties.containsKey("language"))
+			SETTINGS.language = properties.getProperty("language");
+			
+
+		if(properties.containsKey("SlatSpacing"))
+			SETTINGS.DEFAULT_SLAT_SPACING = Float.parseFloat(properties.getProperty("SlatSpacing"));
+
 		//if(properties.containsKey("groundColour"))		
 		//	SETTINGS.groundColour = String.
 		
@@ -136,6 +156,9 @@ public class SketchProperties {
 		if(properties.containsKey("startInExpertMode"))
 		SETTINGS.EXPERT_MODE = "yes".equals(properties.getProperty("startInExpertMode"));
 		
+		
+		if(properties.containsKey("smoothRender"))			
+			SETTINGS.SMOOTH_RENDER = "yes".equals(properties.getProperty("smoothRender"));
 		
 	}
 	

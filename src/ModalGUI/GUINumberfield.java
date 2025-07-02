@@ -19,11 +19,13 @@
  ******************************************************************************/
 package ModalGUI;
 
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.text.NumberFormat;
 
+import processing.core.PApplet;
+import cc.sketchchair.core.KeyEventSK;
+import cc.sketchchair.core.MouseWheelEventSK;
 import cc.sketchchair.sketch.LOGGER;
 
 public class GUINumberfield extends GUITextfield {
@@ -57,7 +59,7 @@ public class GUINumberfield extends GUITextfield {
 	}
 
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public void mouseWheelMoved(MouseWheelEventSK e) {
 		if(this.hasFocus()){
 			
 		float notches = (float)-e.getUnitsToScroll();
@@ -71,17 +73,17 @@ public class GUINumberfield extends GUITextfield {
 	}
 	
 	@Override
-	public void keyEvent(KeyEvent theKeyEvent) {
+	public void keyEvent(KeyEventSK theKeyEvent) {
 
 		if (isTexfieldActive && isActive
-				&& theKeyEvent.getID() == KeyEvent.KEY_PRESSED) {
-			if (theKeyEvent.getKeyCode() == KeyEvent.VK_UP) {
+				&& theKeyEvent.getAction() == KeyEventSK.PRESS) {
+			if (theKeyEvent.getKeyCode() == PApplet.UP) {
 				float v = getVal();
 				v += incriment;
 				NumberFormat nf = NumberFormat.getInstance();
 				nf.setMaximumFractionDigits(2);
 				this.setText(nf.format(v));
-			} else if (theKeyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
+			} else if (theKeyEvent.getKeyCode() == PApplet.DOWN) {
 				float v = getVal();
 				v -= incriment;
 
@@ -89,34 +91,34 @@ public class GUINumberfield extends GUITextfield {
 				nf.setMaximumFractionDigits(2);
 
 				this.setText(nf.format(v));
-			} else if (theKeyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
+			} else if (theKeyEvent.getKeyCode() == PApplet.LEFT) {
 				if (myPosition > 0) {
 					myPosition--;
 				}
-			} else if (theKeyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+			} else if (theKeyEvent.getKeyCode() == PApplet.RIGHT) {
 				if (myPosition < myTextline.length()) {
 					myPosition++;
 				}
-			} else if (theKeyEvent.getKeyCode() == KeyEvent.VK_DELETE
-					|| theKeyEvent.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			} else if (theKeyEvent.getKeyCode() ==PApplet.DELETE
+					|| theKeyEvent.getKeyCode() == PApplet.BACKSPACE) {
 				if (myTextline.length() > 0) {
 					if (myPosition > 0) {
 						myTextline.deleteCharAt(myPosition - 1);
 						myPosition--;
 					}
 				}
-			} else if (theKeyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
+			} else if (theKeyEvent.getKeyCode() == PApplet.ENTER) {
 				submit();
-			} else if (theKeyEvent.getKeyCode() != KeyEvent.VK_SHIFT
-					&& theKeyEvent.getKeyCode() != KeyEvent.VK_ALT
-					&& theKeyEvent.getKeyCode() != KeyEvent.VK_A
-					&& theKeyEvent.getKeyCode() != KeyEvent.VK_CONTROL) {
+			} else if (theKeyEvent.getKeyCode() != PApplet.SHIFT
+					&& theKeyEvent.getKeyCode() != PApplet.ALT
+					&& theKeyEvent.getKeyCode() != PApplet.ALT
+					&& theKeyEvent.getKeyCode() != PApplet.CONTROL) {
 				if (theKeyEvent.getKeyCode() >= 48
 						&& theKeyEvent.getKeyCode() <= 57
 						|| theKeyEvent.getKeyCode() == 46) {
 
 					System.out.println(theKeyEvent.getKeyCode());
-					myTextline.insert(myPosition, theKeyEvent.getKeyChar());
+					myTextline.insert(myPosition, theKeyEvent.getKey());
 					myPosition++;
 				}
 			}

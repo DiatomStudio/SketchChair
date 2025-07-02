@@ -19,12 +19,11 @@
  ******************************************************************************/
 package ModalGUI;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import javax.media.opengl.GL;
-
+import cc.sketchchair.core.KeyEventSK;
+import cc.sketchchair.core.MouseEventSK;
+import cc.sketchchair.core.MouseWheelEventSK;
 import cc.sketchchair.sketch.LOGGER;
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -216,7 +215,7 @@ public class GUIPanel extends GUIComponent {
 	}
 
 	@Override
-	public void keyEvent(KeyEvent theKeyEvent) {
+	public void keyEvent(KeyEventSK theKeyEvent) {
 		this.components.keyEvent(theKeyEvent);
 	}
 
@@ -244,7 +243,7 @@ public class GUIPanel extends GUIComponent {
 	}
 
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public void mouseWheelMoved(MouseWheelEventSK e) {
 		if (!this.visible)
 			return;
 		this.components.mouseWheelMoved(e);
@@ -253,7 +252,7 @@ public class GUIPanel extends GUIComponent {
 	
 	
 	@Override
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 
 		if (!this.visible)
 			return;
@@ -265,21 +264,21 @@ public class GUIPanel extends GUIComponent {
 		if (sliderY != null)
 			sliderY.mouseEvent(e);
 
-		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getAction() == MouseEventSK.PRESS) {
 			if (isMouseOver())
 				wasClicked = true;
 
 			if (isMouseOverMoveBar() && isDraggable)
 				isDragging = true;
 
-		} else if (e.getID() == MouseEvent.MOUSE_RELEASED && wasClicked
+		} else if (e.getAction() == MouseEventSK.RELEASE && wasClicked
 				&& isMouseOver()) {
 			fireEventNotification(this, "Clicked");
 			wasClicked = false;
 			isDragging = false;
 		}
 
-		if (e.getID() == MouseEvent.MOUSE_RELEASED) {
+		if (e.getAction() == MouseEventSK.RELEASE) {
 			isDragging = false;
 		}
 
@@ -390,10 +389,12 @@ public class GUIPanel extends GUIComponent {
 			if(renderBorder ){
 			if (this.cornerRad > 0)
 				g.rect(this.getX(), this.getY(), this.getWidth(),
-						this.getHeight(),this.cornerRad);
+						this.getHeight());
 			else
 				g.rect(this.getX(), this.getY(), this.getWidth(),
 						this.getHeight());
+			
+			//this.cornerRad
 		
 			}
 			g.fill(this.getFillColour());

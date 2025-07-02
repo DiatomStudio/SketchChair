@@ -21,7 +21,6 @@
 //#IF JAVA
 package cc.sketchchair.sketch;
 
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
@@ -31,15 +30,14 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import cc.sketchchair.core.GLOBAL;
+import cc.sketchchair.core.MouseEventSK;
 import cc.sketchchair.core.UITools;
-
 import ModalGUI.GUIComponentSet;
 import ModalGUI.GUILabel;
 import ModalGUI.GUIPanel;
 import ModalGUI.GUIPanelTabbed;
 import ModalGUI.GUIToggle;
 import ModalGUI.ModalGUI;
-
 import processing.core.PApplet;
 
 
@@ -132,6 +130,7 @@ public class main extends PApplet {
 		gui.renderOnUpdate = false;
 		gui.setup(this);
 		gui.myFontMedium = loadFont("TrebuchetMS-12.vlw");
+		
 		setupGUI(gui);
 	//	smooth(8);
 		ortho();
@@ -139,6 +138,7 @@ public class main extends PApplet {
 	    frameRate(200);
 
 		hint(PApplet.DISABLE_STROKE_PERSPECTIVE);
+		
 		addMouseWheelListener(new MouseWheelListener() {
 		
 			public void mouseWheelMoved(MouseWheelEvent e) {
@@ -240,7 +240,7 @@ public class main extends PApplet {
 	}
 
 	
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(MouseEventSK e) {
 		 if (e.getClickCount()==1) {
 		 }  
 		 else if (e.getClickCount()==2) {
@@ -248,7 +248,7 @@ public class main extends PApplet {
 			 sketch.mouseDoubleClick(mouseX, mouseY);
 		 }
 		 
-			super.mousePressed(e);
+			super.mousePressed();
 
 		}
 	

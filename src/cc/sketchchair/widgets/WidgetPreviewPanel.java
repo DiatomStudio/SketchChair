@@ -19,9 +19,9 @@
  ******************************************************************************/
 package cc.sketchchair.widgets;
 
-import java.awt.event.MouseEvent;
-
 import cc.sketchchair.core.GLOBAL;
+import cc.sketchchair.core.Legacy;
+import cc.sketchchair.core.MouseEventSK;
 import cc.sketchchair.core.PickBuffer;
 import cc.sketchchair.core.SETTINGS;
 import cc.sketchchair.core.UITools;
@@ -81,16 +81,19 @@ public class WidgetPreviewPanel extends GUIPanel {
 		this.renderBorder = false;
 		this.hideSelectBar = true;
 		ergoFig = gui.applet.loadImage("gui/GUI_ERGO_FIGURE.png");
-		chairPreview = gui.applet.createGraphics((int)previewW,(int)previewH, PApplet.OPENGL );
-		chairPreview.smooth(8);
-		chairPreview.hint(PApplet.DISABLE_TRANSFORM_CACHE);
-		chairPreview.hint(PApplet.ENABLE_ACCURATE_2D);
+		chairPreview = gui.applet.createGraphics((int)previewW,(int)previewH, Legacy.instance().get3DRenderMode() );
+		chairPreview.smooth();
+		gui.applet.image(chairPreview, -1000, 0); //load into cache
+		//chairPreview.hint(PApplet.DISABLE_TRANSFORM_CACHE);
+		//chairPreview.hint(PApplet.ENABLE_ACCURATE_2D);
 		
 	
-		patternPreview = gui.applet.createGraphics((int) getWidth(), (int) (getHeight()-patternPannelYPos), PApplet.OPENGL );
-		patternPreview.smooth(8);
-		patternPreview.hint(PApplet.DISABLE_TRANSFORM_CACHE);
-		patternPreview.hint(PApplet.ENABLE_ACCURATE_2D);
+		patternPreview = gui.applet.createGraphics((int) getWidth(), (int) (getHeight()-patternPannelYPos), Legacy.instance().get2DRenderMode());
+		patternPreview.smooth();
+		gui.applet.image(patternPreview, -1000, 0); //load into cache
+
+		//patternPreview.hint(PApplet.DISABLE_TRANSFORM_CACHE);
+		//patternPreview.hint(PApplet.ENABLE_ACCURATE_2D);
 
 		
 		previewShapePack = new spShapePack();
@@ -445,6 +448,7 @@ public class WidgetPreviewPanel extends GUIPanel {
 		
 		float scale = 0;
 
+		LOGGER.debug("rebuildPatternPreview");
 		
 		
 		//Render preview chair, if we have mouse pressed use the undo version of our chair otherwise 
@@ -492,11 +496,20 @@ public class WidgetPreviewPanel extends GUIPanel {
 			chairPreview.beginDraw();
 			chairPreview.background(250);
 			chairPreview.pushMatrix();
-			chairPreview.ortho(-(int)(chairPreview.width / 2), (int)(chairPreview.width  / 2), -(int)(chairPreview.height / 2), (int)(chairPreview.height / 2),
-					-1000, 1000);
+			//chairPreview.ortho(-(int)(chairPreview.width / 2), (int)(chairPreview.width  / 2), -(int)(chairPreview.height / 2), (int)(chairPreview.height / 2),
+			//		-1000, 1000);
+			
+			
+			
+			  if(SETTINGS.LEGACY_MODE){
+				  chairPreview.ortho(-(int)(chairPreview.width / 2), (int)(chairPreview.width / 2), -(int)(chairPreview.height / 2), (int)(chairPreview.height / 2),-10000, 10000);	  
+			  }else{
+				  chairPreview.ortho(0,chairPreview.width, 0, chairPreview.height,-10000, 10000);
+			  }
+		
 			//chairPreview.hint(PApplet.DISABLE_STROKE_PERSPECTIVE);
 
-			chairPreview.smooth(8);
+			chairPreview.smooth();
 			chairPreview.scale(scale);
 			chairPreview.translate(x,y);
 			//chairPreview.translate(0, +(height / 2));
@@ -543,15 +556,15 @@ public class WidgetPreviewPanel extends GUIPanel {
 	}
 	
 	@Override
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 		super.mouseEvent(e);
 		if (!this.visible)
 			return;
 
 
-		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getAction() == MouseEventSK.PRESS) {
 
-		} else if (e.getID() == MouseEvent.MOUSE_RELEASED) {
+		} else if (e.getAction() == MouseEventSK.RELEASE) {
 			if (!GLOBAL.gui.overComponent() && !GLOBAL.gui.hasFocus()) {
 			//rebuildPatternPreview();
 			}
