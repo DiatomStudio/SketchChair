@@ -1,0 +1,34 @@
+name: Build with Ant and Processing 4
+
+on:
+  push:
+    branches: [ master, develop, upgrade-merge ]
+  pull_request:
+    branches: [ master, develop, upgrade-merge ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 11 (Zulu)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Install Ant
+        run: sudo apt-get update && sudo apt-get install -y ant
+
+      - name: Download and extract Processing 4.3 core.jar
+        run: |
+          mkdir -p lib
+          wget https://github.com/processing/processing4/releases/download/processing-0430/processing-4.3-linux-x64.tgz
+          tar -xzf processing-4.3-linux-x64.tgz
+          cp processing-4.3/core/library/core.jar lib/core.jar
+
+      - name: Build with Ant
+        run: ant
