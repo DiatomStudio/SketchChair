@@ -26,19 +26,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GL;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
-
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
-import processing.opengl.PGL;
-import processing.opengl.PGraphicsOpenGL;
 import toxi.geom.Matrix4x4;
 import toxi.geom.Plane;
 import toxi.geom.Vec2D;
@@ -46,7 +42,6 @@ import toxi.geom.Vec3D;
 import ShapePacking.BezierControlNode;
 import ShapePacking.spShape;
 import ShapePacking.spShapePack;
-
 import cc.sketchchair.environments.Environment;
 import cc.sketchchair.geometry.GeometryOperations;
 import cc.sketchchair.geometry.SlicePlane;
@@ -60,7 +55,6 @@ import cc.sketchchair.sketch.SketchShapes;
 import cc.sketchchair.sketch.SketchSpline;
 import cc.sketchchair.sketch.SketchTools;
 import cc.sketchchair.sketch.SliceSlot;
-
 
 import com.bulletphysics.BulletGlobals;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
@@ -1177,7 +1171,7 @@ public class SketchChair {
 
 		// System.out.println(currentWorldTransform.origin.x);
 		PGraphics saveImg = GLOBAL.applet.createGraphics((int) width,
-				(int) height, PConstants.P3D);
+				(int) height, Legacy.instance().get3DRenderMode() );
 		saveImg.beginDraw();
 		saveImg.ortho(-(width / 2), (width / 2), -(height / 2), (height / 2),
 				-1000, 10000);
@@ -1187,7 +1181,7 @@ public class SketchChair {
 		saveImg.directionalLight(69, 69, 69, 0, 0, -1);
 		saveImg.lightFalloff(1, 0, 0);
 
-		saveImg.smooth(8);
+		saveImg.smooth();
 
 		saveImg.background(255);
 
@@ -2197,10 +2191,10 @@ public class SketchChair {
 		//boolean useVBO = true;//state.vbosAvailable;
 
 		if (renderMode == P3D)
-			diagramImg = GLOBAL.applet.createGraphics(w, h, GLOBAL.applet.P3D);
+			diagramImg = GLOBAL.applet.createGraphics(w, h, Legacy.instance().get3DRenderMode() );
 
 		if (renderMode == OPENGL)
-			diagramImg = GLOBAL.applet.createGraphics(w, h, GLOBAL.applet.OPENGL);
+			diagramImg = GLOBAL.applet.createGraphics(w, h, Legacy.instance().get3DRenderMode() );
 
 
 		/*
@@ -2214,11 +2208,23 @@ public class SketchChair {
 */
 		diagramImg.beginDraw();
 		//diagramImg.background(255,255,255,1);
-		diagramImg.ortho(-(w / 2), (w / 2), -(h / 2), (h / 2), -1000, 10000);
+		//diagramImg.ortho(0,w,0,h, -1000, 10000);
+		
+		  if(SETTINGS.LEGACY_MODE){
+			  diagramImg.ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),-10000, 10000);	  
+		  }else{
+			  diagramImg.ortho(0,width, 0, height,-10000, 10000);
+		  }
+		  
+		  
+		  
+		//diagramImg.ortho(0, w, 0, h, -1000, 10000);
+
+		
 		//diagramImg.hint(PApplet.DISABLE_STROKE_PERSPECTIVE);
 
 		diagramImg.pushMatrix();
-		diagramImg.smooth(8);
+		diagramImg.smooth();
 
 		if (useCurrentView) {
 
@@ -2312,7 +2318,7 @@ public class SketchChair {
 	 */
 	public float render3Dpreview(PGraphics g, float x, float y, float w, float h) {
 
-		g.smooth(8);
+		g.smooth();
 
 		this.slicePlanesY.setRenderMode(Sketch.RENDER_3D_PREVIW);
 		this.slicePlanesSlatSlices.setRenderMode(Sketch.RENDER_3D_PREVIW);
@@ -2413,7 +2419,7 @@ public class SketchChair {
 
 	public void renderSilhouette(PGraphics g) {
 		g.pushMatrix();
-		g.smooth(8);
+		g.smooth();
 		this.getSlicePlanesY().renderSilhouette(g);
 		g.noSmooth();
 		g.popMatrix();
@@ -2444,13 +2450,13 @@ public class SketchChair {
 		float height2 = Math.abs(maxY2 - minY2) + (imgBorder * 2);
 
 		PGraphics saveImg = GLOBAL.applet.createGraphics((int) width,
-				(int) height, PConstants.P3D);
+				(int) height, Legacy.instance().get3DRenderMode() );
 		saveImg.beginDraw();
 		saveImg.ortho(-(width / 2), (width / 2), -(height / 2), (height / 2),
 				-1000, 10000);
 		//saveImg.hint(PApplet.DISABLE_STROKE_PERSPECTIVE);
 
-		saveImg.smooth(8);
+		saveImg.smooth();
 		saveImg.pushMatrix();
 
 		saveImg.translate(-minX + border, -minY + border);

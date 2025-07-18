@@ -220,7 +220,7 @@ public class SETTINGS_SKETCH {
 	public static float chair_slat_end_size = 45; // how much should the last slat stick out
 
 	public static float chair_width = 400;
-	public static float spline_point_every = 20;
+	public static float spline_point_every = 30;
 	public static float dist_between_adding_points = 20; //distance between points on splline
 
 	public static float slat_x_spacing = 250;
@@ -231,6 +231,6 @@ public class SETTINGS_SKETCH {
 	public static boolean dynamic_offset = true;
 	public static int renderChairColour = functions.color(255, 255, 255);
 	public static float PATH_WIDTH_ZOOM = 1.5f;
-	public static int splineMoveFalloff = 100;
+	public static float splineMoveFalloff = 100;
 
 }

@@ -1,0 +1,37 @@
+name: Build with Ant and Processing 3
+
+on:
+  push:
+    branches: [ master, develop, upgrade-merge ]
+  pull_request:
+    branches: [ master, develop, upgrade-merge ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 8 (Zulu)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+
+      - name: Install Ant
+        run: sudo apt-get update && sudo apt-get install -y ant
+
+      - name: Set up Processing core.jar
+        run: |
+          # Use the existing core.jar from libCurrent
+          cp libCurrent/core.jar lib/core.jar
+          echo "Using existing core.jar:"
+          ls -la lib/core.jar
+
+      - name: Build with Ant
+        run: |
+          # Temporarily modify build.xml for Java 8
+          sed -i 's/source="11" target="11"/source="8" target="8"/g' build.xml
+          ant

@@ -25,45 +25,29 @@ package cc.sketchchair.core;
 //TODO: Render ragdoll correctly
 //TODO: sitting controle for ragdoll
 
-import java.awt.Dimension;
+
+
+
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.IntBuffer;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLCapabilities;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 import javax.vecmath.Vector3f;
 
-
-import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationAdapter;
-import com.apple.eawt.ApplicationEvent;
-
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PGraphics;
 import processing.core.PImage;
-import processing.opengl.PGL;
-import processing.opengl.PGraphicsOpenGL;
-import ModalGUI.ModalGUI;
-
 import cc.sketchchair.functions.functions;
 import cc.sketchchair.ragdoll.ergoDoll;
-import cc.sketchchair.sketch.Sketch;
 import cc.sketchchair.sketch.SketchSpline;
-import cc.sketchchair.sketch.SketchTools;
+import cc.sketchchair.widgets.WidgetLoad;
+import cc.sketchchair.widgets.WidgetMaterials;
+import cc.sketchchair.widgets.WidgetPlanes;
 /**
  * Main program class. Used to start SketchChair. 
  * @author gregsaul
@@ -75,7 +59,7 @@ public class main extends PApplet {
 	public static void main(String args[]) {
 
 		//send log to a file
-		
+		/*
 		File file=new File("debug.log");
 			try {
 				if(!file.exists()){
@@ -89,7 +73,7 @@ public class main extends PApplet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
+		*/
 			
 
 		PApplet.main(new String[] { main.class.getName() });
@@ -103,6 +87,7 @@ public class main extends PApplet {
 	// Static global components
 	GLOBAL GLOBAL;
 	SETTINGS SETTINGS;
+	Localization Localization;
 
 	static LOGGER LOGGER = new LOGGER();
 	static String openChair = null;
@@ -142,8 +127,6 @@ public class main extends PApplet {
 
 
 	void applyWorldTranslation(PGraphics renderer) {
-
-		
 		
 		if (GLOBAL.autoRotate)
 			GLOBAL.rotateModelsY -= 0.017f;
@@ -164,6 +147,24 @@ public class main extends PApplet {
 
 	@Override
 	public void draw() {
+		
+		
+		//not the first loop
+		if(firstLoop){
+			
+	
+			
+			
+
+			
+			//this.initiatingFrames++;
+			//if(this.initiatingFrames > 100)
+				firstLoop = false;
+
+		}
+		
+		
+		
 		if(UI.menuListen.quedAction != null)
 			UI.menuListen.processAction();
 		
@@ -196,7 +197,6 @@ public class main extends PApplet {
 		 
 		//GLGraphics renderer = (GLGraphics)g;
 		PGraphics renderer = (PGraphics)g;
-
 		//if(useGLGRAPHICS)
 			//renderer.beginGL();
 		
@@ -323,33 +323,20 @@ public class main extends PApplet {
 		    aspect = (float) (aspect / 2.0);
 		  }
 		  
-		  
-		 
-		//LOGGER.info(width + "width");
-		//renderer.ortho();
-		/*
-		if(useGLGRAPHICS){
-		ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),
-				-1000, 1000);
-			//renderer.translate((width /2), (height / 2));
-		//renderer.ortho();
-		}else{
-		renderer.ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),
-				-1000, 10000);
-		}
-		*/
-		  renderer.ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),
-					-10000, 10000);
-		  //renderer.hint(PApplet.DISABLE_STROKE_PERSPECTIVE);
-
-		 //frustum();
-		//camera();
-		//perspective();
 		
+		  if(SETTINGS.LEGACY_MODE){
+			  renderer.ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),-10000, 10000);	  
+		  }else{
+			  renderer.ortho(0,width, 0, height,-10000, 10000);
+		  }
+		  
+		 // 
+		  
 		//GLOBAL.uiTools.pickBuffer.background(255);
 		renderer.noFill();
 		renderer.strokeWeight(2);	
-			
+		
+
 		//GLOBAL.uiTools.update();
 		UI.updateMouse(mouseX, mouseY, pmouseX, pmouseY, mousePressed,
 				mouseButton);
@@ -358,9 +345,8 @@ public class main extends PApplet {
 		GLOBAL.uiTools.updateMouse(mouseX, mouseY, pmouseX, pmouseY, mouseDown,
 				mouseButton);
 		
-if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
-		GLOBAL.uiTools.SketchTools.updateMouse(mouseX, mouseY, pmouseX,
-				pmouseY, mouseDown, mouseButton);
+		if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
+		GLOBAL.uiTools.SketchTools.updateMouse(mouseX, mouseY, pmouseX,pmouseY, mouseDown, mouseButton);
 
 		GLOBAL.uiTools.updateMouseWorld();
 
@@ -480,13 +466,7 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		//if(useGLGRAPHICS)
 		//renderer.endGL();
 		
-		//not the first loop
-		if(firstLoop){
-			this.initiatingFrames++;
-			if(this.initiatingFrames > 100)
-				firstLoop = false;
 
-		}
 		
 	}
 
@@ -688,16 +668,38 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		renderer.noLights();
 		
 		//pick buffer rendering
-		if(PickBuffer.getInstance().usePickBuffer && GLOBAL.uiTools.mousePressed && SETTINGS.ENABLE_SELECT_MODEL_PLANES){
+		if(PickBuffer.getInstance().usePickBuffer && ((GLOBAL.uiTools.mousePressed && SETTINGS.ENABLE_SELECT_MODEL_PLANES) || firstLoop) ){
 
+			LOGGER.debug("Update PickBuffer");
 			PickBuffer.getInstance().pickBuffer.beginDraw();
-			PickBuffer.getInstance().pickBuffer.ortho(-(width / 2), (width / 2), -(height / 2), (height / 2),
-					-1000, 10000);
+			//PickBuffer.getInstance().pickBuffer.ortho(-(width / 2), (width / 2), -(height / 2), (height / 2),
+			//		-1000, 10000);
+			
+			//PickBuffer.getInstance().pickBuffer.ortho(width/2, width , height/2, height,
+				//	-1000, 10000);
+			
+			float scale = PickBuffer.getInstance().pickBufferRes;
+			
+			  //renderer.ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),-10000, 10000);	  
+
+			  if(SETTINGS.LEGACY_MODE){
+				  PickBuffer.getInstance().pickBuffer.ortho(-(width*scale)/(2*scale),(width*scale)/(2*scale), -(height*scale)/(2*scale), (height*scale)/(2*scale),
+							-10000, 10000);
+				  }else{
+				  PickBuffer.getInstance().pickBuffer.ortho(-(width*scale),width-(width*scale), -(height*scale), height-(height*scale),
+							-10000, 10000);
+				  }
+			  
+			  
+			  
+		
+			
 			PickBuffer.getInstance().reset();
 			PickBuffer.getInstance().pickBuffer.resetMatrix();
 			PickBuffer.getInstance().pickBuffer.background(255);
 			PickBuffer.getInstance().pickBuffer.setMatrix(renderer.getMatrix());
-			
+			//PickBuffer.getInstance().pickBuffer.translate(width/1.35f, -height/1.35f, -400);
+			//PickBuffer.getInstance().pickBuffer.scale(2f);
 			if ( GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 			GLOBAL.sketchChairs.renderPickBuffer(PickBuffer.getInstance().pickBuffer);
 
@@ -866,6 +868,7 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 	
 		
 		if (SETTINGS.show_framerate) {
+			LOGGER.info("FPS" +GLOBAL.applet.frameRate);
 			renderer.fill(0);
 			renderer.textSize(12);
 			renderer.text((int) GLOBAL.applet.frameRate + " fps", 10, 80);
@@ -987,7 +990,8 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		GLOBAL.designToolbarAdvanced.getBasePanel().setPos((GLOBAL.windowWidth - GLOBAL.designToolbarAdvanced.getWidth())/2.0f, GLOBAL.windowHeight -GLOBAL.designToolbarAdvanced.getHeight());
 		
 		//resize our pick buffer
-		PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes),P3D);
+		PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes), Legacy.instance().get3DRenderMode());
+		image(PickBuffer.getInstance().pickBuffer.get(),0,0);
 
 		/*
 		if (GLOBAL.windowWidth != width || GLOBAL.windowHeight != height
@@ -1056,9 +1060,33 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 
 	@Override
 	public void setup() {
+		
+		
+		
+		
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gd = ge.getDefaultScreenDevice();
+		
+		
+		Legacy.displayWidth = (int) gd.getDefaultConfiguration().getBounds().getWidth();
+		Legacy.displayHeight= (int) gd.getDefaultConfiguration().getBounds().getHeight();
+
+		
+		int _displayWidth = (Legacy.displayWidth - 15);
+		int _displayHeight = (Legacy.displayHeight - 55);
+
+		
+		LOGGER.debug("Size( "+_displayWidth+" , "+_displayHeight+ ", "+Legacy.instance().get3DRenderMode()+")");
+
+		if(GLOBAL == null || GLOBAL.resetting == false){
+			size(_displayWidth, _displayHeight, Legacy.instance().get3DRenderMode());
+		}
+		
 
 		
 		
+		LOGGER.debug("Setup()");
+
 		
 		LOGGER.info("Operating System: " + System.getProperty("os.name"));
 
@@ -1099,23 +1127,38 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 			GLOBAL.frame = this.frame;
 
 		
-		//Static global components
+
+		
 		GLOBAL = new GLOBAL(this);
 		SETTINGS = new SETTINGS();
 		GLOBAL.sketchProperties.loadDefaults();
+		Localization = new Localization(dataPath("/"),SETTINGS.language);
+
+		//HackHacky
+		GLOBAL.planesWidget = new WidgetPlanes(0, 0, 0, 0, GLOBAL.gui);
+		GLOBAL.loadWidget = new WidgetLoad();
+		GLOBAL.widgetMaterials = new WidgetMaterials(0, 0, 0, 0, GLOBAL.gui);
+
+		//Static global components
+
+		if(SETTINGS.SMOOTH_RENDER)
+		smooth();
+		else
+		noSmooth();
 		
-		
-	//	smooth(8);
 		  
+		
+		
 		  
 		  
 		UI = new UI();
 		
+
 		LOGGER.info("SketchChair v " + GLOBAL.version);
 
 		
-		GLOBAL.windowWidth = (displayWidth - 5);
-		GLOBAL.windowHeight = (displayHeight - 65);
+		GLOBAL.windowWidth = _displayWidth;
+		GLOBAL.windowHeight = _displayHeight;
 		
 		Thread.currentThread().setDefaultUncaughtExceptionHandler(exception);
 		useOPENGL = false;
@@ -1130,7 +1173,6 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 				
 				//size(GLOBAL.windowWidth, GLOBAL.windowHeight, OldP3D.NOSTALGIA);
 
-				size(GLOBAL.windowWidth, GLOBAL.windowHeight, OPENGL);
 
 			}
 		}else{
@@ -1204,7 +1246,9 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		//textMode(SCREEN);
 
 		
-	
+		
+
+		
 		
 		
 		GLOBAL.jBullet.physics_on = false;
@@ -1212,6 +1256,16 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		GLOBAL.applet = this;
 		GLOBAL.gui.setup(this);
 		GLOBAL.gui.renderOnUpdate = GLOBAL.useMaskedUpdating;
+		
+
+
+		
+		if (SETTINGS.EXPERT_MODE)
+			UI.setupGUITabsExpert(GLOBAL.applet, GLOBAL.gui);
+		else
+			UI.setupGUITabsBasic(GLOBAL.applet, GLOBAL.gui);
+		
+		
 		
 		frameRate(120);
 
@@ -1228,11 +1282,8 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		//if(!SETTINGS.EXPERT_MODE)
 		//GLOBAL.clickToStart = loadImage("clickToStart.png");
 
-		if (SETTINGS.EXPERT_MODE)
-			UI.setupGUITabsExpert(GLOBAL.applet, GLOBAL.gui);
-		else
-			UI.setupGUITabsBasic(GLOBAL.applet, GLOBAL.gui);
 
+		
 		LOGGER.info("AFTER GUI AGAIN");
 
 		GLOBAL.uiTools.build(this);
@@ -1353,22 +1404,24 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		this.initiatingFrames = 0; 
 		
 		//previewBuffer = createGraphics((int)previewW,(int)previewH,P3D);
-		PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes),P3D);
-		PickBuffer.getInstance().pickBuffer.hint(PApplet.DISABLE_TRANSFORM_CACHE);
-		PickBuffer.getInstance().pickBuffer.hint(PApplet.ENABLE_ACCURATE_2D);
+		PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes),Legacy.instance().get3DRenderMode() );
+		image(PickBuffer.getInstance().pickBuffer.get(),0,0);
+		//PickBuffer.getInstance().pickBuffer.hint(PApplet.DISABLE_TRANSFORM_CACHE);
+		//PickBuffer.getInstance().pickBuffer.hint(PApplet.ENABLE_ACCURATE_2D);
 
 		//FlurryAgent.onStartApp(null, "SVAM3TIHA2YVU7KEHHC7") ;
 		
-		
-		
-		GLOBAL.uiTools.SketchTools.selectTool(SketchTools.DRAW_TOOL);
+		//GLOBAL.uiTools.SketchTools.selectTool(SketchTools.DRAW_TOOL);
+		//default tool
+		GLOBAL.uiTools.SketchTools.selectTool(UITools.DRAW_TOOL);
 		
 		
 		//Hints
 		//g.hint(ENABLE_ACCURATE_2D); // slow but less memory maybe?
-		g.hint(PApplet.DISABLE_STROKE_PERSPECTIVE);
+		g.hint(Legacy.DISABLE_STROKE_PERSPECTIVE);
 		
 		
+				
 	}
 
 	private void switchResolution() {

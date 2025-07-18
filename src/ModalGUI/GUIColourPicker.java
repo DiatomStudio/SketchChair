@@ -19,8 +19,8 @@
  ******************************************************************************/
 package ModalGUI;
 
-import java.awt.event.MouseEvent;
 
+import cc.sketchchair.core.MouseEventSK;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
@@ -53,12 +53,12 @@ public class GUIColourPicker extends GUIComponent {
 	}
 
 	@Override
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 
 		if (this.destroy)
 			return;
 
-		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getAction() == MouseEventSK.PRESS) {
 			if (isMouseOver()) {
 				int c = this.getColourOver();
 
@@ -71,7 +71,7 @@ public class GUIColourPicker extends GUIComponent {
 					}
 				}
 			}
-		} else if (e.getID() == MouseEvent.MOUSE_RELEASED && wasClicked
+		} else if (e.getAction() == MouseEventSK.RELEASE && wasClicked
 				&& isMouseOver()) {
 			fireEventNotification(this, "Clicked");
 			wasClicked = false;

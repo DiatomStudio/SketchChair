@@ -375,7 +375,7 @@ public class Sketch {
 
 	public void mousePressed(float mouseX, float mouseY) {
 		
-		LOGGER.debug("mousePressed" +getSketchTools().getMouseButton());
+		LOGGER.debug("mousePressed" +getSketchTools().getMouseButton() + " Tool:" +getSketchTools().getCurrentTool());
 
 		
 		//#IF JAVA
@@ -408,6 +408,7 @@ public class Sketch {
 		//LEG TOOL OPERATIONS
 		if (getSketchTools().getCurrentTool() == SketchTools.LEG_TOOL
 				&& getSketchTools().getMouseButton() == SketchTools.MOUSE_LEFT) {
+			LOGGER.debug("mousePressed" +"Leg tool");
 
 			Vec2D pointOnPlan = new Vec2D(mouseX, mouseY);
 

@@ -1,0 +1,49 @@
+name: Build with Ant and Processing 4 (Java 11)
+
+on:
+  push:
+    branches: [ master, develop, upgrade-merge ]
+  pull_request:
+    branches: [ master, develop, upgrade-merge ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 11 (Zulu)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Install latest Apache Ant
+        run: |
+          wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.14-bin.tar.gz
+          tar -xzf apache-ant-1.10.14-bin.tar.gz
+          sudo mv apache-ant-1.10.14 /opt/ant
+          echo "ANT_HOME=/opt/ant" >> $GITHUB_ENV
+          echo "/opt/ant/bin" >> $GITHUB_PATH
+
+      - name: Set up Processing core.jar
+        run: |
+          # Use the existing core.jar from libCurrent
+          cp libCurrent/core.jar lib/core.jar
+          echo "Using existing core.jar:"
+          ls -la lib/core.jar
+
+      - name: Print Java version info
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          which javac
+          javac -version
+          ant -version
+
+      - name: Build with Ant (force Java 11)
+        run: |
+          export JAVA_HOME=${JAVA_HOME}
+          export PATH=$JAVA_HOME/bin:$PATH
+          ant

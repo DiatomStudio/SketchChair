@@ -30,19 +30,19 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.IntBuffer;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GLCapabilities;
-
-//import codeanticode.glgraphics.GLGraphics;
 
 import cc.sketchchair.core.GLOBAL;
+import cc.sketchchair.core.KeyEventSK;
+import cc.sketchchair.core.Legacy;
+import cc.sketchchair.core.MouseEventSK;
+import cc.sketchchair.core.MouseWheelEventSK;
 import cc.sketchchair.sketch.LOGGER;
-
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PGraphics;
 import processing.core.PImage;
+
 
 public class ModalGUI implements MouseWheelListener {
 	public static PApplet applet;
@@ -51,14 +51,17 @@ public class ModalGUI implements MouseWheelListener {
 	public boolean renderOnUpdate = true; //only render components when they're updated or mouse is over.
 	public boolean rebuildStencilBuffer = true;
 	public static PImage makeImgDown(float w, float h, PImage img) {
-
+		
+		
 		PGraphics pg = appletStatic.createGraphics((int) w, (int) h,
-				PApplet.JAVA2D);
-		pg.smooth();
+				Legacy.instance().get2DRenderMode());
+		
 		pg.beginDraw();
+
+		pg.smooth();
 		
 		pg.noStroke();
-		pg.background(255);
+		pg.background(250);
 		pg.rect(0,0,w,h);
 		
 		
@@ -77,9 +80,20 @@ public class ModalGUI implements MouseWheelListener {
 
 		int offsetX = (int) ((w - img.width) / 2);
 		int offsetY = (int) ((h - img.height) / 2);
+		
+		pg.fill(255);
+
+		
+		if(img != null){
 		pg.image(img, (int)offsetX, (int)offsetY);
+		}
+		
 		pg.endDraw();
-		return pg;
+
+		
+		PImage returnImage = pg.get();
+
+		return returnImage;
 
 	}
 
@@ -89,10 +103,14 @@ public class ModalGUI implements MouseWheelListener {
 
 	public static PImage makeImgOver(int w, int h, PImage img) {
 
-		PGraphics pg = appletStatic.createGraphics(w, h, PApplet.JAVA2D);
-		pg.smooth();
-		pg.beginDraw();
+	
 		
+		PGraphics pg = appletStatic.createGraphics(w, h, Legacy.instance().get2DRenderMode());
+		pg.beginDraw();
+
+		pg.smooth();
+		pg.background(250);
+
 		pg.noStroke();
 
 		pg.smooth();
@@ -103,9 +121,18 @@ public class ModalGUI implements MouseWheelListener {
 		roundrect(pg, 0, 0, w + 4, h + 4, 4); //right bottom border off texture
 		int offsetX = (int) ((w - img.width) / 2);
 		int offsetY = (int) ((h - img.height) / 2);
+		
+		pg.fill(255);
+
+		if(img != null)
 		pg.image(img, (int)offsetX, (int)offsetY);
+		
 		pg.endDraw();
-		return pg;
+		PImage returnImage = pg.get();
+
+		//load into the cache 
+		appletStatic.image(returnImage, -1000, -1000);
+		return returnImage;
 
 	}
 
@@ -114,23 +141,32 @@ public class ModalGUI implements MouseWheelListener {
 	}
 
 	public static PImage makeImgUp(float w, float h, PImage img) {
-
+		
+		
 		PGraphics pg = appletStatic.createGraphics((int) w, (int) h,
-				PApplet.JAVA2D );
-		pg.smooth();
+				Legacy.instance().get2DRenderMode() );
+
 		pg.beginDraw();
+		pg.background(250);
 		pg.smooth();
 		
 		pg.noStroke();
 
 		pg.stroke(200, 200, 200);
-		pg.fill(255, 255, 255);
-
+		//pg.fill(255, 255, 255);
+		pg.fill(255);
 		int offsetX = (int) ((w - img.width) / 2);
 		int offsetY = (int) ((h - img.height) / 2);
+		
+		if(img != null)
 		pg.image(img, (int)offsetX, (int)offsetY);
 		pg.endDraw();
-		return pg;
+		PImage returnImg = pg.get();
+
+		//load into the cache 
+		appletStatic.image(returnImg, -1000, -1000);		
+		
+		return returnImg;
 
 	}
 
@@ -261,15 +297,38 @@ public class ModalGUI implements MouseWheelListener {
 		return components.hasFocus();
 
 	}
-
-	public void keyEvent(KeyEvent keyevent) {
+	
+	
+	public void keyEvent(processing.event.KeyEvent e) {
+		keyEvent(new KeyEventSK(e));
+    }
+	
+	
+	 public void keyEvent(java.awt.event.KeyEvent e) {
+		 keyEvent(new KeyEventSK(e));
+	 }
+	public void keyEvent(KeyEventSK keyevent) {
 		this.components.keyEvent(keyevent);
 
 	}
-
-	public void mouseEvent(MouseEvent e) {
+	
+	
+	
+	public void mouseEvent(processing.event.MouseEvent e) {
+	    	mouseEvent(new MouseEventSK(e));
+	    }
+	  
+	
+    public void mouseEvent(java.awt.event.MouseEvent e) {
+    	mouseEvent(new MouseEventSK(e));
+    }
+	public void mouseEvent(MouseEventSK e) {
+		
+		
+		//LOGGER.debug("mouseEvent: " + e.getAction());
+		
 		this.components.mouseEvent(e);
-		if (e.getID() == 501) {
+		if (e.getAction() == MouseEventSK.CLICK) {
 			
 			reRender();
 
@@ -277,7 +336,7 @@ public class ModalGUI implements MouseWheelListener {
 			if (overComponent())
 				clickStartedOn = true;
 			
-		} else if (e.getID() == 502) {
+		} else if (e.getAction() == MouseEventSK.RELEASE) {
 			reRender();
 
 				clickStartedOn = false;
@@ -286,8 +345,9 @@ public class ModalGUI implements MouseWheelListener {
 		
 	}
 	
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
+		
+	
+	public void mouseWheelMoved(MouseWheelEventSK e) {
 		this.components.mouseWheelMoved(e);
 
 	}
@@ -300,7 +360,8 @@ public class ModalGUI implements MouseWheelListener {
 
 	
 	public boolean clickStartedOn() {
-		return clickStartedOn;
+		//return clickStartedOn;
+		return false;
 	}
 
 	public void reload() {
@@ -396,9 +457,12 @@ public class ModalGUI implements MouseWheelListener {
 
 		if (!registeredEvent) {
 			
-			applet.registerMouseEvent(this);
-			applet.registerKeyEvent(this);
-			applet.addMouseWheelListener(this);
+			//Legacy.registerMethod("mouseEvent",this);
+			//Legacy.registerMethod("keyEvent",this);
+
+			Legacy.registerMouseEvent(main,this);
+			Legacy.registerKeyEvent(main,this);
+			Legacy.addMouseWheelListener(main,this);
 			registeredEvent = true;
 		
 
@@ -428,6 +492,12 @@ public class ModalGUI implements MouseWheelListener {
 			loadedCursor = _cursorImg.toString();
 			applet.cursor(_cursorImg,_x,_y);
 		}
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

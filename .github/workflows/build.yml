@@ -1,0 +1,48 @@
+name: Build SketchChair
+
+on:
+  push:
+    branches: [ master, develop, upgrade-merge ]
+  pull_request:
+    branches: [ master, develop, upgrade-merge ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Install Apache Ant
+        run: sudo apt-get update && sudo apt-get install -y ant
+
+      - name: Set up Processing core.jar
+        run: |
+          # Use the existing core.jar from libCurrent
+          cp libCurrent/core.jar lib/core.jar
+          echo "core.jar copied successfully:"
+          ls -la lib/core.jar
+
+      - name: Print build environment info
+        run: |
+          echo "Java version:"
+          java -version
+          echo "Ant version:"
+          ant -version
+          echo "Lib directory contents:"
+          ls -la lib/
+
+      - name: Build with Ant
+        run: ant
+
+      - name: Check build output
+        run: |
+          echo "Build directory contents:"
+          ls -la bin/ || echo "No bin directory found"

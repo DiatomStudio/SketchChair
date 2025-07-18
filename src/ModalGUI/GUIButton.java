@@ -19,13 +19,12 @@
  ******************************************************************************/
 package ModalGUI;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 
 import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
 
+import cc.sketchchair.core.KeyEventSK;
+import cc.sketchchair.core.MouseEventSK;
 import cc.sketchchair.sketch.LOGGER;
-
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -159,10 +158,10 @@ public class GUIButton extends GUIComponent {
 	}
 
 	@Override
-	public void keyEvent(KeyEvent theKeyEvent) {
+	public void keyEvent(KeyEventSK theKeyEvent) {
 	}
-
-	public void mouseEvent(MouseEvent e) {
+	
+	public void mouseEvent(MouseEventSK e) {
 
 		if (!this.visible)
 			return ;
@@ -170,10 +169,10 @@ public class GUIButton extends GUIComponent {
 		if (this.destroy)
 			return;
 
-		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getAction() == MouseEventSK.PRESS) {
 			if (isMouseOver())
 				wasClicked = true;
-		} else if (e.getID() == MouseEvent.MOUSE_RELEASED && wasClicked
+		} else if (e.getAction() == MouseEventSK.RELEASE && wasClicked
 				&& isMouseOver()) {
 			fireEventNotification(this, "Clicked");
 			wasClicked = false;
