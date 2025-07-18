@@ -28,12 +28,12 @@ jobs:
           echo "ANT_HOME=/opt/ant" >> $GITHUB_ENV
           echo "/opt/ant/bin" >> $GITHUB_PATH
 
-      - name: Download and extract Processing 4.3 core.jar
+      - name: Set up Processing core.jar
         run: |
-          mkdir -p lib
-          wget https://github.com/processing/processing4/releases/download/processing-0430/processing-4.3-linux-x64.zip
-          unzip processing-4.3-linux-x64.zip
-          cp processing-4.3/core/library/core.jar lib/core.jar
+          # Use the existing core.jar from libCurrent
+          cp libCurrent/core.jar lib/core.jar
+          echo "Using existing core.jar:"
+          ls -la lib/core.jar
 
       - name: Print Java version info
         run: |

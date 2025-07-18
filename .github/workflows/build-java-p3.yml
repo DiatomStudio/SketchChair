@@ -23,12 +23,15 @@ jobs:
       - name: Install Ant
         run: sudo apt-get update && sudo apt-get install -y ant
 
-      - name: Download and extract Processing 3.5.4 core.jar
+      - name: Set up Processing core.jar
         run: |
-          mkdir -p lib
-          wget https://github.com/processing/processing/releases/download/processing-0254/processing-3.5.4-linux64.tgz
-          tar -xzf processing-3.5.4-linux64.tgz
-          cp processing-3.5.4/core/library/core.jar lib/core.jar
+          # Use the existing core.jar from libCurrent
+          cp libCurrent/core.jar lib/core.jar
+          echo "Using existing core.jar:"
+          ls -la lib/core.jar
 
       - name: Build with Ant
-        run: ant
+        run: |
+          # Temporarily modify build.xml for Java 8
+          sed -i 's/source="11" target="11"/source="8" target="8"/g' build.xml
+          ant
