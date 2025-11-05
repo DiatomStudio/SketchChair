@@ -1061,6 +1061,17 @@ public class main extends PApplet {
 
 	// Processing 4: settings() method must be defined to call size()
 	public void settings() {
+		// Processing 4: Set sketch path for One-JAR compatibility
+		// When running from One-JAR, PApplet can't determine jarPath automatically
+		// Set to current working directory as fallback
+		try {
+			String currentDir = System.getProperty("user.dir");
+			sketchPath(currentDir);
+			LOGGER.debug("Sketch path set to: " + currentDir);
+		} catch (Exception e) {
+			LOGGER.warn("Could not set sketch path: " + e.getMessage());
+		}
+
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 
@@ -1112,7 +1123,12 @@ public class main extends PApplet {
 		
 		
 		LOGGER.info("Starting SketchChair");
-		LOGGER.info("DataPath set at :" + dataPath("TrebuchetMS-12.vlw"));
+		// Processing 4: dataPath() may fail in JAR, handle gracefully
+		try {
+			LOGGER.info("DataPath set at :" + dataPath("TrebuchetMS-12.vlw"));
+		} catch (Exception e) {
+			LOGGER.warn("Could not determine dataPath (running from JAR): " + e.getMessage());
+		}
 
 		LOGGER.info("After exit");
 
@@ -1126,7 +1142,16 @@ public class main extends PApplet {
 		GLOBAL = new GLOBAL(this);
 		SETTINGS = new SETTINGS();
 		GLOBAL.sketchProperties.loadDefaults();
-		Localization = new Localization(dataPath("/"),SETTINGS.language);
+		// Processing 4: dataPath() may fail in JAR, provide fallback
+		String localizationPath;
+		try {
+			localizationPath = dataPath("/");
+		} catch (Exception e) {
+			// Fallback to current directory when running from JAR
+			localizationPath = "./";
+			LOGGER.warn("Using fallback localization path: " + localizationPath);
+		}
+		Localization = new Localization(localizationPath, SETTINGS.language);
 
 		//HackHacky
 		GLOBAL.planesWidget = new WidgetPlanes(0, 0, 0, 0, GLOBAL.gui);
