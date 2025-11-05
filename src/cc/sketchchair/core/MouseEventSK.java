@@ -20,8 +20,9 @@ public class MouseEventSK{
 
 	public MouseEventSK(processing.event.MouseEvent e) {
 		action = ((MouseEvent)(e.getNative())).getID();
-		
-		clickCount = e.getClickCount();
+
+		// Processing 4: getClickCount() → getCount()
+		clickCount = e.getCount();
 		}
 
 	public int getAction() {
