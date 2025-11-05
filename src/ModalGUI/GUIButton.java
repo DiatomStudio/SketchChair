@@ -19,9 +19,6 @@
  ******************************************************************************/
 package ModalGUI;
 
-
-import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
-
 import cc.sketchchair.core.KeyEventSK;
 import cc.sketchchair.core.MouseEventSK;
 import cc.sketchchair.sketch.LOGGER;

@@ -37,7 +37,7 @@
 	</target>
 
 	<target name="compile" depends="mkdirs">
-        <javac destdir="classes/src" includes="**/*.java" debug="true" verbose="true" target="1.5">
+        <javac destdir="classes/src" includes="**/*.java" debug="true" verbose="false" source="1.8" target="1.8">
             <src path="src" />
             <exclude name="**/processingjs/**" />
             <include name="**/*.properties"/>
