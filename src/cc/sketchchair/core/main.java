@@ -1061,13 +1061,46 @@ public class main extends PApplet {
 
 	// Processing 4: settings() method must be defined to call size()
 	public void settings() {
-		// Processing 4: Set sketch path for One-JAR compatibility
-		// When running from One-JAR, PApplet can't determine jarPath automatically
-		// Set to current working directory as fallback
+		// Processing 4: Set sketch path appropriately
+		// Priority: 1) jpackage app.dir, 2) JAR location, 3) user.dir
 		try {
-			String currentDir = System.getProperty("user.dir");
-			sketchPath(currentDir);
-			LOGGER.debug("Sketch path set to: " + currentDir);
+			String sketchDir = null;
+
+			// Check if running from jpackage (has jpackage.app-path property)
+			String jpackagePath = System.getProperty("jpackage.app-path");
+			if (jpackagePath != null) {
+				// jpackage sets app-path to the .app/Contents/app directory
+				java.io.File appDir = new java.io.File(jpackagePath).getParentFile();
+				if (appDir != null && appDir.getName().equals("app")) {
+					sketchDir = appDir.getAbsolutePath();
+					LOGGER.debug("Running from jpackage, using app directory");
+				}
+			}
+
+			// Fallback to JAR location
+			if (sketchDir == null) {
+				try {
+					String jarPath = getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+					java.io.File jarFile = new java.io.File(jarPath);
+					if (jarFile.isFile()) {
+						sketchDir = jarFile.getParent();
+					} else {
+						sketchDir = jarPath; // Might be a directory when running from classes
+					}
+					LOGGER.debug("Using JAR location");
+				} catch (Exception e) {
+					LOGGER.debug("Could not determine JAR location: " + e.getMessage());
+				}
+			}
+
+			// Final fallback to user.dir
+			if (sketchDir == null) {
+				sketchDir = System.getProperty("user.dir");
+				LOGGER.debug("Using user.dir fallback");
+			}
+
+			sketchPath(sketchDir);
+			LOGGER.debug("Sketch path set to: " + sketchDir);
 		} catch (Exception e) {
 			LOGGER.warn("Could not set sketch path: " + e.getMessage());
 		}
