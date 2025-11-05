@@ -197,4 +197,120 @@
 		</java>
 	</target>
 
+	<!-- jpackage targets for native distribution -->
+	<target name="jpackage.mac" depends="build.standard" description="Create macOS .app bundle">
+		<mkdir dir="dist"/>
+		<exec executable="jpackage" failonerror="true">
+			<arg value="--input"/>
+			<arg value="build"/>
+			<arg value="--name"/>
+			<arg value="SketchChair"/>
+			<arg value="--main-jar"/>
+			<arg value="SketchChair-standard.jar"/>
+			<arg value="--type"/>
+			<arg value="app-image"/>
+			<arg value="--dest"/>
+			<arg value="dist"/>
+			<arg value="--java-options"/>
+			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+			<!-- Icon optional: uncomment if icon.icns exists
+			<arg value=" - -icon"/>
+			<arg value="data/icon.icns"/>
+			end icon -->
+			<arg value="--app-version"/>
+			<arg value="1.0"/>
+			<arg value="--vendor"/>
+			<arg value="Diatom Studio"/>
+			<arg value="--copyright"/>
+			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
+		</exec>
+		<echo>macOS .app created in dist/SketchChair.app</echo>
+	</target>
+
+	<target name="jpackage.mac.dmg" depends="build.standard" description="Create macOS .dmg installer">
+		<mkdir dir="dist"/>
+		<exec executable="jpackage" failonerror="true">
+			<arg value="--input"/>
+			<arg value="build"/>
+			<arg value="--name"/>
+			<arg value="SketchChair"/>
+			<arg value="--main-jar"/>
+			<arg value="SketchChair-standard.jar"/>
+			<arg value="--type"/>
+			<arg value="dmg"/>
+			<arg value="--dest"/>
+			<arg value="dist"/>
+			<arg value="--java-options"/>
+			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+			<arg value="--icon"/>
+			<arg value="data/icon.icns"/>
+			<arg value="--app-version"/>
+			<arg value="1.0"/>
+			<arg value="--vendor"/>
+			<arg value="Diatom Studio"/>
+			<arg value="--copyright"/>
+			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
+		</exec>
+		<echo>macOS .dmg created in dist/SketchChair-1.0.dmg</echo>
+	</target>
+
+	<target name="jpackage.win" depends="build.standard" description="Create Windows .exe installer">
+		<mkdir dir="dist"/>
+		<exec executable="jpackage" failonerror="true">
+			<arg value="--input"/>
+			<arg value="build"/>
+			<arg value="--name"/>
+			<arg value="SketchChair"/>
+			<arg value="--main-jar"/>
+			<arg value="SketchChair-standard.jar"/>
+			<arg value="--type"/>
+			<arg value="exe"/>
+			<arg value="--dest"/>
+			<arg value="dist"/>
+			<arg value="--java-options"/>
+			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+			<arg value="--icon"/>
+			<arg value="data/icon.ico"/>
+			<arg value="--app-version"/>
+			<arg value="1.0"/>
+			<arg value="--vendor"/>
+			<arg value="Diatom Studio"/>
+			<arg value="--copyright"/>
+			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
+			<arg value="--win-per-user-install"/>
+			<arg value="--win-dir-chooser"/>
+			<arg value="--win-menu"/>
+			<arg value="--win-shortcut"/>
+		</exec>
+		<echo>Windows .exe installer created in dist/</echo>
+	</target>
+
+	<target name="jpackage.linux" depends="build.standard" description="Create Linux package">
+		<mkdir dir="dist"/>
+		<exec executable="jpackage" failonerror="true">
+			<arg value="--input"/>
+			<arg value="build"/>
+			<arg value="--name"/>
+			<arg value="sketchchair"/>
+			<arg value="--main-jar"/>
+			<arg value="SketchChair-standard.jar"/>
+			<arg value="--type"/>
+			<arg value="deb"/>
+			<arg value="--dest"/>
+			<arg value="dist"/>
+			<arg value="--java-options"/>
+			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+			<arg value="--icon"/>
+			<arg value="data/icon.png"/>
+			<arg value="--app-version"/>
+			<arg value="1.0"/>
+			<arg value="--vendor"/>
+			<arg value="Diatom Studio"/>
+			<arg value="--copyright"/>
+			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
+			<arg value="--linux-shortcut"/>
+		</exec>
+		<echo>Linux .deb package created in dist/</echo>
+	</target>
+
 </project>
