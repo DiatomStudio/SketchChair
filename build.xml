@@ -11,7 +11,7 @@
 	<property name="temp.dir" value="temp" />	
     <path id="libraries">
     	<fileset dir="lib" includes="*.jar"/>
-    	<fileset dir="libLegacy" includes="*.jar"/>
+    	<fileset dir="libProcessing4" includes="*.jar"/>
 
     </path>
     
@@ -37,7 +37,7 @@
 	</target>
 
 	<target name="compile" depends="mkdirs">
-        <javac destdir="classes/src" includes="**/*.java" debug="true" verbose="false" source="1.8" target="1.8">
+        <javac destdir="classes/src" includes="**/*.java" debug="true" verbose="false" source="17" target="17">
             <src path="src" />
             <exclude name="**/processingjs/**" />
             <include name="**/*.properties"/>
@@ -65,10 +65,10 @@
             <lib>
                 <fileset dir="lib" includes="*.jar">
                 <exclude name="**/processingjs/**" />
-                </fileset>   
-            	   <fileset dir="libLegacy" includes="*.jar">
+                </fileset>
+            	   <fileset dir="libProcessing4" includes="*.jar">
             	                <exclude name="**/processingjs/**" />
-            	   </fileset>   
+            	   </fileset>
             </lib>
 			
 
