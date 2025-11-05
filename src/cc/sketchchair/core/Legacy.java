@@ -21,31 +21,18 @@ public class Legacy {
 	public static int displayHeight = 768;
 	
 	public static void registerMouseEvent(PApplet _main, ModalGUI _modalGUI) {
-		
-		if(SETTINGS.LEGACY_MODE)
-			_main.registerMouseEvent(_modalGUI);
-		else
+		// Processing 4: Always use registerMethod()
 		_main.registerMethod("mouseEvent", _modalGUI);
 	}
+
 	public static void registerKeyEvent(PApplet _main, ModalGUI _modalGUI) {
-		
-		if(SETTINGS.LEGACY_MODE)
-			_main.registerKeyEvent(_modalGUI);
-		else
+		// Processing 4: Always use registerMethod()
 		_main.registerMethod("keyEvent", _modalGUI);
-		//
-		
-		
 	}
+
 	public static void addMouseWheelListener(PApplet _main, ModalGUI _modalGUI) {
-		
-		if(SETTINGS.LEGACY_MODE)
-			_main.addMouseWheelListener(_modalGUI);
-		//else
-	//	_main.registerMethod("mouseWheelMoved", _modalGUI);
-		
-		
-		
+		// Processing 4: Mouse wheel is part of mouseEvent, no separate registration needed
+		// The mouseEvent handler in ModalGUI should handle wheel events
 	}
 	
 	
@@ -66,15 +53,15 @@ public class Legacy {
 	      selectFrame = frame;
 
 	    } else if (selectFrame == null) {
-	      Component comp = GLOBAL.applet.getParent();
-	      while (comp != null) {
-	        if (comp instanceof Frame) {
-	          selectFrame = (Frame) comp;
-	          break;
+	      // Processing 4: Get Frame from PSurface instead of getParent()
+	      if (GLOBAL.surface != null) {
+	        Object nativeWindow = GLOBAL.surface.getNative();
+	        if (nativeWindow instanceof Frame) {
+	          selectFrame = (Frame) nativeWindow;
 	        }
-	        comp = comp.getParent();
 	      }
-	      // Who you callin' a hack?
+
+	      // Fallback: create new Frame if needed
 	      if (selectFrame == null) {
 	        selectFrame = new Frame();
 	      }
