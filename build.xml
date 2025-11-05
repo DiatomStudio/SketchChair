@@ -132,5 +132,69 @@
 	<target name="test.SketchChair" depends="build" description="Stand-alone test a One-Jar SketchChair">
         <java fork="true" jar="build/test-SketchChair.jar"/>
     </target>
-	
+
+	<!-- Standard JAR build (not One-JAR) for better Processing 4 compatibility -->
+	<target name="build.standard" depends="clean, mkdirs, compile" description="Build standard JAR with lib folder">
+		<mkdir dir="build/lib"/>
+		<mkdir dir="build/data"/>
+		<mkdir dir="build/languages"/>
+		<mkdir dir="build/binlib"/>
+
+		<!-- Copy all library JARs to build/lib -->
+		<copy todir="build/lib">
+			<fileset dir="lib" includes="*.jar">
+				<exclude name="**/processingjs/**"/>
+			</fileset>
+			<fileset dir="libProcessing4" includes="*.jar">
+				<exclude name="**/processingjs/**"/>
+			</fileset>
+		</copy>
+
+		<!-- Copy data and resources -->
+		<copy todir="build/data">
+			<fileset dir="data"/>
+		</copy>
+		<copy todir="build/languages">
+			<fileset dir="languages"/>
+		</copy>
+		<copy todir="build/binlib">
+			<fileset dir="binlib" includes="**"/>
+		</copy>
+
+		<!-- Build Class-Path for MANIFEST -->
+		<pathconvert property="jar.classpath" pathsep=" ">
+			<path>
+				<fileset dir="build/lib" includes="*.jar"/>
+			</path>
+			<mapper>
+				<chainedmapper>
+					<flattenmapper/>
+					<globmapper from="*" to="lib/*"/>
+				</chainedmapper>
+			</mapper>
+		</pathconvert>
+
+		<!-- Create main JAR with proper MANIFEST -->
+		<jar destfile="build/SketchChair-standard.jar">
+			<fileset dir="classes/src">
+				<exclude name="**/processingjs/**"/>
+			</fileset>
+			<!-- Include language resource bundles in JAR root -->
+			<fileset dir="languages" includes="*.properties"/>
+			<manifest>
+				<attribute name="Main-Class" value="cc.sketchchair.core.main"/>
+				<attribute name="Class-Path" value="${jar.classpath}"/>
+			</manifest>
+		</jar>
+
+		<echo>Standard JAR build complete!</echo>
+		<echo>To run: java -Djogamp.gluegen.UseTempJarCache=true -jar build/SketchChair-standard.jar</echo>
+	</target>
+
+	<target name="run.standard" depends="build.standard" description="Run standard JAR build">
+		<java fork="true" jar="build/SketchChair-standard.jar" dir="build">
+			<jvmarg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+		</java>
+	</target>
+
 </project>
