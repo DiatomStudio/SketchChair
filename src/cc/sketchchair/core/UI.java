@@ -2101,10 +2101,15 @@ class UI {
 		myMenu.add(Language);
 		*/
 
-		if (GLOBAL.frame == null)
+		// Processing 4: Get Frame from PSurface
+		if (GLOBAL.surface == null)
 			return;
+		Object nativeWindow = GLOBAL.surface.getNative();
+		if (!(nativeWindow instanceof java.awt.Frame))
+			return;
+		java.awt.Frame frame = (java.awt.Frame) nativeWindow;
 		//add the menu to the frame!
-		GLOBAL.frame.setMenuBar(myMenu);
+		frame.setMenuBar(myMenu);
 
 		Menu Help = new Menu(Localization.getString("help"));
 
@@ -2146,8 +2151,7 @@ class UI {
 
 		myMenu.add(Help);
 
-		//add the menu to the frame!
-		GLOBAL.frame.setMenuBar(myMenu);
+		// Note: Menu bar already set at line 2112, no need to set again
 
 		//applet.println(myMenu);
 	}

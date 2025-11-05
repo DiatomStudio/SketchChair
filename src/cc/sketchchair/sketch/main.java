@@ -138,18 +138,9 @@ public class main extends PApplet {
 	    frameRate(200);
 
 		hint(PApplet.DISABLE_STROKE_PERSPECTIVE);
-		
-		addMouseWheelListener(new MouseWheelListener() {
-		
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				int notches = e.getWheelRotation();
-				if (notches < 0) {
-					sketch.getSketchGlobals().zoom -= (notches / 10f);
-				} else {
-					sketch.getSketchGlobals().zoom -= (notches / 10f);
-			}
-			}
-		});
+
+		// Processing 4: Mouse wheel is handled through mouseWheel() callback instead of listener
+		// (Implementation moved to mouseWheel() method)
 
 	}
 
@@ -242,16 +233,26 @@ public class main extends PApplet {
 	
 	public void mousePressed(MouseEventSK e) {
 		 if (e.getClickCount()==1) {
-		 }  
+		 }
 		 else if (e.getClickCount()==2) {
 			 mouseDoubleClick = true;
 			 sketch.mouseDoubleClick(mouseX, mouseY);
 		 }
-		 
+
 			super.mousePressed();
 
 		}
-	
+
+	// Processing 4: Mouse wheel handler
+	public void mouseWheel(processing.event.MouseEvent event) {
+		int notches = event.getCount();
+		if (notches < 0) {
+			sketch.getSketchGlobals().zoom -= (notches / 10f);
+		} else {
+			sketch.getSketchGlobals().zoom -= (notches / 10f);
+		}
+	}
+
 	/*
 	public void keyPressed() {
 		sketch.getSketchTools().keyCode = keyCode;

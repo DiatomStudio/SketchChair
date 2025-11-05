@@ -42,6 +42,7 @@ import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import processing.core.PSurface;
 import cc.sketchchair.functions.functions;
 import cc.sketchchair.ragdoll.ergoDoll;
 import cc.sketchchair.sketch.SketchSpline;
@@ -1298,18 +1299,8 @@ public class main extends PApplet {
 
 	//	GLOBAL.shapePack.ZOOM = 1.5f;
 
-		addMouseWheelListener(new MouseWheelListener() {
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				int notches = e.getWheelRotation();
-				if(!GLOBAL.gui.hasFocus()){
-					if (GLOBAL.uiTools.currentView == GLOBAL.uiTools.VIEW_CHAIR_EDIT)
-						GLOBAL.uiTools.zoomView((notches / 10f));
-
-					if (GLOBAL.uiTools.currentView == GLOBAL.uiTools.VIEW_SHAPE_PACK)
-						GLOBAL.shapePack.zoomView(notches / 10f,GLOBAL.uiTools.mouseX,GLOBAL.uiTools.mouseY);
-
-			}}
-		});
+		// Processing 4: Mouse wheel is handled through mouseWheel() callback instead of listener
+		// (Implementation moved to mouseWheel() method)
 
 		GLOBAL.person = new ergoDoll(GLOBAL.jBullet.myWorld, new Vector3f(-80,
 				-10, 0), 1f);
@@ -1458,9 +1449,23 @@ LOGGER.debug("switchResolution");
 	
 	public void mousePressed() {
 		startingApp = false; //there was user interaction
-		  if (mouseEvent.getClickCount()==1)mouseSingleClick=true;
-		  if (mouseEvent.getClickCount()==2)mouseDoubleClick=true;
-
+		// Processing 4: Use getCount() instead of getClickCount()
+		if (mouseEvent != null) {
+			if (mouseEvent.getCount()==1)mouseSingleClick=true;
+			if (mouseEvent.getCount()==2)mouseDoubleClick=true;
 		}
+	}
+
+	// Processing 4: Mouse wheel handler
+	public void mouseWheel(processing.event.MouseEvent event) {
+		int notches = event.getCount();
+		if(!GLOBAL.gui.hasFocus()){
+			if (GLOBAL.uiTools.currentView == GLOBAL.uiTools.VIEW_CHAIR_EDIT)
+				GLOBAL.uiTools.zoomView((notches / 10f));
+
+			if (GLOBAL.uiTools.currentView == GLOBAL.uiTools.VIEW_SHAPE_PACK)
+				GLOBAL.shapePack.zoomView(notches / 10f,GLOBAL.uiTools.mouseX,GLOBAL.uiTools.mouseY);
+		}
+	}
 
 }
