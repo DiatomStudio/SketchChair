@@ -11,8 +11,8 @@
 
 Upgrading SketchChair from Processing 1.x (JOGL 1.x, Java 1.8) to Processing 4.3 (JOGL 2.x, Java 17) to enable native Apple Silicon support and modern cross-platform compatibility.
 
-**Current Status**: Phase 1 Complete ✅
-**Overall Progress**: 20% (2 of 5 phases complete)
+**Current Status**: Phase 2 In Progress 🔄
+**Overall Progress**: 45% (Phase 1 complete, Phase 2 ~70% complete)
 
 ---
 
@@ -21,7 +21,7 @@ Upgrading SketchChair from Processing 1.x (JOGL 1.x, Java 1.8) to Processing 4.3
 | Phase | Status | Progress | Notes |
 |-------|--------|----------|-------|
 | **Phase 1**: Build System & Dependencies | ✅ Complete | 100% | Java 17, P4 libraries integrated |
-| **Phase 2**: Critical API Migrations | 🔄 Next | 0% | Frame, GL, Events (37 errors) |
+| **Phase 2**: Critical API Migrations | 🔄 In Progress | 70% | Frame ✅, Events ✅, PDF casting (partial) |
 | **Phase 3**: Rendering Updates | ⏳ Pending | 0% | smooth(), renderers |
 | **Phase 4**: Cross-Platform Testing | ⏳ Pending | 0% | Mac/Win/Linux validation |
 | **Phase 5**: Validation & Documentation | ⏳ Pending | 0% | Features, docs, release |
@@ -329,6 +329,12 @@ smooth(2); // or smooth(4), smooth(8)
 
 | Commit | Phase | Date | Description |
 |--------|-------|------|-------------|
+| 8783ce3 | Phase 2.5 | Nov 5 | PGraphics PDF casting (partial) |
+| 66860fa | Phase 2.4 & 2.6 | Nov 5 | Event registration and Component API migration |
+| d17b4cd | Phase 2.3 | Nov 5 | MouseEvent API migration complete |
+| 6d5406f | Phase 2.1-2.2 | Nov 5 | Frame→Surface API migration complete |
+| df4cad5 | Setup | Nov 5 | Add CLAUDE.md for session continuity |
+| 0308b3c | Setup | Nov 5 | Add comprehensive upgrade progress document |
 | 3b03308 | Phase 1 | Nov 5 | Build system upgrade complete |
 | fe11e27 | Setup | Nov 5 | Initial modernization (Java fixes, JOGL natives) |
 
