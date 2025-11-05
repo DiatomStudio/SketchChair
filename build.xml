@@ -213,6 +213,10 @@
 			<arg value="dist"/>
 			<arg value="--java-options"/>
 			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+			<arg value="--java-options"/>
+			<arg value="-Dapple.awt.application.appearance=system"/>
+			<arg value="--java-options"/>
+			<arg value="-Dapple.laf.useScreenMenuBar=true"/>
 			<!-- Icon optional: uncomment if icon.icns exists
 			<arg value=" - -icon"/>
 			<arg value="data/icon.icns"/>
