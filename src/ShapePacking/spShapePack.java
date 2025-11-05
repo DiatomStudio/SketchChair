@@ -132,8 +132,13 @@ public class spShapePack {
 
 	public ByteArrayOutputStream getDXFBuffered(PApplet a) {
 
-		PGraphicsPDF pdf = (PGraphicsPDF) a.createGraphics(
-				(int) (this.materialWidth), (int) (this.materialHeight), a.PDF);
+		// Processing 4: Use string renderer name and safe cast
+		PGraphics g = a.createGraphics(
+				(int) (this.materialWidth), (int) (this.materialHeight), PApplet.PDF);
+		if (!(g instanceof PGraphicsPDF)) {
+			throw new RuntimeException("Failed to create PDF graphics");
+		}
+		PGraphicsPDF pdf = (PGraphicsPDF) g;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		pdf.setOutput(out);
 
@@ -155,8 +160,13 @@ public class spShapePack {
 
 	public ByteArrayOutputStream getPDFBuffered(PApplet a) {
 
-		PGraphicsPDF pdf = (PGraphicsPDF) a.createGraphics(
-				(int) (this.materialWidth), (int) (this.materialHeight), a.PDF);
+		// Processing 4: Use string renderer name and safe cast
+		PGraphics g = a.createGraphics(
+				(int) (this.materialWidth), (int) (this.materialHeight), PApplet.PDF);
+		if (!(g instanceof PGraphicsPDF)) {
+			throw new RuntimeException("Failed to create PDF graphics");
+		}
+		PGraphicsPDF pdf = (PGraphicsPDF) g;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		pdf.setOutput(out);
 	//	pdf.textSize(this.textSize);
@@ -186,12 +196,17 @@ public class spShapePack {
 	}
 
 	public void makePDF(PApplet a) {
-		PGraphicsPDF pdf = (PGraphicsPDF) a.createGraphics(
+		// Processing 4: Use string renderer name and safe cast
+		PGraphics g = a.createGraphics(
 				(int) (this.materialWidth),
 				(int) (this.materialHeight),
-				a.PDF,
+				PApplet.PDF,
 				"C:\\MyMedia\\sketchChair\\pdfOutput\\output"
 						+ functions.getFileName() + ".pdf");
+		if (!(g instanceof PGraphicsPDF)) {
+			throw new RuntimeException("Failed to create PDF graphics");
+		}
+		PGraphicsPDF pdf = (PGraphicsPDF) g;
 		PFont font = a.createFont("Arial", this.textSize);
 		pdf.textFont(font);
 		pdf.textSize(this.textSize);
@@ -209,11 +224,16 @@ public class spShapePack {
 
 	public void makePDF(PApplet a, String pdfSaveLocation) {
 
-		PGraphicsPDF pdf = (PGraphicsPDF) a.createGraphics(
+		// Processing 4: Use PApplet.PDF and safe cast
+		PGraphics g = a.createGraphics(
 				(int) (this.materialWidth * pdf_pixels_per_mm),
-				(int) (this.materialHeight * pdf_pixels_per_mm), PConstants.PDF,
+				(int) (this.materialHeight * pdf_pixels_per_mm), PApplet.PDF,
 				pdfSaveLocation);
-		
+		if (!(g instanceof PGraphicsPDF)) {
+			throw new RuntimeException("Failed to create PDF graphics");
+		}
+		PGraphicsPDF pdf = (PGraphicsPDF) g;
+
 		LOGGER.info("sending PDF to " + pdfSaveLocation);
 		pdf.beginDraw();
 		//pdf.scale(pdf_pixels_per_mm);
