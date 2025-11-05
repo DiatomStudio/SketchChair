@@ -1057,35 +1057,28 @@ public class main extends PApplet {
 				+ "capture-####.png");
 	}
 
-	
 
-	@Override
-	public void setup() {
-		
-		
-		
-		
+
+	// Processing 4: settings() method must be defined to call size()
+	public void settings() {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
-		
-		
+
 		Legacy.displayWidth = (int) gd.getDefaultConfiguration().getBounds().getWidth();
 		Legacy.displayHeight= (int) gd.getDefaultConfiguration().getBounds().getHeight();
 
-		
 		int _displayWidth = (Legacy.displayWidth - 15);
 		int _displayHeight = (Legacy.displayHeight - 55);
 
-		
 		LOGGER.debug("Size( "+_displayWidth+" , "+_displayHeight+ ", "+Legacy.instance().get3DRenderMode()+")");
 
 		if(GLOBAL == null || GLOBAL.resetting == false){
 			size(_displayWidth, _displayHeight, Legacy.instance().get3DRenderMode());
 		}
-		
+	}
 
-		
-		
+	@Override
+	public void setup() {
 		LOGGER.debug("Setup()");
 
 		
@@ -1157,9 +1150,9 @@ public class main extends PApplet {
 
 		LOGGER.info("SketchChair v " + GLOBAL.version);
 
-		
-		GLOBAL.windowWidth = _displayWidth;
-		GLOBAL.windowHeight = _displayHeight;
+		// Processing 4: width and height are now set by size() in settings()
+		GLOBAL.windowWidth = width;
+		GLOBAL.windowHeight = height;
 		
 		Thread.currentThread().setDefaultUncaughtExceptionHandler(exception);
 		useOPENGL = false;
