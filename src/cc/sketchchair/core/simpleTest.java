@@ -90,7 +90,8 @@ renderer.image(pg, 50, 50);
 
 		  //his.frame.getParent()ABORT;
 		  
-		 this.frame.setLocation(20,29);
+		 // Processing 4: Use PSurface instead of frame
+	 this.getSurface().setLocation(20, 29);
 			frameRate(120);
 			
 

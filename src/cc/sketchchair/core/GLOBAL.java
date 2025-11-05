@@ -179,7 +179,7 @@ public class GLOBAL {
 
 	public static WidgetPreviewPanel previewWidget;
 
-	public static Frame frame;
+	public static processing.core.PSurface surface;
 
 	public static int planeID = 0;
 

@@ -200,7 +200,15 @@ public class Environments {
 	public void openEnvironmentFromFile(GUIEvent e) {
 		LOGGER.info("Preparing to open SketchChair file.");
 
-		FileDialog fd = new FileDialog(GLOBAL.applet.frame, "open",
+		// Processing 4: Get Frame from PSurface
+		java.awt.Frame parentFrame = null;
+		if (GLOBAL.surface != null) {
+			Object nativeWindow = GLOBAL.surface.getNative();
+			if (nativeWindow instanceof java.awt.Frame) {
+				parentFrame = (java.awt.Frame) nativeWindow;
+			}
+		}
+		FileDialog fd = new FileDialog(parentFrame, "open",
 				FileDialog.LOAD);
 		fd.setFile("chair" + SETTINGS.chairSaveNum + ".png");
 		String currentDir = new File(".").getAbsolutePath();

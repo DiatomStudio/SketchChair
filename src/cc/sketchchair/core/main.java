@@ -1122,9 +1122,9 @@ public class main extends PApplet {
 
 		LOGGER.info("After exit");
 
-		//set staic link to applet
-		if(GLOBAL.frame == null)
-			GLOBAL.frame = this.frame;
+		//set static link to applet surface
+		if(GLOBAL.surface == null)
+			GLOBAL.surface = this.getSurface();
 
 		
 
@@ -1223,20 +1223,18 @@ public class main extends PApplet {
 		//g.printProjection();
 		
 
-		if (GLOBAL.frame != null ){
+		if (GLOBAL.surface != null ){
 			//causing crash?
 			/*
-			GLOBAL.frame.setPreferredSize(new Dimension(width,
-					height));
-			GLOBAL.frame.setSize(width, height); // setup and OPENGL window
+			GLOBAL.surface.setSize(width, height); // setup and OPENGL window
      */
-		GLOBAL.frame.setLocation(0, 0);
-		ImageIcon titlebaricon = new ImageIcon(
-				loadBytes("program_icon_02_b_48x48x32.png"));
-		GLOBAL.frame.setIconImage(titlebaricon.getImage());
-		GLOBAL.frame.setName("SketchChair");
-		
-		GLOBAL.frame.setResizable(true);
+		GLOBAL.surface.setLocation(0, 0);
+		// Processing 4: setIcon() expects PImage, not Image
+		PImage titlebaricon = loadImage("program_icon_02_b_48x48x32.png");
+		GLOBAL.surface.setIcon(titlebaricon);
+		GLOBAL.surface.setTitle("SketchChair");
+
+		GLOBAL.surface.setResizable(true);
 		}
 
 		//if(useOPENGL)
@@ -1426,15 +1424,24 @@ public class main extends PApplet {
 
 	private void switchResolution() {
 LOGGER.debug("switchResolution");
-		
+
 		try {
 			GraphicsDevice myGraphicsDevice = GraphicsEnvironment
 					.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-			this.frame.setResizable(false);
-			this.frame.setUndecorated(true);
 
-			myGraphicsDevice.setFullScreenWindow(this.frame);
-			this.frame.setVisible(true);
+			// Processing 4: Use PSurface instead of frame
+			PSurface surface = this.getSurface();
+			surface.setResizable(false);
+
+			// Get the native window from PSurface
+			// PSurface wraps the underlying AWT/Swing window
+			Object nativeWindow = surface.getNative();
+			if (nativeWindow instanceof java.awt.Frame) {
+				java.awt.Frame frame = (java.awt.Frame) nativeWindow;
+				frame.setUndecorated(true);
+				myGraphicsDevice.setFullScreenWindow(frame);
+				frame.setVisible(true);
+			}
 
 			DisplayMode myDisplayMode = new DisplayMode(width, height, 32,
 					DisplayMode.REFRESH_RATE_UNKNOWN);
