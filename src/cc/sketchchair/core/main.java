@@ -1261,13 +1261,14 @@ public class main extends PApplet {
 			/*
 			GLOBAL.surface.setSize(width, height); // setup and OPENGL window
      */
-		// Set window icon - uses SwingUtilities for thread safety on macOS 15.3+
-		final PImage titlebaricon = loadImage("data/icons/program_icon_02_b_48x48x32.png");
-		SwingUtilities.invokeLater(() -> {
-			GLOBAL.surface.setIcon(titlebaricon);
-			GLOBAL.surface.setTitle("SketchChair");
-			GLOBAL.surface.setResizable(true);
-		});
+
+	// Icon setting code removed - causes threading deadlock in Processing 4
+	// Processing 4 requires icon to be set in settings() using PJOGL.setIcon()
+	// See /tmp/icon_code.txt for the code that was causing issues
+
+	// Just set the title - this works fine
+	GLOBAL.surface.setTitle("SketchChair");
+	GLOBAL.surface.setResizable(true);
 		}
 
 		//if(useOPENGL)
