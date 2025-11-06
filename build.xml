@@ -232,6 +232,8 @@
 			<arg value="-Dapple.awt.application.appearance=system"/>
 			<arg value="--java-options"/>
 			<arg value="-Dapple.laf.useScreenMenuBar=true"/>
+			<arg value="--java-options"/>
+			<arg value="-Duser.dir=$APPDIR"/>
 			<!-- Icon optional: uncomment if icon.icns exists
 			<arg value=" - -icon"/>
 			<arg value="data/icon.icns"/>
