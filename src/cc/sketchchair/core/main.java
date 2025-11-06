@@ -75,7 +75,24 @@ public class main extends PApplet {
 				e.printStackTrace();
 			}
 		*/
-			
+
+		// Debug: Print JOGL version info
+		try {
+			Package joglPkg = Package.getPackage("com.jogamp.opengl");
+			if (joglPkg != null) {
+				System.out.println("=== JOGL Version Info ===");
+				System.out.println("Specification Title: " + joglPkg.getSpecificationTitle());
+				System.out.println("Specification Version: " + joglPkg.getSpecificationVersion());
+				System.out.println("Implementation Title: " + joglPkg.getImplementationTitle());
+				System.out.println("Implementation Version: " + joglPkg.getImplementationVersion());
+				System.out.println("Implementation Vendor: " + joglPkg.getImplementationVendor());
+				System.out.println("========================");
+			} else {
+				System.out.println("JOGL package not yet loaded");
+			}
+		} catch (Exception e) {
+			System.out.println("Could not get JOGL version: " + e.getMessage());
+		}
 
 		PApplet.main(new String[] { main.class.getName() });
 
@@ -991,7 +1008,10 @@ public class main extends PApplet {
 		GLOBAL.designToolbarAdvanced.getBasePanel().setPos((GLOBAL.windowWidth - GLOBAL.designToolbarAdvanced.getWidth())/2.0f, GLOBAL.windowHeight -GLOBAL.designToolbarAdvanced.getHeight());
 		
 		//resize our pick buffer
-		PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes), Legacy.instance().get3DRenderMode());
+		// Only create pickBuffer once - avoid recreating to prevent JOGL threading issues on macOS
+		if (PickBuffer.getInstance().pickBuffer == null) {
+			PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes), Legacy.instance().get3DRenderMode());
+		}
 		image(PickBuffer.getInstance().pickBuffer.get(),0,0);
 
 		/*
@@ -1061,69 +1081,18 @@ public class main extends PApplet {
 
 	// Processing 4: settings() method must be defined to call size()
 	public void settings() {
-		// Processing 4: Set sketch path appropriately
-		// Priority: 1) jpackage app.dir, 2) JAR location, 3) user.dir
-		try {
-			String sketchDir = null;
-
-			// Check if running from jpackage (has jpackage.app-path property)
-			String jpackagePath = System.getProperty("jpackage.app-path");
-			if (jpackagePath != null) {
-				// jpackage sets app-path to the .app/Contents/app directory
-				java.io.File appDir = new java.io.File(jpackagePath).getParentFile();
-				if (appDir != null && appDir.getName().equals("app")) {
-					sketchDir = appDir.getAbsolutePath();
-					LOGGER.debug("Running from jpackage, using app directory");
-				}
-			}
-
-			// Fallback to JAR location
-			if (sketchDir == null) {
-				try {
-					String jarPath = getClass().getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-					java.io.File jarFile = new java.io.File(jarPath);
-					if (jarFile.isFile()) {
-						sketchDir = jarFile.getParent();
-					} else {
-						sketchDir = jarPath; // Might be a directory when running from classes
-					}
-					LOGGER.debug("Using JAR location");
-				} catch (Exception e) {
-					LOGGER.debug("Could not determine JAR location: " + e.getMessage());
-				}
-			}
-
-			// Final fallback to user.dir
-			if (sketchDir == null) {
-				sketchDir = System.getProperty("user.dir");
-				LOGGER.debug("Using user.dir fallback");
-			}
-
-			sketchPath(sketchDir);
-			LOGGER.debug("Sketch path set to: " + sketchDir);
-		} catch (Exception e) {
-			LOGGER.warn("Could not set sketch path: " + e.getMessage());
-		}
-
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice gd = ge.getDefaultScreenDevice();
-
-		Legacy.displayWidth = (int) gd.getDefaultConfiguration().getBounds().getWidth();
-		Legacy.displayHeight= (int) gd.getDefaultConfiguration().getBounds().getHeight();
-
-		int _displayWidth = (Legacy.displayWidth - 15);
-		int _displayHeight = (Legacy.displayHeight - 55);
-
-		LOGGER.debug("Size( "+_displayWidth+" , "+_displayHeight+ ", "+Legacy.instance().get3DRenderMode()+")");
-
-		if(GLOBAL == null || GLOBAL.resetting == false){
-			size(_displayWidth, _displayHeight, Legacy.instance().get3DRenderMode());
-		}
+		System.out.println("=== SketchChair Starting ===");
+		System.out.println("Initializing P3D renderer");
+		// Use 80% of display size to avoid macOS dock
+		size((int)(displayWidth * 0.8), (int)(displayHeight * 0.8), P3D);
 	}
 
 	@Override
 	public void setup() {
 		LOGGER.debug("Setup()");
+
+		// Processing 4: Enable window resizing
+		surface.setResizable(true);
 
 		
 		LOGGER.info("Operating System: " + System.getProperty("os.name"));
@@ -1152,9 +1121,20 @@ public class main extends PApplet {
 		LOGGER.info(System.getProperty("java.vm.name"));
 		LOGGER.info("Java version : " + System.getProperty("java.vm.version"));
 
-		
-		
-		
+		// Debug: Print JOGL version info
+		try {
+			Package joglPkg = Package.getPackage("com.jogamp.opengl");
+			if (joglPkg != null) {
+				LOGGER.info("=== JOGL Version Info ===");
+				LOGGER.info("Implementation Version: " + joglPkg.getImplementationVersion());
+				LOGGER.info("Implementation Title: " + joglPkg.getImplementationTitle());
+			} else {
+				LOGGER.info("JOGL package not loaded in setup()");
+			}
+		} catch (Exception e) {
+			LOGGER.warn("Could not get JOGL version: " + e.getMessage());
+		}
+
 		LOGGER.info("Starting SketchChair");
 		// Processing 4: dataPath() may fail in JAR, handle gracefully
 		try {
@@ -1280,13 +1260,13 @@ public class main extends PApplet {
 			/*
 			GLOBAL.surface.setSize(width, height); // setup and OPENGL window
      */
-		GLOBAL.surface.setLocation(0, 0);
+		//GLOBAL.surface.setLocation(0, 0); // macOS 15.3: NSWindow operations must run on main thread
 		// Processing 4: setIcon() expects PImage, not Image
-		PImage titlebaricon = loadImage("program_icon_02_b_48x48x32.png");
-		GLOBAL.surface.setIcon(titlebaricon);
-		GLOBAL.surface.setTitle("SketchChair");
+		//PImage titlebaricon = loadImage("program_icon_02_b_48x48x32.png");
+		//GLOBAL.surface.setIcon(titlebaricon); // macOS 15.3: NSWindow operations must run on main thread
+		//GLOBAL.surface.setTitle("SketchChair"); // macOS 15.3: NSWindow operations must run on main thread
 
-		GLOBAL.surface.setResizable(true);
+		//GLOBAL.surface.setResizable(true); // macOS 15.3: NSWindow operations must run on main thread
 		}
 
 		//if(useOPENGL)
@@ -1444,7 +1424,10 @@ public class main extends PApplet {
 		this.initiatingFrames = 0; 
 		
 		//previewBuffer = createGraphics((int)previewW,(int)previewH,P3D);
-		PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes),Legacy.instance().get3DRenderMode() );
+		// Only create pickBuffer once - avoid recreating to prevent JOGL threading issues on macOS
+		if (PickBuffer.getInstance().pickBuffer == null) {
+			PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes),Legacy.instance().get3DRenderMode() );
+		}
 		image(PickBuffer.getInstance().pickBuffer.get(),0,0);
 		//PickBuffer.getInstance().pickBuffer.hint(PApplet.DISABLE_TRANSFORM_CACHE);
 		//PickBuffer.getInstance().pickBuffer.hint(PApplet.ENABLE_ACCURATE_2D);

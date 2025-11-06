@@ -212,7 +212,13 @@
 			<arg value="--dest"/>
 			<arg value="dist"/>
 			<arg value="--java-options"/>
+			<arg value="--enable-native-access=ALL-UNNAMED"/>
+			<arg value="--java-options"/>
+			<arg value="--add-exports=java.desktop/com.apple.eawt=ALL-UNNAMED"/>
+			<arg value="--java-options"/>
 			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+			<arg value="--java-options"/>
+			<arg value="-Dsun.java2d.metal=true"/>
 			<arg value="--java-options"/>
 			<arg value="-Dapple.awt.application.appearance=system"/>
 			<arg value="--java-options"/>
@@ -315,6 +321,38 @@
 			<arg value="--linux-shortcut"/>
 		</exec>
 		<echo>Linux .deb package created in dist/</echo>
+	</target>
+
+	<!-- Create portable Windows distribution package -->
+	<target name="dist.windows.portable" depends="build.standard" description="Create portable Windows distribution ZIP">
+		<mkdir dir="dist"/>
+		<zip destfile="dist/SketchChair-Windows-Portable.zip">
+			<!-- Main JAR and launcher -->
+			<zipfileset file="build/SketchChair-standard.jar" prefix="SketchChair"/>
+			<zipfileset file="launch-windows.bat" prefix="SketchChair"/>
+			<zipfileset file="BUILD_WINDOWS.md" prefix="SketchChair"/>
+			<zipfileset file="README.md" prefix="SketchChair"/>
+
+			<!-- Libraries -->
+			<zipfileset dir="build/lib" prefix="SketchChair/lib"/>
+
+			<!-- Resources -->
+			<zipfileset dir="build/data" prefix="SketchChair/data"/>
+			<zipfileset dir="build/languages" prefix="SketchChair/languages"/>
+			<zipfileset dir="build/binlib" prefix="SketchChair/binlib"/>
+		</zip>
+		<echo>===================================================</echo>
+		<echo>Portable Windows distribution created!</echo>
+		<echo>File: dist/SketchChair-Windows-Portable.zip</echo>
+		<echo>===================================================</echo>
+		<echo>To use on Windows:</echo>
+		<echo>1. Extract ZIP file</echo>
+		<echo>2. Install JDK 17+ (if not already installed)</echo>
+		<echo>3. Run launch-windows.bat</echo>
+		<echo>===================================================</echo>
+		<echo>To create Windows installer with bundled JRE:</echo>
+		<echo>Run 'ant jpackage.win' on a Windows machine</echo>
+		<echo>===================================================</echo>
 	</target>
 
 </project>
