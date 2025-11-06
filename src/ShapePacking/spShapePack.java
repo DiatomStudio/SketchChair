@@ -198,8 +198,8 @@ public class spShapePack {
 	public void makePDF(PApplet a) {
 		// Processing 4: Use string renderer name and safe cast
 		PGraphics g = a.createGraphics(
-				(int) (this.materialWidth),
-				(int) (this.materialHeight),
+				(int) (this.materialWidth * pdf_pixels_per_mm),
+				(int) (this.materialHeight * pdf_pixels_per_mm),
 				PApplet.PDF,
 				"C:\\MyMedia\\sketchChair\\pdfOutput\\output"
 						+ functions.getFileName() + ".pdf");
@@ -211,19 +211,26 @@ public class spShapePack {
 		pdf.textFont(font);
 		pdf.textSize(this.textSize);
 
+		LOGGER.info("sending PDF to C:\\MyMedia\\sketchChair\\pdfOutput\\output" + functions.getFileName() + ".pdf");
+		LOGGER.info("PDF dimensions: " + (int)(this.materialWidth * pdf_pixels_per_mm) + " x " + (int)(this.materialHeight * pdf_pixels_per_mm));
+		LOGGER.info("Number of pages to render: " + this.pages.l.size());
+
 		pdf.beginDraw();
 		//pdf.scale(pdf_pixels_per_mm );
 
 		pdf.strokeWeight(.0001f);
 		pdf.stroke(255, 0, 0);
+
+		LOGGER.info("About to call renderPDF with pageScale=" + pdf_pixels_per_mm);
 		this.pages.renderPDF(pdf, pdf_pixels_per_mm);
-		pdf.dispose();
+		LOGGER.info("Finished renderPDF call");
+
 		pdf.endDraw();
+		pdf.dispose();
 
 	}
 
 	public void makePDF(PApplet a, String pdfSaveLocation) {
-
 		// Processing 4: Use PApplet.PDF and safe cast
 		PGraphics g = a.createGraphics(
 				(int) (this.materialWidth * pdf_pixels_per_mm),
@@ -235,14 +242,18 @@ public class spShapePack {
 		PGraphicsPDF pdf = (PGraphicsPDF) g;
 
 		LOGGER.info("sending PDF to " + pdfSaveLocation);
+		LOGGER.info("PDF dimensions: " + (int)(this.materialWidth * pdf_pixels_per_mm) + " x " + (int)(this.materialHeight * pdf_pixels_per_mm));
+		LOGGER.info("Number of pages to render: " + this.pages.l.size());
+
 		pdf.beginDraw();
-		//pdf.scale(pdf_pixels_per_mm);
 		pdf.strokeWeight(.0001f);
 		pdf.stroke(255, 0, 0);
-		//PFont font = a.createFont("Arial", this.textSize);
-		//pdf.textFont(font);
 		pdf.textSize(this.textSize);
+
+		LOGGER.info("About to call renderPDF with pageScale=" + pdf_pixels_per_mm);
 		this.pages.renderPDF(pdf, pdf_pixels_per_mm);
+		LOGGER.info("Finished renderPDF call");
+
 		pdf.endDraw();
 		pdf.dispose();
 	}

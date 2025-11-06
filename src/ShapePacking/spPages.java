@@ -211,19 +211,23 @@ public class spPages {
 	}
 
 	public void renderPDF(PGraphicsPDF pdf, float pageScale) {
+		LOGGER.info("renderPDF: Starting to render " + l.size() + " pages with scale=" + pageScale);
 		for (int i = 0; i < l.size(); i++) {
 			spPage page = (spPage) this.l.get(i);
+			LOGGER.info("renderPDF: Page " + i + " has " + page.shapes.l.size() + " shapes");
 
 			pdf.pushMatrix();
 			pdf.scale(pageScale);
+			LOGGER.info("renderPDF: About to call page.render() for page " + i);
 			page.render(pdf);
+			LOGGER.info("renderPDF: Finished page.render() for page " + i);
 			pdf.popMatrix();
 
 			if (i != l.size() - 1) {
 				pdf.nextPage();
 			}
-
 		}
+		LOGGER.info("renderPDF: Finished rendering all pages");
 	}
 
 	public void renderToPlotter(HPGLWriter craftRoboWriter) {
