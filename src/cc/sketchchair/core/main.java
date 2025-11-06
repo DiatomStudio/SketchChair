@@ -1262,7 +1262,7 @@ public class main extends PApplet {
 			GLOBAL.surface.setSize(width, height); // setup and OPENGL window
      */
 		// Set window icon - uses SwingUtilities for thread safety on macOS 15.3+
-		final PImage titlebaricon = loadImage("icons/program_icon_02_b_48x48x32.png");
+		final PImage titlebaricon = loadImage("data/icons/program_icon_02_b_48x48x32.png");
 		SwingUtilities.invokeLater(() -> {
 			GLOBAL.surface.setIcon(titlebaricon);
 			GLOBAL.surface.setTitle("SketchChair");
