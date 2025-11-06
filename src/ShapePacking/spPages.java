@@ -214,13 +214,13 @@ public class spPages {
 		for (int i = 0; i < l.size(); i++) {
 			spPage page = (spPage) this.l.get(i);
 
+			pdf.pushMatrix();
 			pdf.scale(pageScale);
 			page.render(pdf);
+			pdf.popMatrix();
 
 			if (i != l.size() - 1) {
 				pdf.nextPage();
-				// Reset transformation matrix for next page
-				pdf.resetMatrix();
 			}
 
 		}
