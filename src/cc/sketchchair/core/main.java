@@ -1088,17 +1088,17 @@ public class main extends PApplet {
 		// Use 80% of display size to avoid macOS dock
 		size((int)(displayWidth * 0.8), (int)(displayHeight * 0.8), P3D);
 
-		// Set application icon for P3D renderer using PJOGL.setIcon()
-		// This must be done in settings() for OpenGL renderers
-		PJOGL.setIcon("data/icons/program_icon_02_b_48x48x32.png");
+		// PJOGL.setIcon() commented out for now - causes crashes
+		// TODO: Investigate correct way to set icon in Processing 4 P3D
+		// PJOGL.setIcon("data/icons/program_icon_02_b_48x48x32.png");
 	}
 
 	@Override
 	public void setup() {
 		LOGGER.debug("Setup()");
 
-		// Processing 4: Enable window resizing
-		surface.setResizable(true);
+		// Processing 4: setResizable() removed - causes threading deadlock with JOGL animator
+		// surface.setResizable(true);
 
 		
 		LOGGER.info("Operating System: " + System.getProperty("os.name"));
@@ -1273,7 +1273,7 @@ public class main extends PApplet {
 
 	// Just set the title - this works fine
 	GLOBAL.surface.setTitle("SketchChair");
-	GLOBAL.surface.setResizable(true);
+	// GLOBAL.surface.setResizable(true); // Causes threading deadlock with JOGL animator
 		}
 
 		//if(useOPENGL)
