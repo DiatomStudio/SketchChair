@@ -1883,15 +1883,15 @@ public class SketchPath extends SketchShape {
 	}
 
 	protected void renderFace(PGraphics g) {
+		if (!this.getClosed())
+			g.noFill();
+
 		g.beginShape();
 
 
 		int loop = 0;
 		if (this.getClosed() &&(this.l.size() > 0 && (this.l.get(0).containsBezier() || this.l.get(this.l.size()-1).containsBezier())))
 			loop = 1;
-
-		if (!this.getClosed())
-			g.noFill();
 
 		for (int i = 1; i < this.l.size() + loop; i++) {
 			SketchPoint curVec = null;

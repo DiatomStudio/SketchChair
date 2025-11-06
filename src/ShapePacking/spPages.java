@@ -217,7 +217,8 @@ public class spPages {
 			LOGGER.info("renderPDF: Page " + i + " has " + page.shapes.l.size() + " shapes");
 
 			pdf.pushMatrix();
-			pdf.scale(pageScale);
+			// Don't scale - coordinates are already in PDF points
+			// pdf.scale(pageScale);
 			LOGGER.info("renderPDF: About to call page.render() for page " + i);
 			page.render(pdf);
 			LOGGER.info("renderPDF: Finished page.render() for page " + i);
