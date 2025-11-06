@@ -36,6 +36,7 @@ import java.awt.event.MouseWheelListener;
 import java.io.File;
 
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 import javax.vecmath.Vector3f;
 
 import processing.core.PApplet;
@@ -1260,13 +1261,13 @@ public class main extends PApplet {
 			/*
 			GLOBAL.surface.setSize(width, height); // setup and OPENGL window
      */
-		//GLOBAL.surface.setLocation(0, 0); // macOS 15.3: NSWindow operations must run on main thread
-		// Processing 4: setIcon() expects PImage, not Image
-		//PImage titlebaricon = loadImage("program_icon_02_b_48x48x32.png");
-		//GLOBAL.surface.setIcon(titlebaricon); // macOS 15.3: NSWindow operations must run on main thread
-		//GLOBAL.surface.setTitle("SketchChair"); // macOS 15.3: NSWindow operations must run on main thread
-
-		//GLOBAL.surface.setResizable(true); // macOS 15.3: NSWindow operations must run on main thread
+		// Set window icon - uses SwingUtilities for thread safety on macOS 15.3+
+		final PImage titlebaricon = loadImage("icons/program_icon_02_b_48x48x32.png");
+		SwingUtilities.invokeLater(() -> {
+			GLOBAL.surface.setIcon(titlebaricon);
+			GLOBAL.surface.setTitle("SketchChair");
+			GLOBAL.surface.setResizable(true);
+		});
 		}
 
 		//if(useOPENGL)
