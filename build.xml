@@ -200,7 +200,16 @@
 	<!-- jpackage targets for native distribution -->
 	<target name="jpackage.mac" depends="build.standard" description="Create macOS .app bundle">
 		<mkdir dir="dist"/>
-		<exec executable="jpackage" failonerror="true">
+		<!-- Determine JDK 25 path -->
+		<exec executable="/usr/libexec/java_home" outputproperty="jdk25.home">
+			<arg value="-v"/>
+			<arg value="25"/>
+		</exec>
+		<echo>Using JDK 25 from: ${jdk25.home}</echo>
+		<!-- Use JDK 25's jpackage and bundle JDK 25 runtime -->
+		<exec executable="${jdk25.home}/bin/jpackage" failonerror="true">
+			<arg value="--runtime-image"/>
+			<arg value="${jdk25.home}"/>
 			<arg value="--input"/>
 			<arg value="build"/>
 			<arg value="--name"/>
@@ -234,7 +243,7 @@
 			<arg value="--copyright"/>
 			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
 		</exec>
-		<echo>macOS .app created in dist/SketchChair.app</echo>
+		<echo>macOS .app created in dist/SketchChair.app with JDK 25 runtime</echo>
 	</target>
 
 	<target name="jpackage.mac.dmg" depends="build.standard" description="Create macOS .dmg installer">
