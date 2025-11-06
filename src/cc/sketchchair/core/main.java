@@ -44,6 +44,7 @@ import processing.core.PFont;
 import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.core.PSurface;
+import processing.opengl.PJOGL;
 import cc.sketchchair.functions.functions;
 import cc.sketchchair.ragdoll.ergoDoll;
 import cc.sketchchair.sketch.SketchSpline;
@@ -1086,6 +1087,10 @@ public class main extends PApplet {
 		System.out.println("Initializing P3D renderer");
 		// Use 80% of display size to avoid macOS dock
 		size((int)(displayWidth * 0.8), (int)(displayHeight * 0.8), P3D);
+
+		// Set application icon for P3D renderer using PJOGL.setIcon()
+		// This must be done in settings() for OpenGL renderers
+		PJOGL.setIcon("data/icons/program_icon_02_b_48x48x32.png");
 	}
 
 	@Override
