@@ -11,6 +11,8 @@ cd "$SCRIPT_DIR/build"
 
 # Launch SketchChair with JDK 25 and required JVM options
 /usr/libexec/java_home -v 25 --exec java \
+     --enable-native-access=ALL-UNNAMED \
+     --add-exports=java.desktop/com.apple.eawt=ALL-UNNAMED \
      -Djogamp.gluegen.UseTempJarCache=true \
      -Dsun.java2d.metal=true \
      -Dapple.awt.application.appearance=system \
