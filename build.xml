@@ -234,10 +234,8 @@
 			<arg value="-Dapple.laf.useScreenMenuBar=true"/>
 			<arg value="--java-options"/>
 			<arg value="-Duser.dir=$APPDIR"/>
-			<!-- Icon optional: uncomment if icon.icns exists
-			<arg value=" - -icon"/>
-			<arg value="data/icon.icns"/>
-			end icon -->
+			<arg value="--icon"/>
+			<arg value="data/icons/program_icon_02_b.icns"/>
 			<arg value="--app-version"/>
 			<arg value="1.0"/>
 			<arg value="--vendor"/>
@@ -291,7 +289,7 @@
 			<arg value="--java-options"/>
 			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
 			<arg value="--icon"/>
-			<arg value="data/icon.ico"/>
+			<arg value="data/icons/program_icon_02_b.ico"/>
 			<arg value="--app-version"/>
 			<arg value="1.0"/>
 			<arg value="--vendor"/>
@@ -322,7 +320,7 @@
 			<arg value="--java-options"/>
 			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
 			<arg value="--icon"/>
-			<arg value="data/icon.png"/>
+			<arg value="data/icons/program_icon_02_b_128x128x32.png"/>
 			<arg value="--app-version"/>
 			<arg value="1.0"/>
 			<arg value="--vendor"/>
