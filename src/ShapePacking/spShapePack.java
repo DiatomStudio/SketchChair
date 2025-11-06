@@ -243,8 +243,8 @@ public class spShapePack {
 		//pdf.textFont(font);
 		pdf.textSize(this.textSize);
 		this.pages.renderPDF(pdf, pdf_pixels_per_mm);
-		pdf.dispose();
 		pdf.endDraw();
+		pdf.dispose();
 	}
 	
 	public void makeSVG(PApplet a, String svgSaveLocation){

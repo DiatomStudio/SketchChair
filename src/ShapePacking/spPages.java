@@ -217,8 +217,11 @@ public class spPages {
 			pdf.scale(pageScale);
 			page.render(pdf);
 
-			if (i != l.size() - 1)
+			if (i != l.size() - 1) {
 				pdf.nextPage();
+				// Reset transformation matrix for next page
+				pdf.resetMatrix();
+			}
 
 		}
 	}
