@@ -137,7 +137,9 @@ A majority of the core libraries used in SketchChair have also been ported to Ja
 
 ##processing
 homepage: http://processing.org/
-License:  LGPL 
+License:  LGPL
+
+**Note**: SketchChair uses a patched version of Processing's `core.jar` with custom application icons embedded. The default Processing icons in the JAR's `/icon/` directory have been replaced with SketchChair icons to fix the macOS Dock icon issue with JOGL's NEWT windowing system (see Processing Issue #5123). The original `core.jar` is backed up as `core.jar.BACKUP` in `libProcessing4/`.
 
 ##OPENGL: JOGL, GLUEGEN
 homepage: http://www.opengl.org/
