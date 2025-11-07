@@ -201,7 +201,7 @@
 	</target>
 
 	<!-- jpackage targets for native distribution -->
-	<target name="jpackage.mac" depends="build.standard" description="Create macOS .app bundle">
+	<target name="jpackage.mac" depends="build.standard" description="Create macOS .app bundle and DMG">
 		<mkdir dir="dist"/>
 		<!-- Determine JDK 25 path -->
 		<exec executable="/usr/libexec/java_home" outputproperty="jdk25.home">
@@ -246,13 +246,40 @@
 			<arg value="--copyright"/>
 			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
 		</exec>
-		<!-- Copy changelog to app bundle -->
+		<!-- Copy additional files to app bundle Resources -->
 		<copy file="changelog.txt" todir="dist/SketchChair.app/Contents/Resources"/>
-		<!-- Create standardized ZIP package -->
-		<zip destfile="dist/SketchChair-${version}-macos.zip" basedir="dist" includes="SketchChair.app/**"/>
+		<copy file="SketchChair.properties" todir="dist/SketchChair.app/Contents/Resources"/>
+		<!-- Create ZIP using ditto to preserve macOS attributes -->
+		<exec executable="ditto" failonerror="true">
+			<arg value="-c"/>
+			<arg value="-k"/>
+			<arg value="--keepParent"/>
+			<arg value="dist/SketchChair.app"/>
+			<arg value="dist/SketchChair-${version}-macos.zip"/>
+		</exec>
+		<!-- Create DMG installer -->
+		<exec executable="${jdk25.home}/bin/jpackage" failonerror="true">
+			<arg value="--app-image"/>
+			<arg value="dist/SketchChair.app"/>
+			<arg value="--name"/>
+			<arg value="SketchChair"/>
+			<arg value="--type"/>
+			<arg value="dmg"/>
+			<arg value="--dest"/>
+			<arg value="dist"/>
+			<arg value="--app-version"/>
+			<arg value="${version}"/>
+			<arg value="--vendor"/>
+			<arg value="Diatom Studio"/>
+			<arg value="--copyright"/>
+			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
+		</exec>
+		<!-- Rename DMG to standardized naming -->
+		<move file="dist/SketchChair-${version}.dmg" tofile="dist/SketchChair-${version}-macos.dmg" failonerror="false"/>
 		<echo>===================================================</echo>
-		<echo>macOS .app created with JDK 25 runtime!</echo>
-		<echo>Package: dist/SketchChair-${version}-macos.zip</echo>
+		<echo>macOS packages created with JDK 25 runtime!</echo>
+		<echo>ZIP: dist/SketchChair-${version}-macos.zip</echo>
+		<echo>DMG: dist/SketchChair-${version}-macos.dmg</echo>
 		<echo>===================================================</echo>
 	</target>
 
