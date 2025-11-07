@@ -1,8 +1,10 @@
-[1.0.0.3] - 2025-11-06
-+ Fixed portable launcher and added changelog/properties to release packages
-
-[1.0.0.3] - 2025-11-06
-+ Fixed portable launcher and added changelog/properties to release packages
+[1.0.0.4] - 2025-11-06
++ Fixed Windows-specific window positioning issue (window opening off-screen)
++ Fixed Windows mouse/drawing coordinate offset on startup with delayed resize workaround
++ Added comprehensive Windows build automation scripts (build-windows.bat, build-windows-exe.bat, build-windows-portable-exe.bat, build-windows-release.bat)
++ Created automated release packaging with both installer .exe and portable distributions
++ Both Windows distributions now include embedded JRE 21 (no Java installation required)
++ Added documentation (changelog, properties, README) to all distribution packages
 
 [1.0.0.3] - 2025-11-06
 + Fixed portable launcher and added changelog/properties to release packages
