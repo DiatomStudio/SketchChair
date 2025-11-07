@@ -249,14 +249,27 @@
 		<!-- Copy additional files to app bundle Resources -->
 		<copy file="changelog.txt" todir="dist/SketchChair.app/Contents/Resources"/>
 		<copy file="SketchChair.properties" todir="dist/SketchChair.app/Contents/Resources"/>
+		<!-- Copy documentation to dist root for easy access -->
+		<copy file="changelog.txt" todir="dist"/>
+		<copy file="SketchChair.properties" todir="dist"/>
+		<copy file="README.md" todir="dist"/>
 		<!-- Create ZIP using ditto to preserve macOS attributes -->
 		<exec executable="ditto" failonerror="true">
 			<arg value="-c"/>
 			<arg value="-k"/>
 			<arg value="--keepParent"/>
 			<arg value="dist/SketchChair.app"/>
-			<arg value="dist/SketchChair-${version}-macos.zip"/>
+			<arg value="dist/temp-app.zip"/>
 		</exec>
+		<!-- Add documentation files to the ZIP at root level -->
+		<zip destfile="dist/SketchChair-${version}-macos.zip" update="false">
+			<zipfileset src="dist/temp-app.zip"/>
+			<zipfileset file="dist/changelog.txt" prefix=""/>
+			<zipfileset file="dist/SketchChair.properties" prefix=""/>
+			<zipfileset file="dist/README.md" prefix=""/>
+		</zip>
+		<!-- Clean up temp file -->
+		<delete file="dist/temp-app.zip"/>
 		<!-- Create DMG installer -->
 		<exec executable="${jdk25.home}/bin/jpackage" failonerror="true">
 			<arg value="--app-image"/>

@@ -1,12 +1,19 @@
-[1.9.1] - 2025-11-06
-+ Updated to Processing 4.3 for native Apple Silicon support and modern platform compatibility
-+ Upgraded to JOGL 2.6.0 (OpenGL rendering library)
-+ Now supports macOS 15+ (Sequoia) and Apple Silicon (M1/M2/M3) natively
-+ Improved Windows compatibility with updated Java runtime
-+ Modernized build system with standardized release packaging
-+ Native .app bundles for macOS with bundled JDK 25 runtime
-+ All underlying graphics and processing libraries updated to latest versions
-+ Note: No functional changes to SketchChair features, this is purely a compatibility update
+[1.0.0] - 2025-11-06
+=== Major Modernization Release ===
++ Upgraded to Processing 4.3 with Java 17 for modern platform compatibility
++ Native Apple Silicon (M1/M2/M3) support via JOGL 2.5.0
++ Supports macOS 15+ (Sequoia), Windows 10+, and modern Linux distributions
++ Self-contained .app bundles with bundled JDK 25 runtime (no Java installation required)
++ Fixed PDF export with Processing 4.4 compatible libraries
++ Refined ergonomic figure outline rendering (8x thinner, cleaner appearance)
++ Improved distribution packaging with documentation at root level
++ Standard JAR packaging replaces One-JAR for better compatibility
++ All graphics and OpenGL libraries updated to latest stable versions
++ Cross-platform build system with jpackage for native installers
++ Note: This is a compatibility and infrastructure update - all SketchChair features remain the same
+
+[1.9.1] - Previous Development Version
++ Development snapshot during Processing 4 migration
 
 [0.9.0.1]
 + Reordered and added new File menu items. 
