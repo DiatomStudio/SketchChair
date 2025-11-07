@@ -25,45 +25,32 @@ package cc.sketchchair.core;
 //TODO: Render ragdoll correctly
 //TODO: sitting controle for ragdoll
 
-import java.awt.Dimension;
+
+
+
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.IntBuffer;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLCapabilities;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.vecmath.Vector3f;
 
-
-import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationAdapter;
-import com.apple.eawt.ApplicationEvent;
-
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PFont;
 import processing.core.PGraphics;
 import processing.core.PImage;
-import processing.opengl.PGL;
-import processing.opengl.PGraphicsOpenGL;
-import ModalGUI.ModalGUI;
-
+import processing.core.PSurface;
+import processing.opengl.PJOGL;
 import cc.sketchchair.functions.functions;
 import cc.sketchchair.ragdoll.ergoDoll;
-import cc.sketchchair.sketch.Sketch;
 import cc.sketchchair.sketch.SketchSpline;
-import cc.sketchchair.sketch.SketchTools;
+import cc.sketchchair.widgets.WidgetLoad;
+import cc.sketchchair.widgets.WidgetMaterials;
+import cc.sketchchair.widgets.WidgetPlanes;
 /**
  * Main program class. Used to start SketchChair. 
  * @author gregsaul
@@ -75,7 +62,7 @@ public class main extends PApplet {
 	public static void main(String args[]) {
 
 		//send log to a file
-		
+		/*
 		File file=new File("debug.log");
 			try {
 				if(!file.exists()){
@@ -89,8 +76,25 @@ public class main extends PApplet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
-			
+		*/
+
+		// Debug: Print JOGL version info
+		try {
+			Package joglPkg = Package.getPackage("com.jogamp.opengl");
+			if (joglPkg != null) {
+				System.out.println("=== JOGL Version Info ===");
+				System.out.println("Specification Title: " + joglPkg.getSpecificationTitle());
+				System.out.println("Specification Version: " + joglPkg.getSpecificationVersion());
+				System.out.println("Implementation Title: " + joglPkg.getImplementationTitle());
+				System.out.println("Implementation Version: " + joglPkg.getImplementationVersion());
+				System.out.println("Implementation Vendor: " + joglPkg.getImplementationVendor());
+				System.out.println("========================");
+			} else {
+				System.out.println("JOGL package not yet loaded");
+			}
+		} catch (Exception e) {
+			System.out.println("Could not get JOGL version: " + e.getMessage());
+		}
 
 		PApplet.main(new String[] { main.class.getName() });
 
@@ -103,6 +107,7 @@ public class main extends PApplet {
 	// Static global components
 	GLOBAL GLOBAL;
 	SETTINGS SETTINGS;
+	Localization Localization;
 
 	static LOGGER LOGGER = new LOGGER();
 	static String openChair = null;
@@ -139,11 +144,11 @@ public class main extends PApplet {
 	private boolean mouseDoubleClick = false;
 	private int lastMouseMove;
 	private int initiatingFrames;
+	private boolean windowsInitResize = false; // Flag to trigger one-time Windows resize fix
+	private int windowsFrameCount = 0; // Count frames before Windows resize fix
 
 
 	void applyWorldTranslation(PGraphics renderer) {
-
-		
 		
 		if (GLOBAL.autoRotate)
 			GLOBAL.rotateModelsY -= 0.017f;
@@ -164,6 +169,24 @@ public class main extends PApplet {
 
 	@Override
 	public void draw() {
+
+
+		//not the first loop
+		if(firstLoop){
+			
+	
+			
+			
+
+			
+			//this.initiatingFrames++;
+			//if(this.initiatingFrames > 100)
+				firstLoop = false;
+
+		}
+		
+		
+		
 		if(UI.menuListen.quedAction != null)
 			UI.menuListen.processAction();
 		
@@ -196,7 +219,6 @@ public class main extends PApplet {
 		 
 		//GLGraphics renderer = (GLGraphics)g;
 		PGraphics renderer = (PGraphics)g;
-
 		//if(useGLGRAPHICS)
 			//renderer.beginGL();
 		
@@ -232,9 +254,27 @@ public class main extends PApplet {
 		GLOBAL.SketchGlobals.mousePressed = mousePressed;
 		
 		
-		
+
 		if(width != GLOBAL.windowWidth || height != GLOBAL.windowHeight)
 		resize();
+
+		// Windows-specific: Delayed window size change to trigger natural resize
+		// Wait ~2 seconds (60 frames) for Windows to fully initialize
+		// Then force a small window size change and back to trigger proper coordinate recalculation
+		if(GLOBAL.isWindows() && !windowsInitResize) {
+			windowsFrameCount++;
+			if(windowsFrameCount == 60) {
+				// Change window size by 1 pixel to trigger resize event
+				LOGGER.info("Windows: Triggering window resize event (frame " + windowsFrameCount + ")");
+				GLOBAL.surface.setSize(width + 1, height + 1);
+			} else if(windowsFrameCount == 61) {
+				// Change back to original size
+				LOGGER.info("Windows: Restoring original window size");
+				GLOBAL.surface.setSize(width - 1, height - 1);
+				windowsInitResize = true;
+			}
+		}
+
 		//renderer.noSmooth();
 
 		//make sure we always have a chair to edit
@@ -323,33 +363,20 @@ public class main extends PApplet {
 		    aspect = (float) (aspect / 2.0);
 		  }
 		  
-		  
-		 
-		//LOGGER.info(width + "width");
-		//renderer.ortho();
-		/*
-		if(useGLGRAPHICS){
-		ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),
-				-1000, 1000);
-			//renderer.translate((width /2), (height / 2));
-		//renderer.ortho();
-		}else{
-		renderer.ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),
-				-1000, 10000);
-		}
-		*/
-		  renderer.ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),
-					-10000, 10000);
-		  //renderer.hint(PApplet.DISABLE_STROKE_PERSPECTIVE);
-
-		 //frustum();
-		//camera();
-		//perspective();
 		
+		  if(SETTINGS.LEGACY_MODE){
+			  renderer.ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),-10000, 10000);	  
+		  }else{
+			  renderer.ortho(0,width, 0, height,-10000, 10000);
+		  }
+		  
+		 // 
+		  
 		//GLOBAL.uiTools.pickBuffer.background(255);
 		renderer.noFill();
 		renderer.strokeWeight(2);	
-			
+		
+
 		//GLOBAL.uiTools.update();
 		UI.updateMouse(mouseX, mouseY, pmouseX, pmouseY, mousePressed,
 				mouseButton);
@@ -358,9 +385,8 @@ public class main extends PApplet {
 		GLOBAL.uiTools.updateMouse(mouseX, mouseY, pmouseX, pmouseY, mouseDown,
 				mouseButton);
 		
-if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
-		GLOBAL.uiTools.SketchTools.updateMouse(mouseX, mouseY, pmouseX,
-				pmouseY, mouseDown, mouseButton);
+		if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
+		GLOBAL.uiTools.SketchTools.updateMouse(mouseX, mouseY, pmouseX,pmouseY, mouseDown, mouseButton);
 
 		GLOBAL.uiTools.updateMouseWorld();
 
@@ -480,13 +506,7 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		//if(useGLGRAPHICS)
 		//renderer.endGL();
 		
-		//not the first loop
-		if(firstLoop){
-			this.initiatingFrames++;
-			if(this.initiatingFrames > 100)
-				firstLoop = false;
 
-		}
 		
 	}
 
@@ -688,16 +708,38 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		renderer.noLights();
 		
 		//pick buffer rendering
-		if(PickBuffer.getInstance().usePickBuffer && GLOBAL.uiTools.mousePressed && SETTINGS.ENABLE_SELECT_MODEL_PLANES){
+		if(PickBuffer.getInstance().usePickBuffer && ((GLOBAL.uiTools.mousePressed && SETTINGS.ENABLE_SELECT_MODEL_PLANES) || firstLoop) ){
 
+			LOGGER.debug("Update PickBuffer");
 			PickBuffer.getInstance().pickBuffer.beginDraw();
-			PickBuffer.getInstance().pickBuffer.ortho(-(width / 2), (width / 2), -(height / 2), (height / 2),
-					-1000, 10000);
+			//PickBuffer.getInstance().pickBuffer.ortho(-(width / 2), (width / 2), -(height / 2), (height / 2),
+			//		-1000, 10000);
+			
+			//PickBuffer.getInstance().pickBuffer.ortho(width/2, width , height/2, height,
+				//	-1000, 10000);
+			
+			float scale = PickBuffer.getInstance().pickBufferRes;
+			
+			  //renderer.ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),-10000, 10000);	  
+
+			  if(SETTINGS.LEGACY_MODE){
+				  PickBuffer.getInstance().pickBuffer.ortho(-(width*scale)/(2*scale),(width*scale)/(2*scale), -(height*scale)/(2*scale), (height*scale)/(2*scale),
+							-10000, 10000);
+				  }else{
+				  PickBuffer.getInstance().pickBuffer.ortho(-(width*scale),width-(width*scale), -(height*scale), height-(height*scale),
+							-10000, 10000);
+				  }
+			  
+			  
+			  
+		
+			
 			PickBuffer.getInstance().reset();
 			PickBuffer.getInstance().pickBuffer.resetMatrix();
 			PickBuffer.getInstance().pickBuffer.background(255);
 			PickBuffer.getInstance().pickBuffer.setMatrix(renderer.getMatrix());
-			
+			//PickBuffer.getInstance().pickBuffer.translate(width/1.35f, -height/1.35f, -400);
+			//PickBuffer.getInstance().pickBuffer.scale(2f);
 			if ( GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 			GLOBAL.sketchChairs.renderPickBuffer(PickBuffer.getInstance().pickBuffer);
 
@@ -866,6 +908,7 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 	
 		
 		if (SETTINGS.show_framerate) {
+			LOGGER.info("FPS" +GLOBAL.applet.frameRate);
 			renderer.fill(0);
 			renderer.textSize(12);
 			renderer.text((int) GLOBAL.applet.frameRate + " fps", 10, 80);
@@ -987,7 +1030,11 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		GLOBAL.designToolbarAdvanced.getBasePanel().setPos((GLOBAL.windowWidth - GLOBAL.designToolbarAdvanced.getWidth())/2.0f, GLOBAL.windowHeight -GLOBAL.designToolbarAdvanced.getHeight());
 		
 		//resize our pick buffer
-		PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes),P3D);
+		// Only create pickBuffer once - avoid recreating to prevent JOGL threading issues on macOS
+		if (PickBuffer.getInstance().pickBuffer == null) {
+			PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes), Legacy.instance().get3DRenderMode());
+		}
+		image(PickBuffer.getInstance().pickBuffer.get(),0,0);
 
 		/*
 		if (GLOBAL.windowWidth != width || GLOBAL.windowHeight != height
@@ -1052,13 +1099,27 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 				+ "capture-####.png");
 	}
 
-	
+
+
+	// Processing 4: settings() method must be defined to call size()
+	public void settings() {
+		System.out.println("=== SketchChair Starting ===");
+		System.out.println("Initializing P3D renderer");
+		// Use 80% of display size to avoid macOS dock
+		size((int)(displayWidth * 0.8), (int)(displayHeight * 0.8), P3D);
+
+		// PJOGL.setIcon() commented out for now - causes crashes
+		// TODO: Investigate correct way to set icon in Processing 4 P3D
+		// PJOGL.setIcon("data/icons/program_icon_02_b_48x48x32.png");
+	}
 
 	@Override
 	public void setup() {
+		LOGGER.debug("Setup()");
 
-		
-		
+		// Processing 4: setResizable() removed - causes threading deadlock with JOGL animator
+		// surface.setResizable(true);
+
 		
 		LOGGER.info("Operating System: " + System.getProperty("os.name"));
 
@@ -1086,36 +1147,76 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		LOGGER.info(System.getProperty("java.vm.name"));
 		LOGGER.info("Java version : " + System.getProperty("java.vm.version"));
 
-		
-		
-		
+		// Debug: Print JOGL version info
+		try {
+			Package joglPkg = Package.getPackage("com.jogamp.opengl");
+			if (joglPkg != null) {
+				LOGGER.info("=== JOGL Version Info ===");
+				LOGGER.info("Implementation Version: " + joglPkg.getImplementationVersion());
+				LOGGER.info("Implementation Title: " + joglPkg.getImplementationTitle());
+			} else {
+				LOGGER.info("JOGL package not loaded in setup()");
+			}
+		} catch (Exception e) {
+			LOGGER.warn("Could not get JOGL version: " + e.getMessage());
+		}
+
 		LOGGER.info("Starting SketchChair");
-		LOGGER.info("DataPath set at :" + dataPath("TrebuchetMS-12.vlw"));
+		// Processing 4: dataPath() may fail in JAR, handle gracefully
+		try {
+			LOGGER.info("DataPath set at :" + dataPath("TrebuchetMS-12.vlw"));
+		} catch (Exception e) {
+			LOGGER.warn("Could not determine dataPath (running from JAR): " + e.getMessage());
+		}
 
 		LOGGER.info("After exit");
 
-		//set staic link to applet
-		if(GLOBAL.frame == null)
-			GLOBAL.frame = this.frame;
+		//set static link to applet surface
+		if(GLOBAL.surface == null)
+			GLOBAL.surface = this.getSurface();
 
 		
-		//Static global components
+
+		
 		GLOBAL = new GLOBAL(this);
 		SETTINGS = new SETTINGS();
 		GLOBAL.sketchProperties.loadDefaults();
+		// Processing 4: dataPath() may fail in JAR, provide fallback
+		String localizationPath;
+		try {
+			localizationPath = dataPath("/");
+		} catch (Exception e) {
+			// Fallback to current directory when running from JAR
+			localizationPath = "./";
+			LOGGER.warn("Using fallback localization path: " + localizationPath);
+		}
+		Localization = new Localization(localizationPath, SETTINGS.language);
+
+		//HackHacky
+		GLOBAL.planesWidget = new WidgetPlanes(0, 0, 0, 0, GLOBAL.gui);
+		GLOBAL.loadWidget = new WidgetLoad();
+		GLOBAL.widgetMaterials = new WidgetMaterials(0, 0, 0, 0, GLOBAL.gui);
+
+		//Static global components
+
+		if(SETTINGS.SMOOTH_RENDER)
+		smooth();
+		else
+		noSmooth();
 		
-		
-	//	smooth(8);
 		  
+		
+		
 		  
 		  
 		UI = new UI();
 		
+
 		LOGGER.info("SketchChair v " + GLOBAL.version);
 
-		
-		GLOBAL.windowWidth = (displayWidth - 5);
-		GLOBAL.windowHeight = (displayHeight - 65);
+		// Processing 4: width and height are now set by size() in settings()
+		GLOBAL.windowWidth = width;
+		GLOBAL.windowHeight = height;
 		
 		Thread.currentThread().setDefaultUncaughtExceptionHandler(exception);
 		useOPENGL = false;
@@ -1130,7 +1231,6 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 				
 				//size(GLOBAL.windowWidth, GLOBAL.windowHeight, OldP3D.NOSTALGIA);
 
-				size(GLOBAL.windowWidth, GLOBAL.windowHeight, OPENGL);
 
 			}
 		}else{
@@ -1181,20 +1281,26 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		//g.printProjection();
 		
 
-		if (GLOBAL.frame != null ){
+		if (GLOBAL.surface != null ){
 			//causing crash?
 			/*
-			GLOBAL.frame.setPreferredSize(new Dimension(width,
-					height));
-			GLOBAL.frame.setSize(width, height); // setup and OPENGL window
+			GLOBAL.surface.setSize(width, height); // setup and OPENGL window
      */
-		GLOBAL.frame.setLocation(0, 0);
-		ImageIcon titlebaricon = new ImageIcon(
-				loadBytes("program_icon_02_b_48x48x32.png"));
-		GLOBAL.frame.setIconImage(titlebaricon.getImage());
-		GLOBAL.frame.setName("SketchChair");
-		
-		GLOBAL.frame.setResizable(true);
+
+	// Icon setting code removed - causes threading deadlock in Processing 4
+	// Processing 4 requires icon to be set in settings() using PJOGL.setIcon()
+	// See /tmp/icon_code.txt for the code that was causing issues
+
+	// Just set the title - this works fine
+	GLOBAL.surface.setTitle("SketchChair");
+	// GLOBAL.surface.setResizable(true); // Causes threading deadlock with JOGL animator
+
+	// Windows-specific: Position window to avoid off-screen issues
+	// Set to (100, 100) to ensure visibility on all displays
+	if (GLOBAL.isWindows()) {
+		GLOBAL.surface.setLocation(100, 100);
+		LOGGER.info("Windows detected: Set window location to (100, 100)");
+	}
 		}
 
 		//if(useOPENGL)
@@ -1204,7 +1310,9 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		//textMode(SCREEN);
 
 		
-	
+		
+
+		
 		
 		
 		GLOBAL.jBullet.physics_on = false;
@@ -1212,6 +1320,16 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		GLOBAL.applet = this;
 		GLOBAL.gui.setup(this);
 		GLOBAL.gui.renderOnUpdate = GLOBAL.useMaskedUpdating;
+		
+
+
+		
+		if (SETTINGS.EXPERT_MODE)
+			UI.setupGUITabsExpert(GLOBAL.applet, GLOBAL.gui);
+		else
+			UI.setupGUITabsBasic(GLOBAL.applet, GLOBAL.gui);
+		
+		
 		
 		frameRate(120);
 
@@ -1228,11 +1346,8 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		//if(!SETTINGS.EXPERT_MODE)
 		//GLOBAL.clickToStart = loadImage("clickToStart.png");
 
-		if (SETTINGS.EXPERT_MODE)
-			UI.setupGUITabsExpert(GLOBAL.applet, GLOBAL.gui);
-		else
-			UI.setupGUITabsBasic(GLOBAL.applet, GLOBAL.gui);
 
+		
 		LOGGER.info("AFTER GUI AGAIN");
 
 		GLOBAL.uiTools.build(this);
@@ -1249,18 +1364,8 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 
 	//	GLOBAL.shapePack.ZOOM = 1.5f;
 
-		addMouseWheelListener(new MouseWheelListener() {
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				int notches = e.getWheelRotation();
-				if(!GLOBAL.gui.hasFocus()){
-					if (GLOBAL.uiTools.currentView == GLOBAL.uiTools.VIEW_CHAIR_EDIT)
-						GLOBAL.uiTools.zoomView((notches / 10f));
-
-					if (GLOBAL.uiTools.currentView == GLOBAL.uiTools.VIEW_SHAPE_PACK)
-						GLOBAL.shapePack.zoomView(notches / 10f,GLOBAL.uiTools.mouseX,GLOBAL.uiTools.mouseY);
-
-			}}
-		});
+		// Processing 4: Mouse wheel is handled through mouseWheel() callback instead of listener
+		// (Implementation moved to mouseWheel() method)
 
 		GLOBAL.person = new ergoDoll(GLOBAL.jBullet.myWorld, new Vector3f(-80,
 				-10, 0), 1f);
@@ -1304,8 +1409,9 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		// turn off just resizing controls
 		//this.frame.setResizable( true );
 
-		
+		// Windows resize moved to first draw() frame for proper timing
 		//this.resize(true);
+
 		mouseDown = false;
 		mousePressed = false;
 		//contains the title img
@@ -1353,35 +1459,49 @@ if(GLOBAL.uiTools.currentView == UITools.VIEW_CHAIR_EDIT)
 		this.initiatingFrames = 0; 
 		
 		//previewBuffer = createGraphics((int)previewW,(int)previewH,P3D);
-		PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes),P3D);
-		PickBuffer.getInstance().pickBuffer.hint(PApplet.DISABLE_TRANSFORM_CACHE);
-		PickBuffer.getInstance().pickBuffer.hint(PApplet.ENABLE_ACCURATE_2D);
+		// Only create pickBuffer once - avoid recreating to prevent JOGL threading issues on macOS
+		if (PickBuffer.getInstance().pickBuffer == null) {
+			PickBuffer.getInstance().pickBuffer = createGraphics((int)(GLOBAL.windowWidth*PickBuffer.getInstance().pickBufferRes),(int)(GLOBAL.windowHeight*PickBuffer.getInstance().pickBufferRes),Legacy.instance().get3DRenderMode() );
+		}
+		image(PickBuffer.getInstance().pickBuffer.get(),0,0);
+		//PickBuffer.getInstance().pickBuffer.hint(PApplet.DISABLE_TRANSFORM_CACHE);
+		//PickBuffer.getInstance().pickBuffer.hint(PApplet.ENABLE_ACCURATE_2D);
 
 		//FlurryAgent.onStartApp(null, "SVAM3TIHA2YVU7KEHHC7") ;
 		
-		
-		
-		GLOBAL.uiTools.SketchTools.selectTool(SketchTools.DRAW_TOOL);
+		//GLOBAL.uiTools.SketchTools.selectTool(SketchTools.DRAW_TOOL);
+		//default tool
+		GLOBAL.uiTools.SketchTools.selectTool(UITools.DRAW_TOOL);
 		
 		
 		//Hints
 		//g.hint(ENABLE_ACCURATE_2D); // slow but less memory maybe?
-		g.hint(PApplet.DISABLE_STROKE_PERSPECTIVE);
+		g.hint(Legacy.DISABLE_STROKE_PERSPECTIVE);
 		
 		
+				
 	}
 
 	private void switchResolution() {
 LOGGER.debug("switchResolution");
-		
+
 		try {
 			GraphicsDevice myGraphicsDevice = GraphicsEnvironment
 					.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-			this.frame.setResizable(false);
-			this.frame.setUndecorated(true);
 
-			myGraphicsDevice.setFullScreenWindow(this.frame);
-			this.frame.setVisible(true);
+			// Processing 4: Use PSurface instead of frame
+			PSurface surface = this.getSurface();
+			surface.setResizable(false);
+
+			// Get the native window from PSurface
+			// PSurface wraps the underlying AWT/Swing window
+			Object nativeWindow = surface.getNative();
+			if (nativeWindow instanceof java.awt.Frame) {
+				java.awt.Frame frame = (java.awt.Frame) nativeWindow;
+				frame.setUndecorated(true);
+				myGraphicsDevice.setFullScreenWindow(frame);
+				frame.setVisible(true);
+			}
 
 			DisplayMode myDisplayMode = new DisplayMode(width, height, 32,
 					DisplayMode.REFRESH_RATE_UNKNOWN);
@@ -1398,9 +1518,23 @@ LOGGER.debug("switchResolution");
 	
 	public void mousePressed() {
 		startingApp = false; //there was user interaction
-		  if (mouseEvent.getClickCount()==1)mouseSingleClick=true;
-		  if (mouseEvent.getClickCount()==2)mouseDoubleClick=true;
-
+		// Processing 4: Use getCount() instead of getClickCount()
+		if (mouseEvent != null) {
+			if (mouseEvent.getCount()==1)mouseSingleClick=true;
+			if (mouseEvent.getCount()==2)mouseDoubleClick=true;
 		}
+	}
+
+	// Processing 4: Mouse wheel handler
+	public void mouseWheel(processing.event.MouseEvent event) {
+		int notches = event.getCount();
+		if(!GLOBAL.gui.hasFocus()){
+			if (GLOBAL.uiTools.currentView == GLOBAL.uiTools.VIEW_CHAIR_EDIT)
+				GLOBAL.uiTools.zoomView((notches / 10f));
+
+			if (GLOBAL.uiTools.currentView == GLOBAL.uiTools.VIEW_SHAPE_PACK)
+				GLOBAL.shapePack.zoomView(notches / 10f,GLOBAL.uiTools.mouseX,GLOBAL.uiTools.mouseY);
+		}
+	}
 
 }

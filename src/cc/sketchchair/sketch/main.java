@@ -21,7 +21,6 @@
 //#IF JAVA
 package cc.sketchchair.sketch;
 
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
@@ -31,15 +30,14 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import cc.sketchchair.core.GLOBAL;
+import cc.sketchchair.core.MouseEventSK;
 import cc.sketchchair.core.UITools;
-
 import ModalGUI.GUIComponentSet;
 import ModalGUI.GUILabel;
 import ModalGUI.GUIPanel;
 import ModalGUI.GUIPanelTabbed;
 import ModalGUI.GUIToggle;
 import ModalGUI.ModalGUI;
-
 import processing.core.PApplet;
 
 
@@ -132,6 +130,7 @@ public class main extends PApplet {
 		gui.renderOnUpdate = false;
 		gui.setup(this);
 		gui.myFontMedium = loadFont("TrebuchetMS-12.vlw");
+		
 		setupGUI(gui);
 	//	smooth(8);
 		ortho();
@@ -139,17 +138,9 @@ public class main extends PApplet {
 	    frameRate(200);
 
 		hint(PApplet.DISABLE_STROKE_PERSPECTIVE);
-		addMouseWheelListener(new MouseWheelListener() {
-		
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				int notches = e.getWheelRotation();
-				if (notches < 0) {
-					sketch.getSketchGlobals().zoom -= (notches / 10f);
-				} else {
-					sketch.getSketchGlobals().zoom -= (notches / 10f);
-			}
-			}
-		});
+
+		// Processing 4: Mouse wheel is handled through mouseWheel() callback instead of listener
+		// (Implementation moved to mouseWheel() method)
 
 	}
 
@@ -240,18 +231,28 @@ public class main extends PApplet {
 	}
 
 	
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(MouseEventSK e) {
 		 if (e.getClickCount()==1) {
-		 }  
+		 }
 		 else if (e.getClickCount()==2) {
 			 mouseDoubleClick = true;
 			 sketch.mouseDoubleClick(mouseX, mouseY);
 		 }
-		 
-			super.mousePressed(e);
+
+			super.mousePressed();
 
 		}
-	
+
+	// Processing 4: Mouse wheel handler
+	public void mouseWheel(processing.event.MouseEvent event) {
+		int notches = event.getCount();
+		if (notches < 0) {
+			sketch.getSketchGlobals().zoom -= (notches / 10f);
+		} else {
+			sketch.getSketchGlobals().zoom -= (notches / 10f);
+		}
+	}
+
 	/*
 	public void keyPressed() {
 		sketch.getSketchTools().keyCode = keyCode;

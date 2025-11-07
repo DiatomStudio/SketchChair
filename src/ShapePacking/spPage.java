@@ -26,6 +26,7 @@ import ToolPathWriter.CraftRoboWriter;
 import ToolPathWriter.DXFWriter;
 import ToolPathWriter.HPGLWriter;
 import processing.core.PGraphics;
+import processing.core.PConstants;
 
 /**
  * Represents a single page in a multipage cutting file. Holds spOutlines.
@@ -306,10 +307,19 @@ LOGGER.debug("packTileSmart Page");
 	
 
 	public void render(PGraphics g) {
+		// Draw page border using beginShape/endShape to avoid internal save/restore operators
+		LOGGER.debug("spPage.render: Drawing page border " + this.shapePack.materialWidth + "x" + this.shapePack.materialHeight);
 		g.stroke(0);
 		g.fill(250);
-		g.rect(0, 0, this.shapePack.materialWidth, this.shapePack.materialHeight);
+		g.beginShape();
+		g.vertex(0, 0);
+		g.vertex(this.shapePack.materialWidth, 0);
+		g.vertex(this.shapePack.materialWidth, this.shapePack.materialHeight);
+		g.vertex(0, this.shapePack.materialHeight);
+		g.endShape(PConstants.CLOSE);
+		LOGGER.debug("spPage.render: Page border drawn, calling shapes.renderPage()");
 		shapes.renderPage(g);
+		LOGGER.debug("spPage.render: Finished shapes.renderPage()");
 	}
 	
 	public void renderPickBuffer(PGraphics pickBuffer) {

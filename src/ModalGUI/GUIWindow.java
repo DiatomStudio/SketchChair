@@ -19,11 +19,10 @@
  ******************************************************************************/
 package ModalGUI;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-
 import cc.sketchchair.core.GLOBAL;
+import cc.sketchchair.core.KeyEventSK;
 import cc.sketchchair.core.LOGGER;
+import cc.sketchchair.core.MouseEventSK;
 import cc.sketchchair.core.UITools;
 import processing.core.PApplet;
 import processing.core.PGraphics;
@@ -96,7 +95,7 @@ public class GUIWindow extends GUIPanel {
 	}
 	
 	@Override
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 
 		if (!this.visible)
 			return;
@@ -123,7 +122,7 @@ public class GUIWindow extends GUIPanel {
 	}
 	
 	@Override
-	public void keyEvent(KeyEvent theKeyEvent) {
+	public void keyEvent(KeyEventSK theKeyEvent) {
 		this.components.keyEvent(theKeyEvent);
 	}
 

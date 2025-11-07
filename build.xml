@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="SketchChair" basedir="." default="build">
 
+    <!-- Load version from version.properties -->
+    <property file="version.properties"/>
+
     <!-- Hook into One-Jar project -->
+    <!-- DEPRECATED: One-JAR packaging is deprecated, use build.standard instead -->
+    <!--
     <available property="one-jar.dir" file="../one-jar/build.onejar.xml" value="../one-jar"/>
-    <!-- Will be ignored if available above -->
-	<property name="one-jar.dir" location="one-jar" />
+    <property name="one-jar.dir" location="one-jar" />
     <import file="${one-jar.dir}/build.onejar.xml"/>
+    -->
     
 	<property name="eclipse.jar-in-jar.dir" value="build-lib/eclipse"/>
 	<property name="temp.dir" value="temp" />	
     <path id="libraries">
     	<fileset dir="lib" includes="*.jar"/>
+    	<fileset dir="libProcessing4" includes="*.jar"/>
+
     </path>
     
     <target name="mkdirs">
@@ -35,12 +42,11 @@
 	</target>
 
 	<target name="compile" depends="mkdirs">
-        <javac destdir="classes/src" includes="**/*.java" debug="true" verbose="true" target="1.5">
+        <javac destdir="classes/src" includes="**/*.java" debug="true" verbose="false" source="17" target="17">
             <src path="src" />
             <exclude name="**/processingjs/**" />
+            <include name="**/*.properties"/>
             <classpath refid="libraries" />
-            <classpath refid="one-jar.libraries"/>
-            <classpath path="${one-jar.ant.jar}"/>
     </javac>
 
 	</target>
@@ -62,10 +68,17 @@
             <lib>
                 <fileset dir="lib" includes="*.jar">
                 <exclude name="**/processingjs/**" />
-                </fileset>                
+                </fileset>
+            	   <fileset dir="libProcessing4" includes="*.jar">
+            	                <exclude name="**/processingjs/**" />
+            	   </fileset>
             </lib>
+			
+
+            	  	
             <fileset dir="data"/>
-            
+            <fileset dir="languages"/>
+
 
 
 <binlib>
@@ -122,5 +135,289 @@
 	<target name="test.SketchChair" depends="build" description="Stand-alone test a One-Jar SketchChair">
         <java fork="true" jar="build/test-SketchChair.jar"/>
     </target>
-	
+
+	<!-- Standard JAR build (not One-JAR) for better Processing 4 compatibility -->
+	<target name="build.standard" depends="clean, mkdirs, compile" description="Build standard JAR with lib folder">
+		<mkdir dir="build/lib"/>
+		<mkdir dir="build/data"/>
+		<mkdir dir="build/languages"/>
+		<mkdir dir="build/binlib"/>
+
+		<!-- Copy all library JARs to build/lib -->
+		<copy todir="build/lib">
+			<fileset dir="lib" includes="*.jar">
+				<exclude name="**/processingjs/**"/>
+			</fileset>
+			<fileset dir="libProcessing4" includes="*.jar">
+				<exclude name="**/processingjs/**"/>
+			</fileset>
+		</copy>
+
+		<!-- Copy data and resources -->
+		<copy todir="build/data">
+			<fileset dir="data"/>
+		</copy>
+		<copy todir="build/languages">
+			<fileset dir="languages"/>
+		</copy>
+		<copy todir="build/binlib">
+			<fileset dir="binlib" includes="**"/>
+		</copy>
+
+		<!-- Build Class-Path for MANIFEST -->
+		<pathconvert property="jar.classpath" pathsep=" ">
+			<path>
+				<fileset dir="build/lib" includes="*.jar"/>
+			</path>
+			<mapper>
+				<chainedmapper>
+					<flattenmapper/>
+					<globmapper from="*" to="lib/*"/>
+				</chainedmapper>
+			</mapper>
+		</pathconvert>
+
+		<!-- Create main JAR with proper MANIFEST -->
+		<jar destfile="build/SketchChair-standard.jar">
+			<fileset dir="classes/src">
+				<exclude name="**/processingjs/**"/>
+			</fileset>
+			<!-- Include language resource bundles in JAR root -->
+			<fileset dir="languages" includes="*.properties"/>
+			<manifest>
+				<attribute name="Main-Class" value="cc.sketchchair.core.main"/>
+				<attribute name="Class-Path" value="${jar.classpath}"/>
+			</manifest>
+		</jar>
+
+		<echo>Standard JAR build complete!</echo>
+		<echo>To run: java -Djogamp.gluegen.UseTempJarCache=true -jar build/SketchChair-standard.jar</echo>
+	</target>
+
+	<target name="run.standard" depends="build.standard" description="Run standard JAR build">
+		<java fork="true" jar="build/SketchChair-standard.jar" dir="build">
+			<jvmarg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+		</java>
+	</target>
+
+	<!-- jpackage targets for native distribution -->
+	<target name="jpackage.mac" depends="build.standard" description="Create macOS .app bundle and DMG">
+		<mkdir dir="dist"/>
+		<!-- Determine JDK 25 path -->
+		<exec executable="/usr/libexec/java_home" outputproperty="jdk25.home">
+			<arg value="-v"/>
+			<arg value="25"/>
+		</exec>
+		<echo>Using JDK 25 from: ${jdk25.home}</echo>
+		<!-- Use JDK 25's jpackage and bundle JDK 25 runtime -->
+		<exec executable="${jdk25.home}/bin/jpackage" failonerror="true">
+			<arg value="--runtime-image"/>
+			<arg value="${jdk25.home}"/>
+			<arg value="--input"/>
+			<arg value="build"/>
+			<arg value="--name"/>
+			<arg value="SketchChair"/>
+			<arg value="--main-jar"/>
+			<arg value="SketchChair-standard.jar"/>
+			<arg value="--type"/>
+			<arg value="app-image"/>
+			<arg value="--dest"/>
+			<arg value="dist"/>
+			<arg value="--java-options"/>
+			<arg value="--enable-native-access=ALL-UNNAMED"/>
+			<arg value="--java-options"/>
+			<arg value="--add-exports=java.desktop/com.apple.eawt=ALL-UNNAMED"/>
+			<arg value="--java-options"/>
+			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+			<arg value="--java-options"/>
+			<arg value="-Dsun.java2d.metal=true"/>
+			<arg value="--java-options"/>
+			<arg value="-Dapple.awt.application.appearance=system"/>
+			<arg value="--java-options"/>
+			<arg value="-Dapple.laf.useScreenMenuBar=true"/>
+			<arg value="--java-options"/>
+			<arg value="-Duser.dir=$APPDIR"/>
+			<arg value="--icon"/>
+			<arg value="data/icons/program_icon_02_b.icns"/>
+			<arg value="--app-version"/>
+			<arg value="${version}"/>
+			<arg value="--vendor"/>
+			<arg value="Diatom Studio"/>
+			<arg value="--copyright"/>
+			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
+		</exec>
+		<!-- Copy additional files to app bundle Resources -->
+		<copy file="changelog.txt" todir="dist/SketchChair.app/Contents/Resources"/>
+		<copy file="SketchChair.properties" todir="dist/SketchChair.app/Contents/Resources"/>
+		<!-- Copy documentation to dist root for easy access -->
+		<copy file="changelog.txt" todir="dist"/>
+		<copy file="SketchChair.properties" todir="dist"/>
+		<copy file="README.md" todir="dist"/>
+		<!-- Create ZIP using ditto to preserve macOS attributes -->
+		<exec executable="ditto" failonerror="true">
+			<arg value="-c"/>
+			<arg value="-k"/>
+			<arg value="--keepParent"/>
+			<arg value="dist/SketchChair.app"/>
+			<arg value="dist/temp-app.zip"/>
+		</exec>
+		<!-- Add documentation files to the ZIP at root level -->
+		<zip destfile="dist/SketchChair-${version}-macos.zip" update="false">
+			<zipfileset src="dist/temp-app.zip"/>
+			<zipfileset file="dist/changelog.txt" prefix=""/>
+			<zipfileset file="dist/SketchChair.properties" prefix=""/>
+			<zipfileset file="dist/README.md" prefix=""/>
+		</zip>
+		<!-- Clean up temp file -->
+		<delete file="dist/temp-app.zip"/>
+		<!-- Create DMG installer -->
+		<exec executable="${jdk25.home}/bin/jpackage" failonerror="true">
+			<arg value="--app-image"/>
+			<arg value="dist/SketchChair.app"/>
+			<arg value="--name"/>
+			<arg value="SketchChair"/>
+			<arg value="--type"/>
+			<arg value="dmg"/>
+			<arg value="--dest"/>
+			<arg value="dist"/>
+			<arg value="--app-version"/>
+			<arg value="${version}"/>
+			<arg value="--vendor"/>
+			<arg value="Diatom Studio"/>
+			<arg value="--copyright"/>
+			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
+		</exec>
+		<!-- Rename DMG to standardized naming -->
+		<move file="dist/SketchChair-${version}.dmg" tofile="dist/SketchChair-${version}-macos.dmg" failonerror="false"/>
+		<echo>===================================================</echo>
+		<echo>macOS packages created with JDK 25 runtime!</echo>
+		<echo>ZIP: dist/SketchChair-${version}-macos.zip</echo>
+		<echo>DMG: dist/SketchChair-${version}-macos.dmg</echo>
+		<echo>===================================================</echo>
+	</target>
+
+	<target name="jpackage.mac.dmg" depends="build.standard" description="Create macOS .dmg installer">
+		<mkdir dir="dist"/>
+		<exec executable="jpackage" failonerror="true">
+			<arg value="--input"/>
+			<arg value="build"/>
+			<arg value="--name"/>
+			<arg value="SketchChair"/>
+			<arg value="--main-jar"/>
+			<arg value="SketchChair-standard.jar"/>
+			<arg value="--type"/>
+			<arg value="dmg"/>
+			<arg value="--dest"/>
+			<arg value="dist"/>
+			<arg value="--java-options"/>
+			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+			<arg value="--icon"/>
+			<arg value="data/icon.icns"/>
+			<arg value="--app-version"/>
+			<arg value="${version}"/>
+			<arg value="--vendor"/>
+			<arg value="Diatom Studio"/>
+			<arg value="--copyright"/>
+			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
+		</exec>
+		<!-- Rename to standardized naming -->
+		<move file="dist/SketchChair-${version}.dmg" tofile="dist/SketchChair-${version}-macos.dmg" failonerror="false"/>
+		<echo>===================================================</echo>
+		<echo>macOS .dmg installer created!</echo>
+		<echo>Package: dist/SketchChair-${version}-macos.dmg</echo>
+		<echo>===================================================</echo>
+	</target>
+
+	<target name="jpackage.win" depends="build.standard" description="Create Windows .exe installer">
+		<mkdir dir="dist"/>
+		<exec executable="jpackage" failonerror="true">
+			<arg value="--input"/>
+			<arg value="build"/>
+			<arg value="--name"/>
+			<arg value="SketchChair"/>
+			<arg value="--main-jar"/>
+			<arg value="SketchChair-standard.jar"/>
+			<arg value="--type"/>
+			<arg value="exe"/>
+			<arg value="--dest"/>
+			<arg value="dist"/>
+			<arg value="--java-options"/>
+			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+			<arg value="--icon"/>
+			<arg value="data/icons/program_icon_02_b.ico"/>
+			<arg value="--app-version"/>
+			<arg value="${version}"/>
+			<arg value="--vendor"/>
+			<arg value="Diatom Studio"/>
+			<arg value="--copyright"/>
+			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
+			<arg value="--win-per-user-install"/>
+			<arg value="--win-dir-chooser"/>
+			<arg value="--win-menu"/>
+			<arg value="--win-shortcut"/>
+		</exec>
+		<echo>Windows .exe installer created in dist/</echo>
+	</target>
+
+	<target name="jpackage.linux" depends="build.standard" description="Create Linux package">
+		<mkdir dir="dist"/>
+		<exec executable="jpackage" failonerror="true">
+			<arg value="--input"/>
+			<arg value="build"/>
+			<arg value="--name"/>
+			<arg value="sketchchair"/>
+			<arg value="--main-jar"/>
+			<arg value="SketchChair-standard.jar"/>
+			<arg value="--type"/>
+			<arg value="deb"/>
+			<arg value="--dest"/>
+			<arg value="dist"/>
+			<arg value="--java-options"/>
+			<arg value="-Djogamp.gluegen.UseTempJarCache=true"/>
+			<arg value="--icon"/>
+			<arg value="data/icons/program_icon_02_b_128x128x32.png"/>
+			<arg value="--app-version"/>
+			<arg value="${version}"/>
+			<arg value="--vendor"/>
+			<arg value="Diatom Studio"/>
+			<arg value="--copyright"/>
+			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
+			<arg value="--linux-shortcut"/>
+		</exec>
+		<echo>Linux .deb package created in dist/</echo>
+	</target>
+
+	<!-- Create portable Windows distribution package -->
+	<target name="dist.windows.portable" depends="build.standard" description="Create portable Windows distribution ZIP">
+		<mkdir dir="dist"/>
+		<zip destfile="dist/SketchChair-${version}-windows-portable.zip">
+			<!-- Main JAR and launcher -->
+			<zipfileset file="build/SketchChair-standard.jar" prefix="SketchChair"/>
+			<zipfileset file="launch-windows.bat" prefix="SketchChair"/>
+			<zipfileset file="BUILD_WINDOWS.md" prefix="SketchChair"/>
+			<zipfileset file="README.md" prefix="SketchChair"/>
+			<zipfileset file="changelog.txt" prefix="SketchChair"/>
+
+			<!-- Libraries -->
+			<zipfileset dir="build/lib" prefix="SketchChair/lib"/>
+
+			<!-- Resources -->
+			<zipfileset dir="build/data" prefix="SketchChair/data"/>
+			<zipfileset dir="build/languages" prefix="SketchChair/languages"/>
+			<zipfileset dir="build/binlib" prefix="SketchChair/binlib"/>
+		</zip>
+		<echo>===================================================</echo>
+		<echo>Portable Windows distribution created!</echo>
+		<echo>Package: dist/SketchChair-${version}-windows-portable.zip</echo>
+		<echo>===================================================</echo>
+		<echo>To use on Windows:</echo>
+		<echo>1. Extract ZIP file</echo>
+		<echo>2. Install JDK 17+ (if not already installed)</echo>
+		<echo>3. Run launch-windows.bat</echo>
+		<echo>===================================================</echo>
+		<echo>To create Windows installer with bundled JRE:</echo>
+		<echo>Run 'ant jpackage.win' on a Windows machine</echo>
+		<echo>===================================================</echo>
+	</target>
+
 </project>

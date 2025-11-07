@@ -24,7 +24,6 @@ import java.awt.Component;
 import java.awt.Frame;
 import processing.core.PApplet;
 import processing.core.PGraphics;
-import processing.opengl.PGL;
 import processing.opengl.PGraphicsOpenGL;
 
 
@@ -46,35 +45,56 @@ public class simpleTest extends PApplet {
 
 	public void draw() {
 		
+		PGraphics renderer = (PGraphics)g;
+
+		
+		
+		renderer.pushMatrix();
+		renderer.hint(Legacy.DISABLE_STROKE_PERSPECTIVE);
+		renderer.perspective();
 
 
+		//renderer.hint(DISABLE_ACCURATE_2D); // disable depth testing so that we
 
-		  background(255);
-fill(255,0,0);
-pushMatrix();
-translate(width/2,height/2);
-rotateY(((float)millis())/100.0f);
-ellipse(0,0,50,50);
-popMatrix();
+		renderer.hint(ENABLE_DEPTH_TEST); // disable depth testing so that we
+
+	//	ortho(-(int)(width / 2), (int)(width / 2), -(int)(height / 2), (int)(height / 2),
+	//			-10000, 10000);
 
 
+		renderer.background(255);
+		renderer.fill(255,0,0);
+		renderer.translate(width/2,height/2);
+		renderer.rotateY(((float)millis())/100.0f);
+		renderer.ellipse(0,0,50,50);
+		renderer.popMatrix();
+
+
+pg.beginDraw();
+pg.background(102);
+pg.stroke(255);
+pg.line(pg.width*0.5f, pg.height*0.5f, mouseX, mouseY);
+pg.endDraw();
+renderer.image(pg, 50, 50); 
 	}
 
 	public void setup() {
 		size(600, 600, OPENGL);
 		//smooth(4);
-		//noSmooth();
+		////noSmooth();
 		
 		// Detect current openGL version and warn if necessary 
 		//((PGraphicsOpenGL) this.g).endDraw();
-	
-
 		
-		 
+		  pg = createGraphics(100, 100, P3D);
+
 		  //his.frame.getParent()ABORT;
 		  
-		 this.frame.setLocation(20,29);
-		  
+		 // Processing 4: Use PSurface instead of frame
+	 this.getSurface().setLocation(20, 29);
+			frameRate(120);
+			
+
 	}
 	
 	

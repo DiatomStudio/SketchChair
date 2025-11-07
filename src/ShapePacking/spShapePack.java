@@ -132,8 +132,13 @@ public class spShapePack {
 
 	public ByteArrayOutputStream getDXFBuffered(PApplet a) {
 
-		PGraphicsPDF pdf = (PGraphicsPDF) a.createGraphics(
-				(int) (this.materialWidth), (int) (this.materialHeight), a.PDF);
+		// Processing 4: Use string renderer name and safe cast
+		PGraphics g = a.createGraphics(
+				(int) (this.materialWidth), (int) (this.materialHeight), PApplet.PDF);
+		if (!(g instanceof PGraphicsPDF)) {
+			throw new RuntimeException("Failed to create PDF graphics");
+		}
+		PGraphicsPDF pdf = (PGraphicsPDF) g;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		pdf.setOutput(out);
 
@@ -155,8 +160,13 @@ public class spShapePack {
 
 	public ByteArrayOutputStream getPDFBuffered(PApplet a) {
 
-		PGraphicsPDF pdf = (PGraphicsPDF) a.createGraphics(
-				(int) (this.materialWidth), (int) (this.materialHeight), a.PDF);
+		// Processing 4: Use string renderer name and safe cast
+		PGraphics g = a.createGraphics(
+				(int) (this.materialWidth), (int) (this.materialHeight), PApplet.PDF);
+		if (!(g instanceof PGraphicsPDF)) {
+			throw new RuntimeException("Failed to create PDF graphics");
+		}
+		PGraphicsPDF pdf = (PGraphicsPDF) g;
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		pdf.setOutput(out);
 	//	pdf.textSize(this.textSize);
@@ -186,45 +196,66 @@ public class spShapePack {
 	}
 
 	public void makePDF(PApplet a) {
-		PGraphicsPDF pdf = (PGraphicsPDF) a.createGraphics(
-				(int) (this.materialWidth),
-				(int) (this.materialHeight),
-				a.PDF,
+		// Processing 4: Use string renderer name and safe cast
+		PGraphics g = a.createGraphics(
+				(int) (this.materialWidth * pdf_pixels_per_mm),
+				(int) (this.materialHeight * pdf_pixels_per_mm),
+				PApplet.PDF,
 				"C:\\MyMedia\\sketchChair\\pdfOutput\\output"
 						+ functions.getFileName() + ".pdf");
+		if (!(g instanceof PGraphicsPDF)) {
+			throw new RuntimeException("Failed to create PDF graphics");
+		}
+		PGraphicsPDF pdf = (PGraphicsPDF) g;
 		PFont font = a.createFont("Arial", this.textSize);
 		pdf.textFont(font);
 		pdf.textSize(this.textSize);
+
+		LOGGER.info("sending PDF to C:\\MyMedia\\sketchChair\\pdfOutput\\output" + functions.getFileName() + ".pdf");
+		LOGGER.info("PDF dimensions: " + (int)(this.materialWidth * pdf_pixels_per_mm) + " x " + (int)(this.materialHeight * pdf_pixels_per_mm));
+		LOGGER.info("Number of pages to render: " + this.pages.l.size());
 
 		pdf.beginDraw();
 		//pdf.scale(pdf_pixels_per_mm );
 
 		pdf.strokeWeight(.0001f);
 		pdf.stroke(255, 0, 0);
+
+		LOGGER.info("About to call renderPDF with pageScale=" + pdf_pixels_per_mm);
 		this.pages.renderPDF(pdf, pdf_pixels_per_mm);
-		pdf.dispose();
+		LOGGER.info("Finished renderPDF call");
+
 		pdf.endDraw();
+		pdf.dispose();
 
 	}
 
 	public void makePDF(PApplet a, String pdfSaveLocation) {
-
-		PGraphicsPDF pdf = (PGraphicsPDF) a.createGraphics(
+		// Processing 4: Use PApplet.PDF and safe cast
+		PGraphics g = a.createGraphics(
 				(int) (this.materialWidth * pdf_pixels_per_mm),
-				(int) (this.materialHeight * pdf_pixels_per_mm), PConstants.PDF,
+				(int) (this.materialHeight * pdf_pixels_per_mm), PApplet.PDF,
 				pdfSaveLocation);
-		
+		if (!(g instanceof PGraphicsPDF)) {
+			throw new RuntimeException("Failed to create PDF graphics");
+		}
+		PGraphicsPDF pdf = (PGraphicsPDF) g;
+
 		LOGGER.info("sending PDF to " + pdfSaveLocation);
+		LOGGER.info("PDF dimensions: " + (int)(this.materialWidth * pdf_pixels_per_mm) + " x " + (int)(this.materialHeight * pdf_pixels_per_mm));
+		LOGGER.info("Number of pages to render: " + this.pages.l.size());
+
 		pdf.beginDraw();
-		//pdf.scale(pdf_pixels_per_mm);
 		pdf.strokeWeight(.0001f);
 		pdf.stroke(255, 0, 0);
-		//PFont font = a.createFont("Arial", this.textSize);
-		//pdf.textFont(font);
 		pdf.textSize(this.textSize);
+
+		LOGGER.info("About to call renderPDF with pageScale=" + pdf_pixels_per_mm);
 		this.pages.renderPDF(pdf, pdf_pixels_per_mm);
-		pdf.dispose();
+		LOGGER.info("Finished renderPDF call");
+
 		pdf.endDraw();
+		pdf.dispose();
 	}
 	
 	public void makeSVG(PApplet a, String svgSaveLocation){

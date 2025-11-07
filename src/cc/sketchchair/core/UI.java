@@ -180,10 +180,10 @@ class UI {
 		GUIPanel toolPanel = new GUIPanel(10, 15, 42f, 390f, gui);
 
 		GUIPanel cameraPanel = new GUIPanel(65f, 15, 115, 87, gui);
-		cameraPanel.setLabel("camera");
+		cameraPanel.setLabel(Localization.getString("camera"));
 
 		GUIPanel physicsPanel = new GUIPanel(65f, 110f, 115, 95, gui);
-		physicsPanel.setLabel("physics");
+		physicsPanel.setLabel(Localization.getString("physics"));
 
 		GLOBAL.environments.setupGUI(GLOBAL.gui, GLOBAL.applet);
 		GLOBAL.planesWidget.setupGUI(GLOBAL.applet, GLOBAL.gui);
@@ -1090,7 +1090,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.uiTools.toggleSet);
 		toggle.addActionListener(GLOBAL.uiTools.SketchTools, "selectTool",
 				SketchTools.DRAW_TOOL);
-		toggle.setLabel("brush");
+		toggle.setLabel(Localization.getString("brush"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		if (GLOBAL.uiTools.SketchTools.getCurrentTool() == SketchTools.DRAW_TOOL)
@@ -1102,9 +1102,13 @@ class UI {
 		toggle.setComponentSet(GLOBAL.uiTools.toggleSet);
 		toggle.addActionListener(GLOBAL.uiTools.SketchTools, "selectTool",
 				SketchTools.LEG_TOOL);
+		
+		
 		toggle.addActionListener(GLOBAL.uiTools, "selectLegPlanes",
 				SketchTools.LEG_TOOL);
-		toggle.setLabel("leg");
+		
+		
+		toggle.setLabel(Localization.getString("leg"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		if (GLOBAL.uiTools.SketchTools.getCurrentTool() == SketchTools.LEG_TOOL)
@@ -1116,7 +1120,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.uiTools.toggleSet);
 		toggle.addActionListener(GLOBAL.uiTools.SketchTools, "selectTool",
 				SketchTools.SELECT_TOOL);
-		toggle.setLabel("select");
+		toggle.setLabel(Localization.getString("select"));
 		
 		if (GLOBAL.uiTools.SketchTools.getCurrentTool() == SketchTools.SELECT_TOOL)
 			toggle.toggleDown();
@@ -1129,7 +1133,7 @@ class UI {
 		toggle = new GUIToggle(120, posY, button_width, button_height,
 				"gui/sit.png", "gui/stand.png", gui);
 		toggle.addActionListener(GLOBAL.uiTools, "sitStand", UITools.DRAW_TOOL);
-		toggle.setLabel("sit/stand");
+		toggle.setLabel(Localization.getString("sit_stand"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		toolPanel.placeComponent(toggle);
@@ -1138,7 +1142,7 @@ class UI {
 				"gui/camera_rotate.png", gui);
 		toggle.addActionListener(GLOBAL.uiTools, "autoRotate",
 				UITools.DRAW_TOOL);
-		toggle.setLabel("rotate");
+		toggle.setLabel(Localization.getString("rotate"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		toolPanel.placeComponent(toggle);
@@ -1146,7 +1150,7 @@ class UI {
 		GUIButton button = new GUIButton(posX, posY, button_width,
 				button_height, "gui/undo.png", null, gui);
 		button.addActionListener(GLOBAL.uiTools, "undo", UITools.SCALE_TOOL);
-		button.setLabel("undo");
+		button.setLabel(Localization.getString("undo"));
 		button.label.align = GUILabel.CENTRE;
 		button.label.layout = GUILabel.UNDER_COMPONENT;
 
@@ -1156,7 +1160,7 @@ class UI {
 				"gui/GUI_SLICE_DELETE_BUTTON.png", null, gui);
 		button.addActionListener(GLOBAL.uiTools, "deleteAllChairsFlag",
 				UITools.SCALE_TOOL);
-		button.setLabel("delete");
+		button.setLabel(Localization.getString("delete"));
 		button.label.align = GUILabel.CENTRE;
 		button.label.layout = GUILabel.UNDER_COMPONENT;
 
@@ -1166,7 +1170,7 @@ class UI {
 				"gui/GUI_MAKE_BUTTON.png", null, gui);
 		button.addActionListener(GLOBAL.uiTools, "makeChairWindow",
 				UITools.SCALE_TOOL);
-		button.setLabel("make");
+		button.setLabel(Localization.getString("make"));
 		button.label.align = GUILabel.CENTRE;
 		button.label.layout = GUILabel.UNDER_COMPONENT;
 
@@ -1232,8 +1236,7 @@ class UI {
 		//panel for slice widget
 		float slicePanleWidth = 100;
 		float slicePanleHeight = 100;
-		GLOBAL.slicePanel = new GUIPanel(GLOBAL.windowWidth - slicePanleWidth,
-				0, slicePanleWidth, slicePanleHeight, gui);
+		GLOBAL.slicePanel = new GUIPanel(GLOBAL.windowWidth - slicePanleWidth ,0 ,slicePanleWidth, slicePanleHeight ,gui);
 		GLOBAL.slicePanel.invisible();
 		gui.add(GLOBAL.slicePanel);
 		setupGUITabsAll(applet,gui);
@@ -1260,7 +1263,7 @@ class UI {
 
 		GUIPanel toolPanel = new GUIPanel(0f,0f, (int) tabbedPanel.getWidth(),
 				(int) panelHeight, gui);
-		tabbedPanel.addTabbedPanel(toolPanel, "tools","gui/GUI_TAB_EDIT_UP.png","gui/GUI_TAB_EDIT_DOWN.png", gui);
+		tabbedPanel.addTabbedPanel(toolPanel, Localization.getString("tools") ,"gui/GUI_TAB_EDIT_UP.png","gui/GUI_TAB_EDIT_DOWN.png", gui);
 
 
 		GUIToggle toggle = new GUIToggle(posX, posY, button_width,
@@ -1268,7 +1271,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.uiTools.toggleSet);
 		toggle.addActionListener(GLOBAL.uiTools.SketchTools, "selectTool",
 				SketchTools.DRAW_TOOL);
-		toggle.setLabel("brush");
+		toggle.setLabel(Localization.getString("brush"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		
@@ -1282,7 +1285,12 @@ class UI {
 		toggle.setComponentSet(GLOBAL.uiTools.toggleSet);
 		toggle.addActionListener(GLOBAL.uiTools.SketchTools, "selectTool",
 				SketchTools.LEG_TOOL);
-		toggle.setLabel("leg");
+		
+		if(SETTINGS.selectLegPlanesAuto)
+		toggle.addActionListener(GLOBAL.uiTools, "selectLegPlanes",
+				SketchTools.LEG_TOOL);
+		
+		toggle.setLabel(Localization.getString("leg"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 
@@ -1296,7 +1304,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.uiTools.toggleSet);
 		toggle.addActionListener(GLOBAL.uiTools.SketchTools, "selectTool",
 				SketchTools.SELECT_TOOL);
-		toggle.setLabel("select");
+		toggle.setLabel(Localization.getString("select"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 
@@ -1311,7 +1319,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.uiTools.toggleSet);
 		toggle.addActionListener(GLOBAL.uiTools.SketchTools, "selectTool",
 				SketchTools.DRAW_PATH_TOOL);
-		toggle.setLabel("path");
+		toggle.setLabel(Localization.getString("path"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		if (GLOBAL.uiTools.SketchTools.getCurrentTool() == SketchTools.DRAW_PATH_TOOL)
@@ -1324,7 +1332,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.uiTools.toggleSet);
 		toggle.addActionListener(GLOBAL.uiTools.SketchTools, "selectTool",
 				SketchTools.DRAW_OFFSETPATH_TOOL);
-		toggle.setLabel("offset path");
+		toggle.setLabel(Localization.getString("offset_path"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		if (GLOBAL.uiTools.SketchTools.getCurrentTool() == SketchTools.DRAW_OFFSETPATH_TOOL)
@@ -1336,7 +1344,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.uiTools.toggleSet);
 		toggle.addActionListener(GLOBAL.uiTools.SketchTools, "selectTool",
 				SketchTools.SELECT_BEZIER_TOOL);
-		toggle.setLabel("bezier");
+		toggle.setLabel(Localization.getString("bezier"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		if (GLOBAL.uiTools.SketchTools.getCurrentTool() == SketchTools.SELECT_BEZIER_TOOL)
@@ -1348,7 +1356,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.uiTools.toggleSet);
 		toggle.addActionListener(GLOBAL.uiTools, "selectTool",
 				UITools.MEASURE_TOOL);
-		toggle.setLabel("measure");
+		toggle.setLabel(Localization.getString("measure"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		if (GLOBAL.uiTools.getCurrentTool() == UITools.MEASURE_TOOL)
@@ -1360,7 +1368,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.uiTools.toggleSet);
 		toggle.addActionListener(GLOBAL.uiTools, "selectTool",
 				UITools.SCALE_TOOL);
-		toggle.setLabel("scale");
+		toggle.setLabel(Localization.getString("scale"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 
@@ -1369,7 +1377,7 @@ class UI {
 		GUIButton button = new GUIButton(posX, posY, button_width,
 				button_height, "gui/undo.png", null, gui);
 		button.addActionListener(GLOBAL.uiTools, "undo", UITools.SCALE_TOOL);
-		button.setLabel("undo");
+		button.setLabel(Localization.getString("undo"));
 		button.label.align = GUILabel.CENTRE;
 		button.label.layout = GUILabel.UNDER_COMPONENT;
 
@@ -1392,7 +1400,7 @@ class UI {
 		 */
 
 		GUIPanel LayerPanel = new GUIPanel(0f, 0f, (int) tabbedPanel.getWidth(), (int) panelHeight, gui);
-		tabbedPanel.addTabbedPanel(LayerPanel, "layers","gui/GUI_TAB_LAYERS_UP.png","gui/GUI_TAB_LAYERS_DOWN.png", gui);
+		tabbedPanel.addTabbedPanel(LayerPanel, Localization.getString("layers"),"gui/GUI_TAB_LAYERS_UP.png","gui/GUI_TAB_LAYERS_DOWN.png", gui);
 
 		GLOBAL.planesWidget = new WidgetPlanes(0, 0, 900, 100, gui);
 		//GLOBAL.planesWidget.setup();
@@ -1411,7 +1419,7 @@ class UI {
 		 
 		 */
 		GUIPanel slicesPanel = new GUIPanel(0f, 0f, tabbedPanel.getWidth(), (int) panelHeight, gui);
-		tabbedPanel.addTabbedPanel(slicesPanel, "slices","gui/GUI_TAB_SLICES_UP.png","gui/GUI_TAB_SLICES_DOWN.png", gui);
+		tabbedPanel.addTabbedPanel(slicesPanel, Localization.getString("slices"),"gui/GUI_TAB_SLICES_UP.png","gui/GUI_TAB_SLICES_DOWN.png", gui);
 
 		GLOBAL.toggleSetSlices = new GUIComponentSet();
 
@@ -1420,7 +1428,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.toggleSetSlices);
 		toggle.addActionListener(GLOBAL.uiTools, "selectTool",
 				UITools.SLICES_SINGLE_SLICE);
-		toggle.setLabel("slice");
+		toggle.setLabel(Localization.getString("slice"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		slicesPanel.placeComponent(toggle);
@@ -1430,7 +1438,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.toggleSetSlices);
 		toggle.addActionListener(GLOBAL.uiTools, "selectTool",
 				UITools.SLICES_GROUP_SLICES);
-		toggle.setLabel("slice" + '\n' + "group");
+		toggle.setLabel(Localization.getString("slice_group"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		slicesPanel.placeComponent(toggle);
@@ -1450,7 +1458,7 @@ class UI {
 		toggle.setComponentSet(GLOBAL.toggleSetSlices);
 		toggle.addActionListener(GLOBAL.uiTools, "selectTool",
 				UITools.SLICES_SLATSLICE_GROUP);
-		toggle.setLabel("slatSlice" + '\n' + "group");
+		toggle.setLabel(Localization.getString("slatSlice_group"));
 		toggle.label.align = GUILabel.CENTRE;
 		toggle.label.layout = GUILabel.UNDER_COMPONENT;
 		slicesPanel.placeComponent(toggle);
@@ -1712,7 +1720,7 @@ class UI {
 		GUIPanel toolPanel = new GUIPanel((GLOBAL.windowWidth-panelWidth)/2,
 				GLOBAL.windowHeight - panelHeight, panelWidth,
 				(int) panelHeight, gui);
-		tabbedPanel.addTabbedPanel(toolPanel, "tools", gui);
+		tabbedPanel.addTabbedPanel(toolPanel, Localization.getString("tools"), gui);
 
 		
 		//save
@@ -1721,7 +1729,7 @@ class UI {
 				"gui/save_pdf.png", null, gui);
 		button.addActionListener(GLOBAL.uiTools, "savePDF",
 				UITools.VIEW_SHAPE_PACK);
-		button.setLabel("save pdf");
+		button.setLabel(Localization.getString("save_pdf"));
 		button.label.align = GUILabel.CENTRE;
 		button.label.layout = GUILabel.UNDER_COMPONENT;
 		toolPanel.placeComponent(button);
@@ -1730,7 +1738,7 @@ class UI {
 				"gui/print.png", null, gui);
 		button.addActionListener(GLOBAL.uiTools, "print",
 				UITools.VIEW_SHAPE_PACK);
-		button.setLabel("print");
+		button.setLabel(Localization.getString("print"));
 		button.label.align = GUILabel.CENTRE;
 		button.label.layout = GUILabel.UNDER_COMPONENT;
 		toolPanel.placeComponent(button);
@@ -1739,7 +1747,7 @@ class UI {
 				"gui/plot.png", null, gui);
 		button.addActionListener(GLOBAL.uiTools, "saveCraftRobo",
 				UITools.VIEW_SHAPE_PACK);
-		button.setLabel("plot");
+		button.setLabel(Localization.getString("plot"));
 		button.label.align = GUILabel.CENTRE;
 		button.label.layout = GUILabel.UNDER_COMPONENT;
 		toolPanel.placeComponent(button);
@@ -1748,7 +1756,7 @@ class UI {
 		GLOBAL.widgetMaterials =  new WidgetMaterials(0f, GLOBAL.windowHeight
 				- panelHeight, (int) panelWidth, (int) panelHeight, gui);
 		
-		tabbedPanel.addTabbedPanel(GLOBAL.widgetMaterials, "materials", gui);
+		tabbedPanel.addTabbedPanel(GLOBAL.widgetMaterials, Localization.getString("materials"), gui);
 		
 
 	}
@@ -1768,64 +1776,64 @@ class UI {
 
 		//create the top level button
 
-		Menu File = new Menu("File");
+		Menu File = new Menu(Localization.getString("file"));
 
-		item = new MenuItem("New",new MenuShortcut('N',false));
+		item = new MenuItem(Localization.getString("new"),new MenuShortcut('N',false));
 		item.setActionCommand("deleteAllChairs");
 		item.addActionListener(menuListen);
 		File.add(item);
 
-		item = new MenuItem("Save Chair",new MenuShortcut('S',false));
+		item = new MenuItem(Localization.getString("save_chair"),new MenuShortcut('S',false));
 		item.setActionCommand("saveChairToFileAuto");
 		item.addActionListener(menuListen);
 		File.add(item);
 
-		item = new MenuItem("Save Chair As",new MenuShortcut('S',true));
+		item = new MenuItem(Localization.getString("save_chair_as"),new MenuShortcut('S',true));
 		item.setActionCommand("saveChairToFile");
 		item.addActionListener(menuListen);
 		File.add(item);
 
-		item = new MenuItem("Share Chair Online");
+		item = new MenuItem(Localization.getString("share_chair_online"));
 		item.setActionCommand("ShareChairOnline");
 		item.addActionListener(menuListen);
 		File.add(item);
 
-		Menu Export = new Menu("Export Pattern");
+		Menu Export = new Menu(Localization.getString("export_pattern"));
 
-		item = new MenuItem("To PDF");
+		item = new MenuItem(Localization.getString("to_PDF"));
 		item.setActionCommand("savePDF");
 		item.addActionListener(menuListen);
 		Export.add(item);
 		
-		item = new MenuItem("To SVG");
+		item = new MenuItem(Localization.getString("to_SVG"));
 		item.setActionCommand("savePattern");
 		item.addActionListener(menuListen);
 		Export.add(item);
 
-		item = new MenuItem("To DXF");
+		item = new MenuItem(Localization.getString("to_DXF"));
 		item.setActionCommand("savePatternDXF");
 		item.addActionListener(menuListen);
 		Export.add(item);
 
-		item = new MenuItem("Model To dxf");
+		item = new MenuItem(Localization.getString("model_to_DXF"));
 		item.setActionCommand("saveModelDxf");
 		item.addActionListener(menuListen);
 		Export.add(item);
 
-		item = new MenuItem("To craftRobo");
+		item = new MenuItem(Localization.getString("to_craftRobo"));
 		item.setActionCommand("saveCraftRobo");
 		item.setName(Integer.toString(UITools.DRAW_TOOL));
 		item.addActionListener(menuListen);
 		Export.add(item);
 
-		item = new MenuItem("To PNG Preview");
+		item = new MenuItem(Localization.getString("to_PNG_preview"));
 		item.setActionCommand("exportPreview");
 		item.addActionListener(menuListen);
 		Export.add(item);
 
 		File.add(Export);
 
-		item = new MenuItem("Open",new MenuShortcut('O',false));
+		item = new MenuItem(Localization.getString("open"),new MenuShortcut('O',false));
 		item.setActionCommand("openChairFromFile");
 		item.addActionListener(menuListen);
 		File.add(item);
@@ -1835,23 +1843,23 @@ class UI {
 		item.addActionListener(menuListen);
 		File.add(item);
 		*/
-		item = new MenuItem("import image");
+		item = new MenuItem(Localization.getString("import_image"));
 		item.setActionCommand("openEnvironmentFromFile");
 		item.addActionListener(menuListen);
 		File.add(item);
 
-		item = new MenuItem("import SVG");
+		item = new MenuItem(Localization.getString("import_SVG"));
 		item.setActionCommand("importSVG");
 		item.addActionListener(menuListen);
 		File.add(item);
 
-		item = new MenuItem("Print Preview");
+		item = new MenuItem(Localization.getString("print_preview"));
 		item.setActionCommand("toggleView");
 		item.addActionListener(menuListen);
 		File.add(item);
 
 		if (SETTINGS.DEVELOPER_MODE) {
-			item = new MenuItem("Run Automated Actions");
+			item = new MenuItem(Localization.getString("run_automated_actions"));
 			item.setActionCommand("runAutomatedActions");
 			item.addActionListener(menuListen);
 			File.add(item);
@@ -1861,128 +1869,128 @@ class UI {
 		//add the button to the menu
 		myMenu.add(File);
 
-		Menu Edit = new Menu("Edit");
+		Menu Edit = new Menu(Localization.getString("edit"));
 
 		
-		item = new MenuItem("Copy" ,new MenuShortcut('C',false));
+		item = new MenuItem(Localization.getString("copy") ,new MenuShortcut('C',false));
 		item.setActionCommand("copyChair");
 		item.addActionListener(menuListen);
 		Edit.add(item);
 		
-		item = new MenuItem("Paste" ,new MenuShortcut('V',false));
+		item = new MenuItem(Localization.getString("paste") ,new MenuShortcut('V',false));
 		item.setActionCommand("pasteChair");
 		item.addActionListener(menuListen);
 		Edit.add(item);
 		
 		
 		//create all the Menu Items and add the menuListener to check their state.
-		item = new MenuItem("Undo" ,new MenuShortcut('Z',false));
+		item = new MenuItem(Localization.getString("undo") ,new MenuShortcut('Z',false));
 		item.setActionCommand("undo");
 		item.addActionListener(menuListen);
 		Edit.add(item);
 
 		//create all the Menu Items and add the menuListener to check their state.
-		item = new MenuItem("Redo",new MenuShortcut('Z',true));
+		item = new MenuItem(Localization.getString("redo"),new MenuShortcut('Z',true));
 		item.setActionCommand("redo");
 		item.addActionListener(menuListen);
 		Edit.add(item);
 
-		item = new MenuItem("Screen Capture");
+		item = new MenuItem(Localization.getString("screen_capture"));
 		item.setActionCommand("captureScreen");
 		item.addActionListener(menuListen);
 		Edit.add(item);
 
-		item = new MenuItem("Flip Chair");
+		item = new MenuItem(Localization.getString("flip_chair"));
 		item.setActionCommand("flipChair");
 		item.addActionListener(menuListen);
 		Edit.add(item);
 
 		myMenu.add(Edit);
 
-		Menu Tools = new Menu("Tools");
+		Menu Tools = new Menu(Localization.getString("tools"));
 
 		//create all the Menu Items and add the menuListener to check their state.
 
-		item = new MenuItem("Select");
+		item = new MenuItem(Localization.getString("select"));
 		item.setActionCommand("selectTool");
 		item.setName(Integer.toString(UITools.SELECT_TOOL));
 		item.addActionListener(menuListen);
 		Tools.add(item);
 
-		item = new MenuItem("Draw");
+		item = new MenuItem(Localization.getString("draw"));
 		item.setActionCommand("selectTool");
 		item.setName(Integer.toString(UITools.DRAW_TOOL));
 		item.addActionListener(menuListen);
 		Tools.add(item);
 
-		item = new MenuItem("Leg");
+		item = new MenuItem(Localization.getString("leg"));
 		item.setActionCommand("selectTool");
 		item.setName(Integer.toString(UITools.LEG_TOOL));
 		item.addActionListener(menuListen);
 		Tools.add(item);
 
-		item = new MenuItem("Path");
+		item = new MenuItem(Localization.getString("path"));
 		item.setActionCommand("selectTool");
 		item.setName(Integer.toString(UITools.DRAW_PATH_TOOL));
 		item.addActionListener(menuListen);
 		Tools.add(item);
 
-		item = new MenuItem("Bezier");
+		item = new MenuItem(Localization.getString("bezier"));
 		item.setActionCommand("selectTool");
 		item.setName(Integer.toString(UITools.SELECT_BEZIER_TOOL));
 		item.addActionListener(menuListen);
 		Tools.add(item);
 
-		item = new MenuItem("Scale");
+		item = new MenuItem(Localization.getString("scale"));
 		item.setActionCommand("selectTool");
 		item.setName(Integer.toString(UITools.SCALE_TOOL));
 		item.addActionListener(menuListen);
 		Tools.add(item);
 
-		item = new MenuItem("Measure");
+		item = new MenuItem(Localization.getString("measure"));
 		item.setActionCommand("selectTool");
 		item.setName(Integer.toString(UITools.MEASURE_TOOL));
 		item.addActionListener(menuListen);
 		Tools.add(item);
 
-		Menu camera = new Menu("Camera");
+		Menu camera = new Menu(Localization.getString("camera"));
 
-		item = new MenuItem("zoom");
+		item = new MenuItem(Localization.getString("zoom"));
 		item.setActionCommand("selectTool");
 		item.setName(Integer.toString(UITools.ZOOM_CAM_TOOL));
 		item.addActionListener(menuListen);
 		camera.add(item);
 
-		item = new MenuItem("pan");
+		item = new MenuItem(Localization.getString("pan"));
 		item.setActionCommand("selectTool");
 		item.setName(Integer.toString(UITools.MOVE_CAM_TOOL));
 		item.addActionListener(menuListen);
 		camera.add(item);
 
-		item = new MenuItem("rotate");
+		item = new MenuItem(Localization.getString("rotate"));
 		item.setActionCommand("selectTool");
 		item.setName(Integer.toString(UITools.ROTATE_CAM_TOOL));
 		item.addActionListener(menuListen);
 		camera.add(item);
 
-		Menu View = new Menu("View");
+		Menu View = new Menu(Localization.getString("view"));
 
-		item = new MenuItem("front");
+		item = new MenuItem(Localization.getString("front"));
 		item.setActionCommand("camJumpFront");
 		item.addActionListener(menuListen);
 		View.add(item);
 
-		item = new MenuItem("side");
+		item = new MenuItem(Localization.getString("side"));
 		item.setActionCommand("camJumpSide");
 		item.addActionListener(menuListen);
 		View.add(item);
 
-		item = new MenuItem("top");
+		item = new MenuItem(Localization.getString("top"));
 		item.setActionCommand("camJumpTop");
 		item.addActionListener(menuListen);
 		View.add(item);
 
-		item = new MenuItem("isometric");
+		item = new MenuItem(Localization.getString("isometric"));
 		item.setActionCommand("camJumpIso");
 		item.addActionListener(menuListen);
 		View.add(item);
@@ -1994,55 +2002,55 @@ class UI {
 		myMenu.add(Tools);
 
 		
-		Menu layers = new Menu("Layers");
+		Menu layers = new Menu(Localization.getString("layers"));
 
-		item = new MenuItem("Select Next",new MenuShortcut(KeyEvent.VK_LEFT,false));
+		item = new MenuItem(Localization.getString("select_next"),new MenuShortcut(KeyEvent.VK_LEFT,false));
 		item.setActionCommand("layersSelectNext");
 		item.addActionListener(menuListen);
 		layers.add(item);
 
-		item = new MenuItem("Select Prev",new MenuShortcut(KeyEvent.VK_RIGHT,false));
+		item = new MenuItem(Localization.getString("select_prev"),new MenuShortcut(KeyEvent.VK_RIGHT,false));
 		item.setActionCommand("layersSelectPrev");
 		item.addActionListener(menuListen);
 		layers.add(item);
 		myMenu.add(layers);
 
 		
-		Menu physics = new Menu("Physics");
+		Menu physics = new Menu(Localization.getString("physics"));
 
-		item = new MenuItem("play/pause",new MenuShortcut('G',false));
+		item = new MenuItem(Localization.getString("play_pause"),new MenuShortcut('G',false));
 		item.setActionCommand("physicsPlayPause");
 		item.addActionListener(menuListen);
 		physics.add(item);
 
 
 
-		item = new MenuItem("rewind",new MenuShortcut('G',true));
+		item = new MenuItem(Localization.getString("rewind"),new MenuShortcut('G',true));
 		item.setActionCommand("physicsRewind");
 		item.addActionListener(menuListen);
 		physics.add(item);
 
 		myMenu.add(physics);
 
-		Menu Mode = new Menu("Mode");
+		Menu Mode = new Menu(Localization.getString("mode"));
 
-		item = new MenuItem("Basic");
+		item = new MenuItem(Localization.getString("basic"));
 		item.setActionCommand("changeModeBasic");
 		item.addActionListener(menuListen);
 		Mode.add(item);
 
-		item = new MenuItem("Expert");
+		item = new MenuItem(Localization.getString("expert"));
 		item.setActionCommand("changeModeExpert");
 		item.addActionListener(menuListen);
 		Mode.add(item);
 		
 		
-		item = new MenuItem("Make It",new MenuShortcut('M',false));
+		item = new MenuItem(Localization.getString("make_it"),new MenuShortcut('M',false));
 		item.setActionCommand("viewPattern");
 		item.addActionListener(menuListen);
 		Mode.add(item);
 		
-		item = new MenuItem("Build It",new MenuShortcut('B',false));
+		item = new MenuItem(Localization.getString("build_it"),new MenuShortcut('B',false));
 		item.setActionCommand("viewModel");
 		item.addActionListener(menuListen);
 		Mode.add(item);
@@ -2054,20 +2062,20 @@ class UI {
 		
 		
 
-		Menu view = new Menu("View");
+		Menu view = new Menu(Localization.getString("view"));
 
-		item = new MenuItem("Snap to Grid",new MenuShortcut('I',true));
+		item = new MenuItem(Localization.getString("snap_to_grid"),new MenuShortcut('I',true));
 		item.setActionCommand("toggleGrid");
 		item.addActionListener(menuListen);
 		view.add(item);
 
 		
-		item = new MenuItem("Ergonomic Figure",new MenuShortcut('E',false));
+		item = new MenuItem(Localization.getString("ergonomic_figure"),new MenuShortcut('E',false));
 		item.setActionCommand("togglePerson");
 		item.addActionListener(menuListen);
 		view.add(item);
 		
-		item = new MenuItem("Floor",new MenuShortcut('F',false));
+		item = new MenuItem(Localization.getString("floor"),new MenuShortcut('F',false));
 		item.setActionCommand("toggleFloor");
 		item.addActionListener(menuListen);
 		view.add(item);
@@ -2093,14 +2101,19 @@ class UI {
 		myMenu.add(Language);
 		*/
 
-		if (GLOBAL.frame == null)
+		// Processing 4: Get Frame from PSurface
+		if (GLOBAL.surface == null)
 			return;
+		Object nativeWindow = GLOBAL.surface.getNative();
+		if (!(nativeWindow instanceof java.awt.Frame))
+			return;
+		java.awt.Frame frame = (java.awt.Frame) nativeWindow;
 		//add the menu to the frame!
-		GLOBAL.frame.setMenuBar(myMenu);
+		frame.setMenuBar(myMenu);
 
-		Menu Help = new Menu("Help");
+		Menu Help = new Menu(Localization.getString("help"));
 
-		item = new MenuItem("About");
+		item = new MenuItem(Localization.getString("about"));
 		item.setActionCommand("selectTool");
 		item.setName(Integer.toString(UITools.ZOOM_CAM_TOOL));
 		item.addActionListener(menuListen);
@@ -2120,17 +2133,17 @@ class UI {
 		*/
 
 		if (!System.getProperty("java.version").startsWith("1.5")) {
-			item = new MenuItem("reference");
+			item = new MenuItem(Localization.getString("reference"));
 			item.setActionCommand("showReferenceWebpage");
 			item.addActionListener(menuListen);
 			Help.add(item);
 
-			item = new MenuItem("forum");
+			item = new MenuItem(Localization.getString("forum"));
 			item.setActionCommand("showForumWebpage");
 			item.addActionListener(menuListen);
 			Help.add(item);
 
-			item = new MenuItem("report a bug");
+			item = new MenuItem(Localization.getString("report_a_bug"));
 			item.setActionCommand("showBugsWebpage");
 			item.addActionListener(menuListen);
 			Help.add(item);
@@ -2138,8 +2151,7 @@ class UI {
 
 		myMenu.add(Help);
 
-		//add the menu to the frame!
-		GLOBAL.frame.setMenuBar(myMenu);
+		// Note: Menu bar already set at line 2112, no need to set again
 
 		//applet.println(myMenu);
 	}

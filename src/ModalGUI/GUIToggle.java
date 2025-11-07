@@ -19,15 +19,13 @@
  ******************************************************************************/
 package ModalGUI;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 
 import cc.sketchchair.core.LOGGER;
-
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import cc.sketchchair.core.MouseEventSK;
 
 public class GUIToggle extends GUIButton {
 
@@ -152,7 +150,7 @@ public class GUIToggle extends GUIButton {
 	}
 
 	@Override
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 		//super.mouseEvent(e);
 
 		if (!this.visible)
@@ -176,13 +174,13 @@ public class GUIToggle extends GUIButton {
 			return;
 		}
 		//
-		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getAction() == MouseEventSK.PRESS) {
 
 			if (isMouseOver() && !wasClicked) {
 				wasClicked = true;
 
 			}
-		} else if (e.getID() == MouseEvent.MOUSE_RELEASED && wasClicked
+		} else if (e.getAction() == MouseEventSK.RELEASE && wasClicked
 				&& isMouseOver()) {
 
 			fireEventNotification(this, "Clicked");
@@ -280,7 +278,7 @@ public class GUIToggle extends GUIButton {
 			g.image(this.img_clicked, (int)this.getX(), (int)this.getY());
 		} else {
 			if (isMouseOver() && this.img_over != null && !this.isDown) {
-				g.image(this.img_over, (int)this.getX(), (int)this.getY());
+					g.image(this.img_over, (int)this.getX(), (int)this.getY());
 
 			} else {
 

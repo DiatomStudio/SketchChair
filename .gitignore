@@ -1,0 +1,23 @@
+# Build outputs
+dist/
+build/
+classes/
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.claude/
+
+# Release artifacts (these should be uploaded to GitHub releases, not committed)
+*.zip
+*.exe
+*.deb
+*.dmg
+
+# Temporary files
+*.log
+*.tmp

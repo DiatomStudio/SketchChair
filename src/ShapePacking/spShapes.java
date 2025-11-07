@@ -25,6 +25,7 @@ import java.util.List;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
+import cc.sketchchair.core.LOGGER;
 import ToolPathWriter.DXFWriter;
 import ToolPathWriter.HPGLWriter;
 
@@ -142,13 +143,16 @@ public class spShapes {
 	}
 
 	public void renderPage(PGraphics g) {
+		LOGGER.info("spShapes.renderPage: Rendering " + l.size() + " shapes");
 		for (int i = 0; i < l.size(); i++) {
 			spShape shape = (spShape) l.get(i);
 			g.pushMatrix();
 			//g.translate(shape.offsetX, shape.offsetY);
+			LOGGER.debug("spShapes.renderPage: Rendering shape " + i);
 			shape.render(g);
 			g.popMatrix();
 		}
+		LOGGER.info("spShapes.renderPage: Finished rendering all shapes");
 	}
 
 	

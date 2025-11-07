@@ -28,10 +28,6 @@ import processing.core.*;
 import javax.imageio.*;
 import javax.imageio.stream.*;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-
 /** 
  * Helper class to convert a image buffer into a binary representation of encoded image for sending to server.
  * @author gregsaul
@@ -65,11 +61,7 @@ public class makeImage {
 			for (int j = 0; j < srcimg.height; j++)
 				img.setRGB(i, j, srcimg.pixels[j * srcimg.width + i]);
 		try {
-			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-			JPEGEncodeParam encpar = encoder.getDefaultJPEGEncodeParam(img);
-			encpar.setQuality(1f, false);
-			encoder.setJPEGEncodeParam(encpar);
-			encoder.encode(img);
+			ImageIO.write(img, "jpg", out);
 		} catch (FileNotFoundException e) {
 			System.out.println(e);
 		} catch (IOException ioe) {

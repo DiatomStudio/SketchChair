@@ -956,8 +956,13 @@ public class SketchSpline extends SketchShape {
 
 	private void movePointFalloff(Vec2D selectVec, Vec2D pointOnPlane) {
 
+		
 		if (this.getCentrePath().size() <= 2)
 			return;
+		
+		LOGGER.info("movePointFalloff");
+
+		
 
 		Vec2D diff = pointOnPlane.sub(selectVec);
 		Vec2D startVec = null;

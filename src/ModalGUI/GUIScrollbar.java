@@ -18,12 +18,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 package ModalGUI;
-
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-
+import cc.sketchchair.core.KeyEventSK;
 import cc.sketchchair.core.LOGGER;
-
+import cc.sketchchair.core.MouseEventSK;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
@@ -172,15 +169,15 @@ public class GUIScrollbar extends GUIComponent {
 	}
 
 	@Override
-	public void keyEvent(KeyEvent theKeyEvent) {
+	public void keyEvent(KeyEventSK theKeyEvent) {
 	}
 
 	@Override
-	public void mouseEvent(MouseEvent e) {
+	public void mouseEvent(MouseEventSK e) {
 
 		//
 
-		if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+		if (e.getAction() == MouseEventSK.PRESS) {
 
 			if (isMouseOverDragPoint()) {			
 				if (wasClicked == false)
@@ -203,7 +200,7 @@ public class GUIScrollbar extends GUIComponent {
 			//
 			//        }
 
-		} else if (e.getID() == MouseEvent.MOUSE_RELEASED && wasClicked) {
+		} else if (e.getAction() == MouseEventSK.RELEASE && wasClicked) {
 			fireEventNotification(this, "Clicked");
 			wasClicked = false;
 		}

@@ -43,7 +43,16 @@ public class SkchAutamata {
 	String selectFolder() {
 
 		System.setProperty("apple.awt.fileDialogForDirectories", "true");
-		FileDialog fd = new FileDialog(GLOBAL.applet.frame, "open",
+
+		// Processing 4: Get Frame from PSurface
+		java.awt.Frame parentFrame = null;
+		if (GLOBAL.surface != null) {
+			Object nativeWindow = GLOBAL.surface.getNative();
+			if (nativeWindow instanceof java.awt.Frame) {
+				parentFrame = (java.awt.Frame) nativeWindow;
+			}
+		}
+		FileDialog fd = new FileDialog(parentFrame, "open",
 				FileDialog.LOAD);
 		String currentDir = new File(".").getAbsolutePath();
 		fd.setLocation(50, 50);

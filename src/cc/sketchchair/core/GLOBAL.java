@@ -67,13 +67,13 @@ public class GLOBAL {
 
 	static SketchProperties sketchProperties = new SketchProperties();
 	
-	public static double CAM_OFFSET_X = 300;
-	public static double CAM_OFFSET_Y = -900;
+	public static double CAM_OFFSET_X = 0;
+	public static double CAM_OFFSET_Y =  0;
 	public static int windowWidth;
 	public static int windowHeight;
 	public static PFont font;
 	public PImage clickToStart;
-	public String version = "0.9.0.1";
+	public String version = "0.9.0.2";
 	public static boolean forceReset = false;
 	public static boolean cropExportToScreen = false;
 	public static SketchGlobals SketchGlobals;
@@ -179,7 +179,7 @@ public class GLOBAL {
 
 	public static WidgetPreviewPanel previewWidget;
 
-	public static Frame frame;
+	public static processing.core.PSurface surface;
 
 	public static int planeID = 0;
 
@@ -195,6 +195,8 @@ public class GLOBAL {
 
 	// create and load default properties
 	Properties properties = new Properties();
+
+	public static boolean smoothRender = false;
 
 	public static boolean debugPickBuffer =false;
 
@@ -260,6 +262,11 @@ public class GLOBAL {
 		return osName.startsWith("Mac OS X");
 	}
 
+	public static boolean isWindows() {
+		String osName = System.getProperty("os.name");
+		return osName.startsWith("Windows");
+	}
+
 	/**
 	* @param zOOM the zOOM to set
 	*/
@@ -279,13 +286,20 @@ public class GLOBAL {
 		
 		
 		ZOOM = 1f;
-		CAM_OFFSET_X = -600;
-		CAM_OFFSET_Y = -900;
+
 		
+//String[] fonts = PFont.list();
 
-		this.font = applet.loadFont("SegoeUI-12.vlw");
-		//this.font = applet.createFont("Helvetica", 12);
 
+//for(int i = 0; i < fonts.length; i++)
+//	cc.sketchchair.sketch.LOGGER.info(fonts[i]);
+		//this.font = applet.loadFont("SegoeUI-12.vlw");
+		
+		if(isMacOSX())
+		this.font = applet.createFont("Helvetica", 12);
+		else
+		this.font = applet.createFont("Arial", 12);
+	
 		gui.myFontMedium = this.font;
 		/*
 		URL url = findResource("TrebuchetMS-12.vlw");
@@ -328,10 +342,6 @@ public class GLOBAL {
 		undo = new Undo();
 		tick = 0l;
 
-		planesWidget = new WidgetPlanes(0, 0, 0, 0, gui);
-
-		loadWidget = new WidgetLoad();
-		widgetMaterials = new WidgetMaterials(0, 0, 0, 0, gui);
 
 		performanceMode = false;
 

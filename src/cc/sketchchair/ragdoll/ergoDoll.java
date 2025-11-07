@@ -1675,7 +1675,7 @@ if(delta <= 1){
 	}
 
 	public void render(float renderScale, PGraphics g) {
-
+		
 		if (!on)
 			return;
 

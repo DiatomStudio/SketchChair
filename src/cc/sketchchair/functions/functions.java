@@ -360,8 +360,8 @@ else
 		
 		g.noFill();
 		g.stroke(0);
-		g.strokeWeight(2);
-		
+		g.strokeWeight(0.0625f);
+
 		g.line(-r1/2, 0, -r2/2, worldDist);
 		g.line(r1/2,0, r2/2, worldDist);
 		
@@ -398,14 +398,14 @@ else
 		
 		g.noFill();
 		g.stroke(0);
-		g.strokeWeight(2);//top curve weight
+		g.strokeWeight(0.0625f);//top curve weight
 		g.beginShape();
 		  for(float a=(float)(float) (Math.PI+(Math.PI/2)) ; a >= (float) (Math.PI/2); a -=0.1f) {
 			    g.vertex((float)(Math.sin(a)*(r1/2))+0,(float)(Math.cos(a)*(r1/2))+0);
 			    points.add(new PVector(g.modelX((float)(Math.sin(a)*(r1/2))+0,(float)(Math.cos(a)*(r1/2))+0,0),
 			    		g.modelY((float)(Math.sin(a)*(r1/2))+0,(float)(Math.cos(a)*(r1/2))+0,0),
 			    		g.modelZ((float)(Math.sin(a)*(r1/2))+0,(float)(Math.cos(a)*(r1/2))+0,0)));
-		} 
+		}
 		g.endShape();
 		
 		
@@ -446,12 +446,12 @@ else
 		
 		g.noFill();
 		g.stroke(0);
-		g.strokeWeight(2);
-		
+		g.strokeWeight(0.0625f);
+
 		g.beginShape();
 		  for(float a= (float)(Math.PI/2); a >= (float) -(Math.PI/2) ; a -=0.1f) {
 			    g.vertex((float)(Math.sin(a)*(r2/2))+0,(float)(Math.cos(a)*(r2/2))+0);
-		} 
+		}
 		  g.endShape();
 
 		g.strokeWeight(1);

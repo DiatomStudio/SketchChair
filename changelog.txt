@@ -1,0 +1,193 @@
+[1.0.0] - 2025-11-06
+=== Major Modernization Release ===
++ Upgraded to Processing 4.3 with Java 17 for modern platform compatibility
++ Native Apple Silicon (M1/M2/M3) support via JOGL 2.5.0
++ Supports macOS 15+ (Sequoia), Windows 10+, and modern Linux distributions
++ Self-contained .app bundles with bundled JDK 25 runtime (no Java installation required)
++ Fixed PDF export with Processing 4.4 compatible libraries
++ Refined ergonomic figure outline rendering (8x thinner, cleaner appearance)
++ Improved distribution packaging with documentation at root level
++ Standard JAR packaging replaces One-JAR for better compatibility
++ All graphics and OpenGL libraries updated to latest stable versions
++ Cross-platform build system with jpackage for native installers
++ Note: This is a compatibility and infrastructure update - all SketchChair features remain the same
+
+[1.9.1] - Previous Development Version
++ Development snapshot during Processing 4 migration
+
+[0.9.0.1]
++ Reordered and added new File menu items. 
++ Reassigned and added new shortcut keys, documented at: sketchchair.cc/reference.php
++ Changed ground colour to make figure easier to see.
++ Various other bug fixes. 
+
+[0.9.0.0]
++ Changing SketchChair development status from Alpha to public Beta.
+
+[0.8.4.2]
++ Prevent Graphic context resize on startup. Appears to have fixed crashing problem on startup but needs to be tested by others. 
++ Slight modifications to gui. 
++ Repositions app window to the top of desktop on open.
++ Fixed bug with app starting with a low frame rate. 
+
+[0.8.4.1]
++ Increased initial Java heap size to 200mb and the maximum to 1024mb. This should resolve the issue with SketchChair not starting on some systems and should also fix the issue with labels and images in the GUI appearing as black squares.
++ Removed memory leaks. 
++ Changed default undo levels to 10 instead of 20
++ Changed render setting causes small inconsistencies in gui that will need to be repaired but improves frame rate by approximately 30%.
+
+[0.8.4.0]
++ Updated GUI assets and components. Some alignment issues and labels to fix.
++ Bug fixes in slices when editing existing slices.
++ Added mouse scroll number increments to number boxes. 
++ Various other small bug fixes.
+
+[0.8.3.5]
++ Added new function to leg slices "extend to top" this forces leg slices start at the top of the leg shape instead of the intersection between the leg shape and existing sketch.(Fixes leg slices in the Antler Chair design)
++ Debugged two features that stopped working in 0.8.3.4 Paths can be closed by right clicking whilst drawing a path using the path tool. Holding control whilst the path tool is selected allows you to add and remove points along a path. 
++ Fixed render bug on chair preview when sharing designs online. 
+
+[0.8.3.4]
++ Upgraded processing libraries to version 2.0b2. This upgrade bring new OpenGL 2.0 render libraries that improve frame-rate and texture clarity on most machines. However this does mean that your machine will have to support OpenGL 2.0 and some older machines and lower spec laptops with internal graphics cards do not. We plan to also release a SketchChair legacy version to support these machines but for the time being user effected can use v0.8.3.3 .
++ Added SVG export to patterns. Moving forward a modified SVG format will probably be the native format for SVG patterns and will be used for uploading and storing and modifying patterns on SketchChair.cc with the option to export in other formats. 
++ Pattern files are now uploaded when you share  design on SketchChair.cc, more options for this coming soon. 
++ Added new cursors to indicate what tool is selected. Their appears to be a problem with the alpha channel of these on some windows machines. This will be fixed in the next version. 
++ Initial re-layout of tools panels to prepare for new guy in next version. 
++ Clicking on a piece in the pattern preview will now select that item in your model. 
++ A multitude of other small bug fixes and changes. 
+
+[0.8.3.3]
++ Fixed SVG import, a SVG shape is not imported to either the currently selected layer or if no layer is selected one is created for the shape. 
+
+[0.8.3.2]
++ Leg can be added to any selected planes not just outer planes. 
++ Changed how legs are generated. the top of a leg is now calculated from where the leg shape intersect the seat shape. 
++ Fixed bugs with adding Slices and slats to layers. 
++ If no layers are selected the "slices" tool can be used to select one. 
++ When drawing with the offset path tool a path can be completed by double clicking. (still a little buggy)
++ Control nodes on a path are now square instead of circular. 
++ Various other GUI updates. 
+
+[0.8.3.1]
++ Revised GUI elements
++ Changed render engine to use GLGraphics (http://glgraphics.sourceforge.net/)
++ Now starts in advanced mode by default
++ Added pattern preview to main view.
++ Fixed problems with selecting layers. When in 3D view layers may be selected by single clicking on them if in 2D view (side view) all layers are selected when single clicking. 
++ Revised render code for figure. Ergonomic figure now looks more diagrammatical. 
++ GUI Performance improvements. GUI only updates when a element is changed instead of continuously redrawing elements. May not work on all video cards, can be disabled in properties file. 
++ Added material properties to pattern view. 
++ Added ability to change material and pattern packing options in pattern view.
++ Removed button to change to advanced mode, this is now only in the file menu at top of application Mode>Advanced. 
++ Offset bezier path performance improvements. 
++ Other bug fixes.
+
+[0.8.3.0]
++ Added 3D picking to model. To select and edit different layers in advanced mode you may now simply click on them. Holding the 'control' key will allow you to select multiple layers.
++ Added 3D editing , control points can now be selected and edited in 3d. ( still some problems with clicking on overlapping 3d points. 
++ Started to implement jump to context edit. clicking on slices on the model now selects that slice group and jumps to it's properties tab allowing you to edit it.
++ Added 3D preview layer picker to top corner of screen, replaces the previous 3d preview option. This control allows you to preview your chair in 3d as you edit it and allows you to select layers by clicking on them in the preview.
++ Introduced new render mode 3D preview, unselecting all layers will allow you to preview your chair in 3d with all editing points turned off. 
++ Changed some render settings on chair making it easier to tell what is selected. this will probably change a little in the next update. 
++ Added focus mode. when selecting layers in 3D other layers are now rendered as wire frames making it easier to see and edit single layers at a time.
++ Double click to select a object. Double clicking on a object will now select it. Selected object can currently be set to be cut shapes or deleted. 
++ Layers in the layers tab are rendered and selectable even if the layer is blank.
++ Added units to layer width and brush size. (needs to be changed to be relative to scale)
++ Minor font rendering improvements. 
++ Show grid shifted to ALT key.
++ Fixed undo shortcut keys CtrlZ and CommandZ.
++ Pressing spacebar now toggles between 2D view and previous 3D view.
++ Other bug fixes.
+
+[0.8.2.0]
++ Upload to SketchChair.cc. You can now upload designs directly to SketchChair.cc by going to File > Share Chair Online.
++ key 'c' toggles collision detection on slots
++ key 'd' toggles smart shape packing
++ Kinder to your processor. Sleeps drawing threads when the application window is not in focus. 
++ Fixed issue with unintended layers automatically being added to model.
++ Other bug fixes.
+
+[0.8.1.11]
++ Added automatic packing of cutting pieces on sheet
++ Added SketchChair.properties file. This can be used to change default settings in SketchChair.
++ Added start screen menu. 
++ Added File > Export Pattern > To PNG Preview , saves a PNG preview of your chair using the current view.
++ Fixed issues with collisions between furniture and figure not being cleared when moved.
++ Added Slat collision detection, Slices that intersect are removed.
++ Can now use path tool to add point to centre line of offset path. With path tool selected hold down 'Ctrl' and click on a point along the offset path centre line to add a point. 
++ Selected points can now be deleted by dressing 'delete' when a point is selected.
++ Fixed problem with saved chair preview images. 
++ Added cut shapes. Drawn shapes can be set to cut from the outline instead of adding to it. For example cutting eye's fro twiggy and rock steady. 
++ Fixed bug in scale tool.
++ Added file association with .skchr in MacOS, SkechChair needs to be in your application folder for this to work.\
++ Slats can now be either snapped to a SketchSpline or added anywhere on a model. 
++ Slats and Slices now snap to the centre or the outline of a OffsetPath.
++ Can now change leg with with width tool.
++ leg slices generate correctly again
++ Fixed bug slats not saving number of fingers.
++ Fixed? bug with some slices being skipped in a slicegroup
++ Added optimisations when moving paths around
++ Added radius corner slats.
++ Added option to smooth slats.
++ Added finger tolerance, this decreases slot sizes on the female part for a finger joint to allow for the tolerance of the material. 
++ Can now change leg capping styles. 
++ Added camera jump to isometric
++ Added Export Image Preview
++ Fixed problems with slot tolerances
++ Fixed Problems with triangles at top of slot paths. 
++ new shortcuts show/hide floor  key='f' crop exported image key='c'
+
+[0.8.1.10]
++ Sections in a offset path can now have different amounts of offset to make tapered offset paths. 
++ Undo function rewritten, this should now work in most cases. 
++ Added capping styles to slices.
++ Option to flip slots.
++ Reworked intersection with bezier code. Slice groups should now distribute evenly along a bezier curve. Fixes issues with generating slices on offset paths containing loops. 
++ You can now change a draw or offset path shapes capping and offset by selecting them by click on them and then selecting new settings in the tools panel.
++ Various other changes to GUI.
+
+[0.8.1.9]
++ Fixed bug with loading offset paths from .sktchr files.
+
+[0.8.1.8]
++ Added offset path tool.
++ Added capping options to offset path and draw tool.
++ Added 3D Preview to advanced mode.
++ Fixed some bugs that were causing crashes.
++ Various other small changes.
+
+[0.8.1.7]
++ Added new "Slat/Slot Group" tool. This tool allows a combination of Slats and Slots to be aded to a chair, like on the Twiggy and Rocksteady chairs.
++ Added finger joints to Slats. (currently only works on outside edges). 
++ New "Slice Depth" option on slice selections. This allows slices to be extruded only part way though a chair. 
++ Continued structural changes to code, working towards greater code modularity.
++ GUI Labels are now pre-rendered on program startup. This results in less blurry type in the GUI and a good performance increase overall. 
++ Added Import Image function.
++ Path's drawn with the path tool can now be closed by clicking on the paths starting point
+
+[0.8.1.6]
++ Rewrote DXF pattern export (based on processing's export code), now works for exporting large models.
++ Started major structural changes in SketchChair's engine. There should not be any visible changes using the program but moving forward will make SketchChair easier to modify and reuse for others.
+
+[0.8.1.5]
++ Compiled with compatibility mode for the JRE 1.5. Works OSX 10.5.8 again.
+
+[0.8.1.4]
++ Fixed loading chair bug: Modified XOM library to be able to load required files from SketchChair.jar. Modified Verifier.jar to use Thread class loader, added characters.dat to SketchChair.jar base dir.
++ Performance improvements. Optimised bezier curve resolution to reduce polygon count.
+
+[0.8.1.3]
++ Changed how resources are loaded to resolve "tiny white window" bug on some platforms. 
++ Changed windows jar wrapper from JSmooth (jsmooth.sourceforge.ne) to launch4j (http://launch4j.sourceforge.net).
+
+[0.8.1.2]
++ Updated processing.org Libraries to 1.5.1 
++ Added support for Linux (not tested)
++ New processing libraries have bought in many speed improvements and removed some bugs.
++ Processing update should have fixed problem with program not opening on some systems. Thanks for the tip on this Jim V! (still needs testing)
+
+[0.8.1.1]
++ Added logging to debug.log 
++ Added ability to export slots as a separate path
++ Fixed bugs in DXF export *still a problem exporting large models. 
++ Removed smooth command to optimize render speed. 

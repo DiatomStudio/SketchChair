@@ -26,11 +26,11 @@ package cc.sketchchair.core;
 public class LOGGER {
 
 	public static void debug(String message) {
-	//System.out.println(message);
+	System.out.println(message);
 	}
 
 	public static void debug(String message, Object obj) {	
-	//System.out.println(obj.getClass().getName()+": "+message);
+	System.out.println(obj.getClass().getName()+": "+message);
 	}
 
 	public static void error(String message) {

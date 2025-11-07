@@ -43,19 +43,20 @@ public class program extends Frame {
 		setLayout(new BorderLayout());
 		setSize(1200, 700); // setup and OPENGL window
 
+		// Processing 4: Use runSketch instead of init() and Component embedding
 		PApplet p5sketch = new main();
-		add(p5sketch, BorderLayout.CENTER);
-		
+
 		/*
 		PApplet p5UIFrame = new UIFrame();
 		add(p5UIFrame,BorderLayout.SOUTH);
 */
-		
-		
-		GLOBAL.frame = this;
-		//p5UIFrame.init();
-		p5sketch.init();
-		show();
+
+		// Note: GLOBAL.frame is now handled via PSurface in main.java setup()
+		// Start the sketch - PSurface will handle window embedding
+		String[] args = {"SketchChair"};
+		PApplet.runSketch(args, p5sketch);
+
+		setVisible(true);
 		//p5sketch.setup();
 
 		// allow window and application to be closed
