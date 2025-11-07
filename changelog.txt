@@ -1,14 +1,12 @@
-[1.0.0.3] - 2025-11-06
-+ Fixed portable launcher and added changelog/properties to release packages
-
-[1.0.0.3] - 2025-11-06
-+ Fixed portable launcher and added changelog/properties to release packages
-
-[1.0.0.3] - 2025-11-06
-+ Fixed portable launcher and added changelog/properties to release packages
-
-[1.0.0.2] - 2025-11-06
-+ Fixed PDF export scaling issue and added release automation
+[1.9.1] - 2025-11-06
++ Updated to Processing 4.3 for native Apple Silicon support and modern platform compatibility
++ Upgraded to JOGL 2.6.0 (OpenGL rendering library)
++ Now supports macOS 15+ (Sequoia) and Apple Silicon (M1/M2/M3) natively
++ Improved Windows compatibility with updated Java runtime
++ Modernized build system with standardized release packaging
++ Native .app bundles for macOS with bundled JDK 25 runtime
++ All underlying graphics and processing libraries updated to latest versions
++ Note: No functional changes to SketchChair features, this is purely a compatibility update
 
 [0.9.0.1]
 + Reordered and added new File menu items. 
