@@ -360,7 +360,7 @@ else
 		
 		g.noFill();
 		g.stroke(0);
-		g.strokeWeight(0.5f);
+		g.strokeWeight(0.125f);
 
 		g.line(-r1/2, 0, -r2/2, worldDist);
 		g.line(r1/2,0, r2/2, worldDist);
@@ -398,7 +398,7 @@ else
 		
 		g.noFill();
 		g.stroke(0);
-		g.strokeWeight(0.5f);//top curve weight
+		g.strokeWeight(0.125f);//top curve weight
 		g.beginShape();
 		  for(float a=(float)(float) (Math.PI+(Math.PI/2)) ; a >= (float) (Math.PI/2); a -=0.1f) {
 			    g.vertex((float)(Math.sin(a)*(r1/2))+0,(float)(Math.cos(a)*(r1/2))+0);
@@ -446,7 +446,7 @@ else
 		
 		g.noFill();
 		g.stroke(0);
-		g.strokeWeight(0.5f);
+		g.strokeWeight(0.125f);
 
 		g.beginShape();
 		  for(float a= (float)(Math.PI/2); a >= (float) -(Math.PI/2) ; a -=0.1f) {
