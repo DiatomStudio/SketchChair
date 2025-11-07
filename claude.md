@@ -12,7 +12,7 @@ This is **SketchChair** - a 12-year-old Processing-based application for designi
 ## Quick Reference
 
 ### Key Documents
-- **📋 Progress Tracker**: `PROCESSING4_UPGRADE.md` - Comprehensive upgrade status (UPDATE THIS!)
+- **📋 Progress Tracker**: `processing4-upgrade.md` - Comprehensive upgrade status (UPDATE THIS!)
 - **🏗️ Build**: `build.xml` - Ant build configuration (Java 17)
 - **📦 Libraries**: `libProcessing4/` - Processing 4.3 + JOGL 2.x libraries
 - **📝 Original README**: `README.md` - Original project documentation
@@ -62,7 +62,7 @@ This is **SketchChair** - a 12-year-old Processing-based application for designi
 
 1. **Read the progress doc first**:
    ```bash
-   cat PROCESSING4_UPGRADE.md
+   cat processing4-upgrade.md
    ```
 
 2. **Check current branch and status**:
@@ -79,7 +79,7 @@ This is **SketchChair** - a 12-year-old Processing-based application for designi
 
 ### Working on Fixes
 
-1. **Pick a category from Phase 2** (see PROCESSING4_UPGRADE.md)
+1. **Pick a category from Phase 2** (see processing4-upgrade.md)
 
 2. **Find affected files**:
    ```bash
@@ -87,7 +87,7 @@ This is **SketchChair** - a 12-year-old Processing-based application for designi
    grep -rn "\.frame\." src/
    ```
 
-3. **Make fixes** following the patterns in PROCESSING4_UPGRADE.md
+3. **Make fixes** following the patterns in processing4-upgrade.md
 
 4. **Test compilation frequently**:
    ```bash
@@ -100,7 +100,7 @@ This is **SketchChair** - a 12-year-old Processing-based application for designi
    git commit -m "Phase 2: Fix Frame API in main.java (5 locations)"
    ```
 
-6. **Update PROCESSING4_UPGRADE.md** with:
+6. **Update processing4-upgrade.md** with:
    - Change status from ⏳ to ✅
    - Mark files as complete
    - Note any issues discovered
@@ -222,7 +222,7 @@ import processing.opengl.PJOGL;
 - **PSurface Reference**: https://processing.org/reference/PSurface.html
 
 ### In This Repo
-- **Detailed Plan**: `PROCESSING4_UPGRADE.md`
+- **Detailed Plan**: `processing4-upgrade.md`
 - **Original README**: `README.md`
 - **Build Config**: `build.xml`
 
