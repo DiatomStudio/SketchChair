@@ -144,6 +144,8 @@ public class main extends PApplet {
 	private boolean mouseDoubleClick = false;
 	private int lastMouseMove;
 	private int initiatingFrames;
+	private boolean windowsInitResize = false; // Flag to trigger one-time Windows resize fix
+	private int windowsFrameCount = 0; // Count frames before Windows resize fix
 
 
 	void applyWorldTranslation(PGraphics renderer) {
@@ -167,8 +169,8 @@ public class main extends PApplet {
 
 	@Override
 	public void draw() {
-		
-		
+
+
 		//not the first loop
 		if(firstLoop){
 			
@@ -252,9 +254,27 @@ public class main extends PApplet {
 		GLOBAL.SketchGlobals.mousePressed = mousePressed;
 		
 		
-		
+
 		if(width != GLOBAL.windowWidth || height != GLOBAL.windowHeight)
 		resize();
+
+		// Windows-specific: Delayed window size change to trigger natural resize
+		// Wait ~2 seconds (60 frames) for Windows to fully initialize
+		// Then force a small window size change and back to trigger proper coordinate recalculation
+		if(GLOBAL.isWindows() && !windowsInitResize) {
+			windowsFrameCount++;
+			if(windowsFrameCount == 60) {
+				// Change window size by 1 pixel to trigger resize event
+				LOGGER.info("Windows: Triggering window resize event (frame " + windowsFrameCount + ")");
+				GLOBAL.surface.setSize(width + 1, height + 1);
+			} else if(windowsFrameCount == 61) {
+				// Change back to original size
+				LOGGER.info("Windows: Restoring original window size");
+				GLOBAL.surface.setSize(width - 1, height - 1);
+				windowsInitResize = true;
+			}
+		}
+
 		//renderer.noSmooth();
 
 		//make sure we always have a chair to edit
@@ -1274,6 +1294,13 @@ public class main extends PApplet {
 	// Just set the title - this works fine
 	GLOBAL.surface.setTitle("SketchChair");
 	// GLOBAL.surface.setResizable(true); // Causes threading deadlock with JOGL animator
+
+	// Windows-specific: Position window to avoid off-screen issues
+	// Set to (100, 100) to ensure visibility on all displays
+	if (GLOBAL.isWindows()) {
+		GLOBAL.surface.setLocation(100, 100);
+		LOGGER.info("Windows detected: Set window location to (100, 100)");
+	}
 		}
 
 		//if(useOPENGL)
@@ -1382,8 +1409,9 @@ public class main extends PApplet {
 		// turn off just resizing controls
 		//this.frame.setResizable( true );
 
-		
+		// Windows resize moved to first draw() frame for proper timing
 		//this.resize(true);
+
 		mouseDown = false;
 		mousePressed = false;
 		//contains the title img

@@ -262,6 +262,11 @@ public class GLOBAL {
 		return osName.startsWith("Mac OS X");
 	}
 
+	public static boolean isWindows() {
+		String osName = System.getProperty("os.name");
+		return osName.startsWith("Windows");
+	}
+
 	/**
 	* @param zOOM the zOOM to set
 	*/
