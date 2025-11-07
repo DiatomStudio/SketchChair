@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="SketchChair" basedir="." default="build">
 
+    <!-- Load version from version.properties -->
+    <property file="version.properties"/>
+
     <!-- Hook into One-Jar project -->
+    <!-- DEPRECATED: One-JAR packaging is deprecated, use build.standard instead -->
+    <!--
     <available property="one-jar.dir" file="../one-jar/build.onejar.xml" value="../one-jar"/>
-    <!-- Will be ignored if available above -->
-	<property name="one-jar.dir" location="one-jar" />
+    <property name="one-jar.dir" location="one-jar" />
     <import file="${one-jar.dir}/build.onejar.xml"/>
+    -->
     
 	<property name="eclipse.jar-in-jar.dir" value="build-lib/eclipse"/>
 	<property name="temp.dir" value="temp" />	
@@ -42,8 +47,6 @@
             <exclude name="**/processingjs/**" />
             <include name="**/*.properties"/>
             <classpath refid="libraries" />
-            <classpath refid="one-jar.libraries"/>
-            <classpath path="${one-jar.ant.jar}"/>
     </javac>
 
 	</target>
@@ -198,7 +201,7 @@
 	</target>
 
 	<!-- jpackage targets for native distribution -->
-	<target name="jpackage.mac" depends="build.standard" description="Create macOS .app bundle">
+	<target name="jpackage.mac" depends="build.standard" description="Create macOS .app bundle and DMG">
 		<mkdir dir="dist"/>
 		<!-- Determine JDK 25 path -->
 		<exec executable="/usr/libexec/java_home" outputproperty="jdk25.home">
@@ -237,13 +240,60 @@
 			<arg value="--icon"/>
 			<arg value="data/icons/program_icon_02_b.icns"/>
 			<arg value="--app-version"/>
-			<arg value="1.0"/>
+			<arg value="${version}"/>
 			<arg value="--vendor"/>
 			<arg value="Diatom Studio"/>
 			<arg value="--copyright"/>
 			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
 		</exec>
-		<echo>macOS .app created in dist/SketchChair.app with JDK 25 runtime</echo>
+		<!-- Copy additional files to app bundle Resources -->
+		<copy file="changelog.txt" todir="dist/SketchChair.app/Contents/Resources"/>
+		<copy file="SketchChair.properties" todir="dist/SketchChair.app/Contents/Resources"/>
+		<!-- Copy documentation to dist root for easy access -->
+		<copy file="changelog.txt" todir="dist"/>
+		<copy file="SketchChair.properties" todir="dist"/>
+		<copy file="README.md" todir="dist"/>
+		<!-- Create ZIP using ditto to preserve macOS attributes -->
+		<exec executable="ditto" failonerror="true">
+			<arg value="-c"/>
+			<arg value="-k"/>
+			<arg value="--keepParent"/>
+			<arg value="dist/SketchChair.app"/>
+			<arg value="dist/temp-app.zip"/>
+		</exec>
+		<!-- Add documentation files to the ZIP at root level -->
+		<zip destfile="dist/SketchChair-${version}-macos.zip" update="false">
+			<zipfileset src="dist/temp-app.zip"/>
+			<zipfileset file="dist/changelog.txt" prefix=""/>
+			<zipfileset file="dist/SketchChair.properties" prefix=""/>
+			<zipfileset file="dist/README.md" prefix=""/>
+		</zip>
+		<!-- Clean up temp file -->
+		<delete file="dist/temp-app.zip"/>
+		<!-- Create DMG installer -->
+		<exec executable="${jdk25.home}/bin/jpackage" failonerror="true">
+			<arg value="--app-image"/>
+			<arg value="dist/SketchChair.app"/>
+			<arg value="--name"/>
+			<arg value="SketchChair"/>
+			<arg value="--type"/>
+			<arg value="dmg"/>
+			<arg value="--dest"/>
+			<arg value="dist"/>
+			<arg value="--app-version"/>
+			<arg value="${version}"/>
+			<arg value="--vendor"/>
+			<arg value="Diatom Studio"/>
+			<arg value="--copyright"/>
+			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
+		</exec>
+		<!-- Rename DMG to standardized naming -->
+		<move file="dist/SketchChair-${version}.dmg" tofile="dist/SketchChair-${version}-macos.dmg" failonerror="false"/>
+		<echo>===================================================</echo>
+		<echo>macOS packages created with JDK 25 runtime!</echo>
+		<echo>ZIP: dist/SketchChair-${version}-macos.zip</echo>
+		<echo>DMG: dist/SketchChair-${version}-macos.dmg</echo>
+		<echo>===================================================</echo>
 	</target>
 
 	<target name="jpackage.mac.dmg" depends="build.standard" description="Create macOS .dmg installer">
@@ -264,13 +314,18 @@
 			<arg value="--icon"/>
 			<arg value="data/icon.icns"/>
 			<arg value="--app-version"/>
-			<arg value="1.0"/>
+			<arg value="${version}"/>
 			<arg value="--vendor"/>
 			<arg value="Diatom Studio"/>
 			<arg value="--copyright"/>
 			<arg value="Copyright (C) 2012-2025 Diatom Studio"/>
 		</exec>
-		<echo>macOS .dmg created in dist/SketchChair-1.0.dmg</echo>
+		<!-- Rename to standardized naming -->
+		<move file="dist/SketchChair-${version}.dmg" tofile="dist/SketchChair-${version}-macos.dmg" failonerror="false"/>
+		<echo>===================================================</echo>
+		<echo>macOS .dmg installer created!</echo>
+		<echo>Package: dist/SketchChair-${version}-macos.dmg</echo>
+		<echo>===================================================</echo>
 	</target>
 
 	<target name="jpackage.win" depends="build.standard" description="Create Windows .exe installer">
@@ -291,7 +346,7 @@
 			<arg value="--icon"/>
 			<arg value="data/icons/program_icon_02_b.ico"/>
 			<arg value="--app-version"/>
-			<arg value="1.0"/>
+			<arg value="${version}"/>
 			<arg value="--vendor"/>
 			<arg value="Diatom Studio"/>
 			<arg value="--copyright"/>
@@ -322,7 +377,7 @@
 			<arg value="--icon"/>
 			<arg value="data/icons/program_icon_02_b_128x128x32.png"/>
 			<arg value="--app-version"/>
-			<arg value="1.0"/>
+			<arg value="${version}"/>
 			<arg value="--vendor"/>
 			<arg value="Diatom Studio"/>
 			<arg value="--copyright"/>
@@ -335,12 +390,13 @@
 	<!-- Create portable Windows distribution package -->
 	<target name="dist.windows.portable" depends="build.standard" description="Create portable Windows distribution ZIP">
 		<mkdir dir="dist"/>
-		<zip destfile="dist/SketchChair-Windows-Portable.zip">
+		<zip destfile="dist/SketchChair-${version}-windows-portable.zip">
 			<!-- Main JAR and launcher -->
 			<zipfileset file="build/SketchChair-standard.jar" prefix="SketchChair"/>
 			<zipfileset file="launch-windows.bat" prefix="SketchChair"/>
 			<zipfileset file="BUILD_WINDOWS.md" prefix="SketchChair"/>
 			<zipfileset file="README.md" prefix="SketchChair"/>
+			<zipfileset file="changelog.txt" prefix="SketchChair"/>
 
 			<!-- Libraries -->
 			<zipfileset dir="build/lib" prefix="SketchChair/lib"/>
@@ -352,7 +408,7 @@
 		</zip>
 		<echo>===================================================</echo>
 		<echo>Portable Windows distribution created!</echo>
-		<echo>File: dist/SketchChair-Windows-Portable.zip</echo>
+		<echo>Package: dist/SketchChair-${version}-windows-portable.zip</echo>
 		<echo>===================================================</echo>
 		<echo>To use on Windows:</echo>
 		<echo>1. Extract ZIP file</echo>

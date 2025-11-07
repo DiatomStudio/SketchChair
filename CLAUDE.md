@@ -1,270 +1,265 @@
-# Claude Code Instructions for SketchChair
+# CLAUDE.md
 
-## Project Context
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-This is **SketchChair** - a 12-year-old Processing-based application for designing furniture. We're currently upgrading it from Processing 1.x to Processing 4 to enable native Apple Silicon support and modern cross-platform compatibility.
+## Project Overview
 
-**Branch**: `modernization-2025`
-**Status**: Phase 1 Complete, Phase 2 In Progress
+**SketchChair** is an open-source furniture design and fabrication tool built with Processing. Users sketch 2D designs, test them with an ergonomic simulation, and generate cutting patterns for CNC fabrication.
 
----
+- **Language**: Java (Processing 4.3 framework)
+- **Java Version**: Java 17+
+- **Build System**: Apache Ant
+- **Current Branch**: `modernization-2025` (Processing 4 upgrade - 95% complete)
+- **Main Branch**: `master`
 
-## Quick Reference
+## Essential Build Commands
 
-### Key Documents
-- **📋 Progress Tracker**: `PROCESSING4_UPGRADE.md` - Comprehensive upgrade status (UPDATE THIS!)
-- **🏗️ Build**: `build.xml` - Ant build configuration (Java 17)
-- **📦 Libraries**: `libProcessing4/` - Processing 4.3 + JOGL 2.x libraries
-- **📝 Original README**: `README.md` - Original project documentation
+```bash
+# Clean build directories
+ant clean
 
-### Important Files to Track
-- `src/cc/sketchchair/core/main.java` - Main application entry point
-- `src/cc/sketchchair/core/Legacy.java` - Compatibility layer
-- `src/cc/sketchchair/core/SETTINGS.java` - Configuration
-- `build.xml` - Build configuration
+# Compile only (check for errors)
+ant compile
 
----
+# Build standard JAR with external dependencies
+ant build.standard
 
-## Current Status
+# Run the application (macOS recommended)
+./launch-mac.command
+# Or manually:
+cd build
+java -Djogamp.gluegen.UseTempJarCache=true -jar SketchChair-standard.jar
 
-**Overall Progress**: 20% (Phase 1 of 5 complete)
+# Create native macOS .app bundle (requires JDK 25 for best results)
+ant jpackage.mac
 
-### ✅ What's Done (Phase 1)
-1. ✅ Build system upgraded to Java 17
-2. ✅ Processing 4.3 core library integrated
-3. ✅ JOGL 2.x libraries added (all platforms)
-4. ✅ Compilation works (37 expected API errors)
-5. ✅ Progress document created
+# Create Windows portable distribution (ZIP)
+ant dist.windows.portable
 
-### 🔄 What's Next (Phase 2)
-**37 compilation errors to fix** in these categories:
+# Create Windows installer (.exe) - must run on Windows
+ant jpackage.win
 
-1. **Frame → Surface API** (15 instances)
-   - Files: `main.java`, `simpleTest.java`, `Environments.java`, `SkchAutamata.java`
-   - Change: `this.frame.setSize()` → `surface.setSize()`
-
-2. **GL API Access** (6 instances)
-   - Files: `main.java`, `simpleTest.java`, `ModalGUI.java`, `GUIPanel.java`
-   - Change: `beginGL()/endGL()` → `beginPGL()/endPGL()` with JOGL 2.x syntax
-
-3. **Event Registration** (3 instances)
-   - Files: `Legacy.java`, `ModalGUI.java`
-   - Change: `registerMouseEvent()` → `registerMethod("mouseEvent")`
-
-4. **Other API incompatibilities** (13 instances)
-   - MouseEvent methods, PGraphics casting, Component issues
-
----
-
-## How to Continue This Work
-
-### On Session Start
-
-1. **Read the progress doc first**:
-   ```bash
-   cat PROCESSING4_UPGRADE.md
-   ```
-
-2. **Check current branch and status**:
-   ```bash
-   git branch
-   git log --oneline -5
-   git status
-   ```
-
-3. **Review compilation errors**:
-   ```bash
-   ant clean compile 2>&1 | grep "error:"
-   ```
-
-### Working on Fixes
-
-1. **Pick a category from Phase 2** (see PROCESSING4_UPGRADE.md)
-
-2. **Find affected files**:
-   ```bash
-   # Example for Frame API
-   grep -rn "\.frame\." src/
-   ```
-
-3. **Make fixes** following the patterns in PROCESSING4_UPGRADE.md
-
-4. **Test compilation frequently**:
-   ```bash
-   ant clean compile
-   ```
-
-5. **Commit after each logical group of fixes**:
-   ```bash
-   git add -A
-   git commit -m "Phase 2: Fix Frame API in main.java (5 locations)"
-   ```
-
-6. **Update PROCESSING4_UPGRADE.md** with:
-   - Change status from ⏳ to ✅
-   - Mark files as complete
-   - Note any issues discovered
-
-### Important Patterns
-
-#### Frame → Surface
-```java
-// OLD
-this.frame.setSize(width, height);
-GLOBAL.frame = this.frame;
-
-// NEW
-surface.setSize(width, height);
-GLOBAL.surface = surface; // Update GLOBAL.java too
+# Create Linux package (.deb) - must run on Linux
+ant jpackage.linux
 ```
 
-#### GL API
-```java
-// OLD (JOGL 1.x)
-PGraphicsOpenGL pgl = (PGraphicsOpenGL)g;
-GL gl = pgl.beginGL();
-gl.glEnable(GL.GL_DEPTH_TEST);
-pgl.endGL();
+**Important**: Always use `-Djogamp.gluegen.UseTempJarCache=true` when running the JAR directly. This is required for JOGL native library loading.
 
-// NEW (JOGL 2.x)
+## Code Architecture
+
+### Core Packages
+
+#### `cc.sketchchair.core`
+Main application code that ties together all subsystems. Key files:
+- `main.java` - Application entry point (extends PApplet)
+- `SETTINGS.java` - Configuration constants
+- `Legacy.java` - Compatibility layer for Processing API differences
+
+#### `cc.sketchchair.sketch`
+Vector drawing system - can function independently as a standalone vector editor.
+Manages user drawings on SketchPlanes.
+
+#### `cc.sketchchair.geometry`
+Geometry calculations for chair structure:
+- Calculates cross-slice forms from SketchPlane intersections
+- Generates slots for finger joints
+- Creates 3D representations from 2D sketches
+
+#### `cc.sketchchair.ragdoll`
+Ergonomic figure simulation for testing designs.
+Uses physics engine to simulate sitting posture.
+
+### Custom Libraries (in `src/`)
+
+#### `ModalGUI`
+Custom GUI framework with standard widgets built specifically for SketchChair.
+Handles windows, buttons, panels, and other interface components.
+
+#### `ShapePacking`
+2D packing algorithm for arranging cutting outlines on material sheets.
+Optimizes material usage for fabrication.
+
+#### `ToolPathWriter`
+Export system supporting multiple formats:
+- DXF (AutoCAD)
+- G-code (CNC machines)
+- PDF (documentation)
+- HPGL, CraftRobo formats
+
+#### `CloudHook`
+Server communication for design sharing and user authentication.
+Backend implemented in PHP (separate repository).
+
+### Third-Party Libraries
+
+**lib/** - SketchChair-specific dependencies:
+- `AppleJavaExtensions.jar` - Mac-specific extensions
+- `dxf.jar` - DXF export support
+- `janino.jar` - Runtime Java compiler
+- `jbullet.jar` - Physics simulation engine
+- `stack-alloc.jar` - Memory optimization
+- `svgSalamander-tiny.jar` - SVG import/export
+- `toxilib_2.jar` - Geometry utilities
+- `vecmath.jar` - Vector math for physics
+- `xom-1.2.6_mod.jar` - XML processing
+
+**libProcessing4/** - Processing 4 + JOGL dependencies:
+- `core.jar` - Processing 4.3 (custom patched with macOS icon fixes)
+- `jogl-all.jar`, `gluegen-rt.jar` - JOGL 2.6.0 OpenGL bindings
+- 66+ platform-specific native JARs for JOGL
+- `itext.jar`, `pdf.jar` - PDF export (Processing 4 versions)
+
+## How the Application Works
+
+1. **Sketch Phase**: User draws on SketchPlanes using vector tools
+2. **Build Phase**: Geometry engine calculates 3D forms from 2D sketches:
+   - Analyzes slice selections
+   - Computes intersections between planes
+   - Generates slots and joints
+3. **Simulation Phase**: Physics engine tests design with ergonomic figure
+4. **Export Phase**: ShapePacking optimizes layout, ToolPathWriter generates output
+5. **Save/Share**: Custom XML format stores designs, CloudHook uploads to server
+
+## Important Modernization Context
+
+The codebase is currently undergoing a **Processing 1.x → Processing 4 upgrade** on the `modernization-2025` branch.
+
+**Status**: Phase 5 Complete (95% done) - Native distribution ready! 🚀
+
+**Key Changes Made**:
+- Java 8 → Java 17
+- JOGL 1.x → JOGL 2.x (Apple Silicon support)
+- Frame API → Surface API (Processing 4 requirement)
+- One-JAR packaging → Standard JAR with lib/ folder
+- Added jpackage targets for native .app/.dmg/.exe distribution
+- Fixed PDF export with Processing 4.4 compatible iText/pdf.jar
+
+**Key Files to Check**:
+- `processing4-upgrade.md` - Comprehensive upgrade progress document
+- `build.xml` - All build targets and configurations
+- `changelog.txt` - Version history
+
+**Remaining Work**:
+- Cross-platform testing (Windows, Linux, Intel Mac)
+- Feature validation
+- Performance benchmarking
+
+## Processing 4 Specific Notes
+
+### Critical Runtime Requirement
+Always launch with: `-Djogamp.gluegen.UseTempJarCache=true`
+
+This enables JOGL's temp JAR cache for native library extraction.
+
+### API Patterns
+
+**Surface API** (replaces Frame API):
+```java
+// Window management
+surface.setSize(width, height);
+surface.setLocation(x, y);
+surface.setResizable(true);
+```
+
+**JOGL 2.x OpenGL**:
+```java
 PGraphicsOpenGL pg = (PGraphicsOpenGL)g;
 PJOGL pgl = (PJOGL)pg.beginPGL();
 GL2 gl = pgl.gl.getGL2();
-gl.glEnable(GL.GL_DEPTH_TEST);
+// ... OpenGL calls ...
 pg.endPGL();
 ```
 
-#### Event Registration
+**Event Registration**:
 ```java
-// OLD
-_main.registerMouseEvent(_modalGUI);
-
-// NEW
-_main.registerMethod("mouseEvent", _modalGUI);
+registerMethod("mouseEvent", object);
+registerMethod("keyEvent", object);
 ```
 
----
-
-## Build Commands
-
-```bash
-# Clean build
-ant clean
-
-# Compile only
-ant compile
-
-# Full build (creates JAR)
-ant build
-
-# Run (after successful build)
-ant run.SketchChair
-# or
-java -jar build/SketchChair.jar
-```
-
----
-
-## Testing Strategy
-
-### After Each Fix Group
-1. Compile to check error count decreases
-2. Note any new errors introduced
-3. Update progress document
-
-### After Phase 2 Complete
-1. Build should succeed with 0 errors
-2. Test basic run: `java -jar build/SketchChair.jar`
-3. Check for runtime errors
-4. Test on target platform (Mac/Windows/Linux)
-
----
-
-## Common Issues & Solutions
-
-### Issue: "cannot find symbol" for Processing classes
-**Solution**: Check import statements, Processing 4 may have moved classes
-
-### Issue: GL/GL2 type mismatches
-**Solution**: Use JOGL 2.x syntax with proper casting (see patterns above)
-
-### Issue: PApplet no longer extends Component
-**Solution**: Use PSurface API instead of direct Component access
-
-### Issue: Import errors for JOGL classes
-**Solution**: Add imports:
+**settings() Method**:
 ```java
-import com.jogamp.opengl.*;
-import processing.opengl.PJOGL;
+// Processing 4 requires size() in settings(), not setup()
+public void settings() {
+    size(width, height, P3D);
+}
 ```
 
----
+## File Locations
 
-## Git Workflow
+- **Source**: `src/` (all Java source files)
+- **Libraries**: `lib/` (SketchChair-specific), `libProcessing4/` (Processing + JOGL)
+- **Resources**: `data/` (images, fonts, GUI assets)
+- **Languages**: `languages/` (localization .properties files)
+- **Native Binaries**: `binlib/` (platform-specific tools)
+- **Build Output**: `build/` (compiled classes, JARs)
+- **Distribution**: `dist/` (native .app, .dmg, .exe packages)
 
-### Commits
-- Commit frequently (after each file or logical group)
-- Use descriptive messages: "Phase 2: Fix [issue] in [file]"
-- Always update PROCESSING4_UPGRADE.md in commits that complete tasks
+## Development Workflow
 
-### Branch
-- Working branch: `modernization-2025`
-- Parent branch: `develop` (most recent code)
-- Don't merge to master until fully tested
+### For Bug Fixes or Features
 
----
+1. Check current branch: `git branch --show-current`
+2. Compile to verify current state: `ant compile`
+3. Make changes
+4. Test frequently: `ant compile` or `ant run.standard`
+5. Commit with descriptive messages
+6. Update relevant documentation if needed
 
-## Resources
+### For Continuing the Modernization
 
-### Documentation
-- **Processing 4 API**: https://processing.org/reference/
-- **JOGL 2.x Migration**: https://jogamp.org/wiki/index.php/Migrating_From_JOGL_1_To_JOGL_2
-- **PSurface Reference**: https://processing.org/reference/PSurface.html
+1. **Read** `processing4-upgrade.md` first for current status
+2. Check remaining tasks in Phase 6 (testing) or Phase 7 (validation)
+3. Follow the upgrade patterns documented in that file
+4. **Always update** `processing4-upgrade.md` when completing tasks
 
-### In This Repo
-- **Detailed Plan**: `PROCESSING4_UPGRADE.md`
-- **Original README**: `README.md`
-- **Build Config**: `build.xml`
+## Common Issues
 
----
+### "cannot find symbol" errors
+Check import statements - Processing 4 moved some classes to different packages.
 
-## Critical Reminders
+### JOGL native library errors
+Ensure `-Djogamp.gluegen.UseTempJarCache=true` is set when running.
 
-1. **Always update PROCESSING4_UPGRADE.md** when completing tasks
-2. **Test compilation after each change** (`ant compile`)
-3. **Commit frequently** with clear messages
-4. **Check for new errors** - fixes can sometimes introduce new issues
-5. **Preserve backward compatibility** where possible (file formats!)
-6. **Document any discoveries** that aren't in the plan
+### dataPath() or loadImage() failures
+Use `ant build.standard` (not old One-JAR build). Resources must be in external folders.
 
----
+### Window/Frame API errors
+Use `surface` instead of `frame` (Processing 4 API change).
 
-## Quick Status Check
+### PDF export "Unbalanced save/restore state operators" error
+Ensure using Processing 4.4 compatible `itext.jar` and `pdf.jar` from `libProcessing4/`.
+These are the correct versions - do NOT use older versions from other sources.
 
-Run this to see current state:
+## Testing
+
+### Manual Testing Checklist
+- [ ] Application launches
+- [ ] 3D rendering works
+- [ ] Mouse/keyboard input responsive
+- [ ] GUI widgets functional
+- [ ] Physics simulation runs
+- [ ] PDF export works (no save/restore errors)
+- [ ] DXF export works
+- [ ] Load old .xml designs
+- [ ] Save/load roundtrip
+
+### Build Verification
 ```bash
-echo "=== Branch ==="
-git branch --show-current
-echo -e "\n=== Recent Commits ==="
-git log --oneline -5
-echo -e "\n=== Compilation Status ==="
-ant clean compile 2>&1 | tail -20
-echo -e "\n=== Files Changed ==="
-git status --short
+ant clean compile  # Should complete with 0 errors
+ant build.standard # Should create SketchChair-standard.jar
+cd build && java -Djogamp.gluegen.UseTempJarCache=true -jar SketchChair-standard.jar
 ```
 
----
+## Documentation
 
-## Session End Checklist
+- **API Docs**: `/doc/index.html` (JavaDoc for custom classes)
+- **README**: `README.md` (project overview, setup)
+- **Build Windows**: `build-windows.md` (Windows-specific instructions)
+- **Release Process**: `release-instructions.md` (creating releases)
+- **Upgrade Progress**: `processing4-upgrade.md` (detailed migration notes)
 
-Before ending a session:
-- [ ] All changes committed
-- [ ] PROCESSING4_UPGRADE.md updated with progress
-- [ ] Compilation status documented (errors remaining)
-- [ ] Any issues/discoveries noted in progress doc
-- [ ] Git status is clean (except build artifacts)
+## Contact
 
----
-
-**Last Updated**: November 5, 2025
-**Next Action**: Start Phase 2 - Fix Frame API (main.java has most occurrences)
+- **Studio**: Diatom Studio (diatom.cc)
+- **Email**: hello@diatom.cc
+- **Website**: sketchchair.cc

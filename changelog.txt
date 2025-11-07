@@ -1,16 +1,19 @@
-[1.0.0.4] - 2025-11-06
-+ Fixed Windows-specific window positioning issue (window opening off-screen)
-+ Fixed Windows mouse/drawing coordinate offset on startup with delayed resize workaround
-+ Added comprehensive Windows build automation scripts (build-windows.bat, build-windows-exe.bat, build-windows-portable-exe.bat, build-windows-release.bat)
-+ Created automated release packaging with both installer .exe and portable distributions
-+ Both Windows distributions now include embedded JRE 21 (no Java installation required)
-+ Added documentation (changelog, properties, README) to all distribution packages
+[1.0.0] - 2025-11-06
+=== Major Modernization Release ===
++ Upgraded to Processing 4.3 with Java 17 for modern platform compatibility
++ Native Apple Silicon (M1/M2/M3) support via JOGL 2.5.0
++ Supports macOS 15+ (Sequoia), Windows 10+, and modern Linux distributions
++ Self-contained .app bundles with bundled JDK 25 runtime (no Java installation required)
++ Fixed PDF export with Processing 4.4 compatible libraries
++ Refined ergonomic figure outline rendering (8x thinner, cleaner appearance)
++ Improved distribution packaging with documentation at root level
++ Standard JAR packaging replaces One-JAR for better compatibility
++ All graphics and OpenGL libraries updated to latest stable versions
++ Cross-platform build system with jpackage for native installers
++ Note: This is a compatibility and infrastructure update - all SketchChair features remain the same
 
-[1.0.0.3] - 2025-11-06
-+ Fixed portable launcher and added changelog/properties to release packages
-
-[1.0.0.2] - 2025-11-06
-+ Fixed PDF export scaling issue and added release automation
+[1.9.1] - Previous Development Version
++ Development snapshot during Processing 4 migration
 
 [0.9.0.1]
 + Reordered and added new File menu items. 
