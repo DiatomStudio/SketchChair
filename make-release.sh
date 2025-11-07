@@ -79,7 +79,7 @@ case "$PLATFORM" in
 
             # Create ZIP of the .app bundle with changelog and properties at root
             cd dist
-            ZIP_NAME="SketchChair_v${VERSION}_macOS.zip"
+            ZIP_NAME="SketchChair-${VERSION}-macos.zip"
             echo -e "  Creating $ZIP_NAME..."
             # Include changelog and properties at the root of the ZIP alongside the .app
             zip -r "releases/$ZIP_NAME" SketchChair.app changelog.txt SketchChair.properties >/dev/null
@@ -108,7 +108,7 @@ case "$PLATFORM" in
 
         if [ -n "$EXE_FILE" ]; then
             # Rename to versioned name
-            NEW_NAME="SketchChair_v${VERSION}_Windows.exe"
+            NEW_NAME="SketchChair-${VERSION}-windows-installer.exe"
             mv "$EXE_FILE" "dist/releases/$NEW_NAME"
 
             echo -e "${GREEN}✓ Created: dist/releases/$NEW_NAME${NC}"
@@ -131,7 +131,7 @@ case "$PLATFORM" in
 
         if [ -n "$DEB_FILE" ]; then
             # Rename to versioned name
-            NEW_NAME="SketchChair_v${VERSION}_Linux.deb"
+            NEW_NAME="SketchChair-${VERSION}-linux-amd64.deb"
             mv "$DEB_FILE" "dist/releases/$NEW_NAME"
 
             echo -e "${GREEN}✓ Created: dist/releases/$NEW_NAME${NC}"
@@ -155,7 +155,7 @@ echo -e "${YELLOW}[5/5] Creating portable ZIP package (requires Java)...${NC}"
 
 create_portable_zip() {
     local PLATFORM_NAME=$1
-    local ZIP_NAME="SketchChair_v${VERSION}_${PLATFORM_NAME}_portable.zip"
+    local ZIP_NAME="SketchChair-${VERSION}-${PLATFORM_NAME}-portable.zip"
     local TEMP_DIR="dist/releases/temp_portable"
     local PACKAGE_DIR="SketchChair"
 
@@ -200,7 +200,7 @@ SketchChair $VERSION for macOS (Portable)
 ==========================================
 
 This is a portable version that requires Java to be installed.
-For easier installation, use SketchChair_v${VERSION}_macOS.zip instead.
+For easier installation, use SketchChair-${VERSION}-macos.zip instead.
 
 Requirements:
 - macOS 10.14 or later
@@ -227,7 +227,7 @@ EOF
 
 # Only create portable version for macOS (as fallback)
 if [ "$PLATFORM" == "Darwin" ]; then
-    create_portable_zip "macOS"
+    create_portable_zip "macos"
 fi
 
 # Create a release summary file
@@ -244,7 +244,7 @@ Packages Created:
 EOF
 
 # List all created packages
-for file in dist/releases/SketchChair_v${VERSION}_*; do
+for file in dist/releases/SketchChair-${VERSION}-*; do
     if [ -f "$file" ]; then
         filename=$(basename "$file")
         size=$(ls -lh "$file" | awk '{print $5}')
@@ -261,7 +261,7 @@ echo "" >> "dist/releases/RELEASE-$VERSION.txt"
 
 echo "File Checksums (SHA256):" >> "dist/releases/RELEASE-$VERSION.txt"
 cd dist/releases
-for file in SketchChair_v${VERSION}_*; do
+for file in SketchChair-${VERSION}-*; do
     if [ -f "$file" ]; then
         sha256sum "$file" >> "RELEASE-$VERSION.txt" 2>/dev/null || shasum -a 256 "$file" >> "RELEASE-$VERSION.txt"
     fi
@@ -277,7 +277,7 @@ echo -e "Version: ${BLUE}$VERSION${NC}"
 echo -e "Location: ${BLUE}dist/releases/${NC}"
 echo ""
 echo -e "${YELLOW}Created packages:${NC}"
-ls -lh dist/releases/SketchChair_v${VERSION}_* 2>/dev/null | awk '{print "  " $9 " (" $5 ")"}'
+ls -lh dist/releases/SketchChair-${VERSION}-* 2>/dev/null | awk '{print "  " $9 " (" $5 ")"}'
 echo ""
 echo -e "${YELLOW}Release summary:${NC} dist/releases/RELEASE-$VERSION.txt"
 echo ""
