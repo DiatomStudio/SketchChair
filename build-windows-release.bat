@@ -13,6 +13,9 @@ set PATH=%JAVA_HOME%\bin;%ANT_HOME%\bin;%WIX%\bin;%PATH%
 
 cd /d C:\Git\Diatom\SketchChair
 
+REM Read version from version.properties
+for /f "tokens=2 delims==" %%a in ('findstr "^version=" version.properties') do set VERSION=%%a
+
 REM Clean previous builds
 echo Cleaning previous builds...
 rmdir /s /q dist 2>nul
@@ -45,7 +48,7 @@ jpackage ^
   --name SketchChair ^
   --main-jar SketchChair-standard.jar ^
   --dest dist ^
-  --app-version 1.0 ^
+  --app-version %VERSION% ^
   --vendor "Diatom Studio" ^
   --copyright "Copyright (C) 2012-2025 Diatom Studio" ^
   --icon data/icons/program_icon_02_b.ico ^
@@ -63,7 +66,7 @@ echo [4/4] Packaging distributions...
 REM Create installer package folder
 echo   - Preparing installer package...
 mkdir dist\SketchChair-Installer
-copy dist\SketchChair-1.0.exe dist\SketchChair-Installer\ >nul
+copy dist\SketchChair-%VERSION%.exe dist\SketchChair-Installer\ >nul
 copy changelog.txt dist\SketchChair-Installer\ >nul
 copy SketchChair.properties dist\SketchChair-Installer\ >nul
 copy README.md dist\SketchChair-Installer\ 2>nul
@@ -73,7 +76,7 @@ echo SketchChair Windows Installer > dist\SketchChair-Installer\README.txt
 echo ================================ >> dist\SketchChair-Installer\README.txt
 echo. >> dist\SketchChair-Installer\README.txt
 echo To install: >> dist\SketchChair-Installer\README.txt
-echo 1. Double-click SketchChair-1.0.exe >> dist\SketchChair-Installer\README.txt
+echo 1. Double-click SketchChair-%VERSION%.exe >> dist\SketchChair-Installer\README.txt
 echo 2. Follow the installation wizard >> dist\SketchChair-Installer\README.txt
 echo 3. Launch from Start Menu or Desktop shortcut >> dist\SketchChair-Installer\README.txt
 echo. >> dist\SketchChair-Installer\README.txt
@@ -103,8 +106,8 @@ echo See changelog.txt for version history. >> dist\SketchChair\README.txt
 
 REM Create ZIP packages
 echo   - Creating ZIP archives...
-powershell -Command "Compress-Archive -Path 'dist\SketchChair-Installer' -DestinationPath 'dist\SketchChair-Installer.zip' -Force"
-powershell -Command "Compress-Archive -Path 'dist\SketchChair' -DestinationPath 'dist\SketchChair-Portable.zip' -Force"
+powershell -Command "Compress-Archive -Path 'dist\SketchChair-Installer' -DestinationPath 'dist\SketchChair-%VERSION%-win-Installer.zip' -Force"
+powershell -Command "Compress-Archive -Path 'dist\SketchChair' -DestinationPath 'dist\SketchChair-%VERSION%-win-Portable.zip' -Force"
 
 REM Summary
 echo.
@@ -114,15 +117,15 @@ echo ========================================
 echo.
 echo Created in dist/:
 echo   1. SketchChair-Installer/
-echo      - SketchChair-1.0.exe (installer)
+echo      - SketchChair-%VERSION%.exe (installer)
 echo      - Documentation files
-echo      - SketchChair-Installer.zip
+echo      - SketchChair-%VERSION%-win-Installer.zip
 echo.
 echo   2. SketchChair/ (portable)
 echo      - SketchChair.exe (run directly)
 echo      - Bundled JRE
 echo      - Documentation files
-echo      - SketchChair-Portable.zip
+echo      - SketchChair-%VERSION%-win-Portable.zip
 echo.
 echo Distribution packages:
 dir dist\*.zip

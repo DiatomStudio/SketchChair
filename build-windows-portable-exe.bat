@@ -9,6 +9,9 @@ set PATH=%JAVA_HOME%\bin;%ANT_HOME%\bin;%WIX%\bin;%PATH%
 
 cd /d C:\Git\Diatom\SketchChair
 
+REM Read version from version.properties
+for /f "tokens=2 delims==" %%a in ('findstr "^version=" version.properties') do set VERSION=%%a
+
 echo Step 1: Building standard JAR...
 call ant clean build.standard
 if errorlevel 1 (
@@ -26,7 +29,7 @@ jpackage ^
   --name SketchChair ^
   --main-jar SketchChair-standard.jar ^
   --dest dist ^
-  --app-version 1.0 ^
+  --app-version %VERSION% ^
   --vendor "Diatom Studio" ^
   --copyright "Copyright (C) 2012-2025 Diatom Studio" ^
   --icon data/icons/program_icon_02_b.ico ^
